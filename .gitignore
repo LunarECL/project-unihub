@@ -107,5 +107,9 @@ yarn-error.log
 # testing
 /coverage
 
+# environment variables
+.env.dev
+.env.test
+.env
 
 apps/rnapp-e2e/artifacts
