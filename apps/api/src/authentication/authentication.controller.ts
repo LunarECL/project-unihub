@@ -11,9 +11,10 @@ import {
 import { Response } from 'express';
 import { AuthenticationService } from './authentication.service';
 import RegisterDto from './dto/Register.dto';
-import { LocalAuthenticationGuard } from './localAuthentication.guard';
+import { LocalAuthenticationGuard } from './guards/localAuthentication.guard';
 import RequestWithUser from './requestWithUser.interface';
-import JwtAuthenticationGuard from './jwt-authentication.guard';
+import JwtAuthenticationGuard from './guards/jwt-authentication.guard';
+import { GoogleAuthenticationGuard } from './guards/googleAuthentication.guard';
 
 @Controller('authentication')
 export class AuthenticationController {
@@ -28,6 +29,25 @@ export class AuthenticationController {
   @UseGuards(LocalAuthenticationGuard)
   @Post('log-in')
   async logIn(@Req() request: RequestWithUser, @Res() response: Response) {
+    const user = request.user;
+    const cookie = this.authenticationService.getCookieWithJwtToken(user.id);
+    response.setHeader('Set-Cookie', cookie);
+    user.password = undefined;
+    return response.send(user);
+  }
+
+  @UseGuards(GoogleAuthenticationGuard)
+  @Get('google')
+  async googleAuth() {
+    // redirect google login page
+  }
+
+  @Get('google/callback')
+  @UseGuards(GoogleAuthenticationGuard)
+  async googleAuthCallback(
+    @Req() request: RequestWithUser,
+    @Res() response: Response
+  ) {
     const user = request.user;
     const cookie = this.authenticationService.getCookieWithJwtToken(user.id);
     response.setHeader('Set-Cookie', cookie);
