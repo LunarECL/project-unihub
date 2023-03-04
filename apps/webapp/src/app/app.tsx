@@ -2,10 +2,26 @@
 import styles from './app.module.css';
 
 import NxWelcome from './nx-welcome';
+import { useAuth0 } from '@auth0/auth0-react';
+import { FaGoogle, FaPencilAlt } from 'react-icons/fa';
+import { useNavigate } from 'react-router-dom';
 
 import { Route, Routes, Link } from 'react-router-dom';
+import React from 'react';
+import { Button, Skeleton } from '@mui/material';
 
 export function App() {
+  const { loginWithRedirect, isAuthenticated, isLoading } = useAuth0();
+  const navigate = useNavigate();
+
+  const login = () => {
+    return loginWithRedirect({
+      appState: {
+        returnTo: '/home',
+      },
+    });
+  };
+
   return (
     <>
       <NxWelcome title="webapp" />
@@ -18,6 +34,34 @@ export function App() {
       <br />
       <hr />
       <br />
+      {isLoading ? (
+        <Skeleton variant="rectangular" height={20} />
+      ) : (
+        <>
+          {isAuthenticated ? (
+            <Button
+              onClick={() => navigate('/home')}
+              startIcon={<FaPencilAlt />}
+              color="success"
+              size="large"
+            >
+              Get Started
+            </Button>
+          ) : (
+            <>
+              <Button
+                onClick={login}
+                startIcon={<FaPencilAlt />}
+                color="success"
+                size="large"
+              >
+                Login
+              </Button>
+            </>
+          )}
+        </>
+      )}
+
       <div role="navigation">
         <ul>
           <li>
