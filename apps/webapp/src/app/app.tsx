@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Landing } from '@unihub/webapp/public';
-import { Sharedoc } from 'libs/webapp/sharedoc/src';
+import { Sharedoc } from '@unihub/webapp/sharedoc';
 import { ThemeProviderWrapper } from './ThemeProviderWrapper';
 
 export function App() {

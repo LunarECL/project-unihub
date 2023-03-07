@@ -1,21 +1,67 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
 export interface SharedocProps { }
+
+// const ReconnectingWebSocket = require('reconnecting-websocket');
+import ReconnectingWebSocket from 'reconnecting-websocket';
+import io from 'socket.io-client';
+import * as  ShareDB from 'sharedb/lib/client';
+// import sharedb from 'sharedb/lib/client';
+// var sharedb = require('sharedb/lib/client');
+// import { Doc } from 'sharedb/lib/client';
+//@ts-ignore
+import StringBinding from 'sharedb-string-binding';
 
 export function Sharedoc(props: SharedocProps) {
 
-  const [count, setCount] = useState(0);
+  const [status, setStatus] = useState('Not Connected');
 
-  function increment(): void {
-    setCount((prevCount) => prevCount + 1);
-    //set the span to the count
-    document.getElementById("num-clicks")!.innerHTML = count.toString();
-  }
+  // const socket = new WebSocket('http://localhost:3030')
+  
+  useEffect(() => { 
+    
+    const element = document.getElementById('note');
+  
+
+    // const socket: any = new ReconnectingWebSocket('ws://localhost:3030');
+    
+    var socket = new ReconnectingWebSocket('ws://localhost:3030');
+
+    // const doc = connection.get('examples', 'textarea');
+    const connection = new ShareDB.Connection(socket as any);
+    
+    socket.addEventListener('open', function (event) {
+      setStatus('Connected');
+    }
+    );
+
+    socket.addEventListener('close', function (event) {
+      setStatus('Not Connected');
+    }
+    );
+
+    socket.addEventListener('error', function (event) {
+      setStatus('Error');
+    }
+    );
+
+    const doc  = connection.get('examples', 'textarea');
+    doc.subscribe(function(err: any) {
+      if (err) throw err;
+      console.log(doc.data); // {comment: 'Hello world!'}
+      const binding = new StringBinding(element, doc, ['content']);
+      binding.setup();
+    }
+    );
+    
+  
+  }, []);
 
   return (
-    <div>
-      You clicked <span id="num-clicks"></span> times.
-      <button onClick={increment}>+1</button>
-    </div>
+    <>
+      <textarea id="note" />
+      <span id="status-span">{status}</span>
+    </>
   );
 }
 
