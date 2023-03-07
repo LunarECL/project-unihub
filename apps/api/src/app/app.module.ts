@@ -1,25 +1,43 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
-import * as process from 'process';
-// import Joi from "joi";
+import Joi from 'joi';
+import { AppService } from './app.service';
+import { AppController } from './app.controller';
+import { AuthModule } from '@unihub/api/auth';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 @Module({
   imports: [
+    AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.test',
-      ignoreEnvFile: process.env.NODE_ENV === 'prod',
-      // validationSchema: Joi.object({
-      //   NOED_ENV: Joi.string().valid('dev', 'prod').required(),
-      //   DB_HOST: Joi.string().required(),
-      //   DB_PORT: Joi.string().required(),
-      //   DB_USERNAME: Joi.string().required(),
-      //   DB_PASSWORD: Joi.string().required(),
-      //   DB_NAME: Joi.string().required(),
-      // }),
+      validationSchema: Joi.object({
+        DB_HOST: Joi.string().required(),
+        DB_PORT: Joi.string().required(),
+        DB_USERNAME: Joi.string().required(),
+        DB_PASSWORD: Joi.string().required(),
+        DB_NAME: Joi.string().required(),
+
+        AUTH0_DOMAIN: Joi.string().required(),
+        AUTH0_CLIENT_ID: Joi.string().required(),
+        AUTH0_MANAGEMENT_CLIENT_ID: Joi.string().required(),
+        AUTH0_MANAGEMENT_CLIENT_SECRET: Joi.string().required(),
+        AUTH0_ISSUER_URL: Joi.string().required(),
+        AUTH0_AUDIENCE: Joi.string().required(),
+      }),
       // TODO: modify later to module to block the empty value
     }),
+    // GraphQLModule.forRoot<ApolloDriverConfig>({
+    //   driver: ApolloDriver,
+    //   autoSchemaFile: true,
+    //   useGlobalPrefix: true,
+    //   cors: {
+    //     origin: 'http://localhost:4200',
+    //     credentials: true,
+    //   },
+    // }),
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST,
@@ -32,7 +50,7 @@ import * as process from 'process';
       logging: true,
     }),
   ],
-  controllers: [],
-  providers: [],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

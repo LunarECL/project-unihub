@@ -14,7 +14,10 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@unihub/api/auth": ["libs/api/auth/src/index.ts"],
+      "@unihub/webapp/public": ["libs/webapp/public/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
