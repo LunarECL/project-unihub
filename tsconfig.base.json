@@ -16,6 +16,7 @@
     "baseUrl": ".",
     "paths": {
       "@unihub/api/auth": ["libs/api/auth/src/index.ts"],
+      "@unihub/sharedoc": ["libs/sharedoc/src/index.ts"],
       "@unihub/webapp/public": ["libs/webapp/public/src/index.ts"]
     }
   },
