@@ -1,0 +1,16 @@
+#doc-container {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  bottom: 24px;
+  left: 24px;
+}
+
+#header {
+  font-size: 24px;
+  font-weight: lighter;
+  margin: 0;
+  display: inline-block;
+  padding-bottom: 1%;
+  padding-top: 2%;
+}
