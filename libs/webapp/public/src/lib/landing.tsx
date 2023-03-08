@@ -6,7 +6,7 @@ import { FaPencilAlt } from 'react-icons/fa';
 import React from 'react';
 
 /* eslint-disable-next-line */
-export interface LandingProps { }
+export interface LandingProps {}
 
 export function Landing(props: LandingProps) {
   const { loginWithRedirect, logout, isAuthenticated, isLoading } = useAuth0();
@@ -36,7 +36,10 @@ export function Landing(props: LandingProps) {
           <>
             {isAuthenticated ? (
               <>
-                <Button onClick={() => navigate('/sharedDocument')} variant="contained">
+                <Button
+                  onClick={() => navigate('/sharedDocument')}
+                  variant="contained"
+                >
                   Document Collaboration
                 </Button>
                 <Button

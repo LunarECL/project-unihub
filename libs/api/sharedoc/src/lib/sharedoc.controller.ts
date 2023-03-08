@@ -69,4 +69,3 @@ export class AppController {
     return 'Hello World!';
   }
 }
-
