@@ -36,8 +36,11 @@ export function Landing(props: LandingProps) {
           <>
             {isAuthenticated ? (
               <>
-                <Button onClick={() => navigate('/')} variant="contained">
-                  Get Started
+                <Button
+                  onClick={() => navigate('/sharedDocument')}
+                  variant="contained"
+                >
+                  Document Collaboration
                 </Button>
                 <Button
                   onClick={() => {

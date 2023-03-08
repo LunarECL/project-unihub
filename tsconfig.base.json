@@ -16,7 +16,10 @@
     "baseUrl": ".",
     "paths": {
       "@unihub/api/auth": ["libs/api/auth/src/index.ts"],
-      "@unihub/webapp/public": ["libs/webapp/public/src/index.ts"]
+      "@unihub/api/sharedoc": ["libs/api/sharedoc/src/index.ts"],
+      "@unihub/webapp/public": ["libs/webapp/public/src/index.ts"],
+      "@unihub/webapp/sharedoc": ["libs/webapp/sharedoc/src/index.ts"],
+      "@unihub/webapp/ui": ["libs/webapp/ui/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

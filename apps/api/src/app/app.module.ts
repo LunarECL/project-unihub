@@ -5,12 +5,14 @@ import Joi from 'joi';
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
 import { AuthModule } from '@unihub/api/auth';
+import { SharedocModule } from '@unihub/api/sharedoc';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 
 @Module({
   imports: [
     AuthModule,
+    SharedocModule,
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
