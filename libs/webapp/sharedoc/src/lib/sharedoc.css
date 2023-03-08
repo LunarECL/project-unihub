@@ -1,4 +1,4 @@
-#container {
+#doc-container {
   position: absolute;
   top: 24px;
   right: 24px;
@@ -7,19 +7,10 @@
 }
 
 #header {
-  font-size: 24;
+  font-size: 24px;
   font-weight: lighter;
   margin: 0;
   display: inline-block;
   padding-bottom: 1%;
   padding-top: 2%;
-}
-
-#back-button {
-  float: right;
-  padding-top: 1%;
-  color: white;
-  font-weight: lighter;
-  font-size: 10;
-  text-decoration: none;
 }
