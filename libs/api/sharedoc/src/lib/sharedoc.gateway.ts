@@ -1,16 +1,10 @@
-// import { IoAdapter } from '@nestjs/platform-socket.io';
-// import { Server } from 'socket.io';
-// import { Injectable } from '@nestjs/common';
-// import ShareDB = require('sharedb');
-// import WebSocketJSONStream from '@teamwork/websocket-json-stream';
-
 import { WebSocketServer, SubscribeMessage, MessageBody, WebSocketGateway, OnGatewayConnection } from '@nestjs/websockets';
 import ShareDB = require('sharedb');
 import WebSocketJSONStream from '@teamwork/websocket-json-stream';
+import * as richText from 'rich-text';
 
-
-
-const backend = new ShareDB();
+ShareDB.types.register(richText.type);
+const backend = new ShareDB({presence: true});
 
 // Create initial document
 const connection = backend.connect();
@@ -18,7 +12,7 @@ const doc = connection.get('examples', 'textarea');
 doc.fetch(function(err) {
   if (err) throw err;
   if (doc.type === null) {
-    doc.create({content: ''});
+    doc.create([{insert: 'Start Typing'}], 'rich-text');
     console.log('Created document');
     return;
   }
@@ -45,36 +39,3 @@ export class ShareDBServer implements
   }
   
 }
-
-// @Injectable()
-// export class ShareDBServer extends IoAdapter {
-//   private backend = new ShareDB();
-
-//   // Create initial document
-//   private connection = this.backend.connect();
-//   private doc = this.connection.get('examples', 'textarea');
-
-//   constructor() {
-//     super();
-//     this.doc.fetch((err) => {
-//       if (err) throw err;
-//       if (this.doc.type === null) {
-//         this.doc.create({content: ''});
-//         return;
-//       }
-//     });
-//   }
-
-//   createIOServer(port: number): Server {
-//     const server = super.createIOServer(port);
-//     console.log('ShareDBServer.createIOServer()');
-
-//     server.on('connection', (client) => {
-//         console.log('ShareDBServer.createIOServer().connection()');
-//       const stream = new WebSocketJSONStream(client);
-//       this.backend.listen(stream);
-//     });
-
-//     return server;
-//   }
-// }

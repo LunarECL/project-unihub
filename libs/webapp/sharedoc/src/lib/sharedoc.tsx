@@ -2,32 +2,28 @@ import { useEffect, useRef, useState } from 'react';
 
 export interface SharedocProps { }
 
-// const ReconnectingWebSocket = require('reconnecting-websocket');
 import ReconnectingWebSocket from 'reconnecting-websocket';
-import io from 'socket.io-client';
 import * as  ShareDB from 'sharedb/lib/client';
-// import sharedb from 'sharedb/lib/client';
-// var sharedb = require('sharedb/lib/client');
-// import { Doc } from 'sharedb/lib/client';
 //@ts-ignore
 import StringBinding from 'sharedb-string-binding';
+// var richText = require('rich-text');
+//@ts-ignore
+import * as richText from 'rich-text';
+// var Quill = require('quill');
+//@ts-ignore
+import * as Quill from 'quill';
+ShareDB.types.register(richText.type);
+import 'quill/dist/quill.snow.css';
 
 export function Sharedoc(props: SharedocProps) {
 
   const [status, setStatus] = useState('Not Connected');
-
-  // const socket = new WebSocket('http://localhost:3030')
   
   useEffect(() => { 
     
-    const element = document.getElementById('note');
-  
-
-    // const socket: any = new ReconnectingWebSocket('ws://localhost:3030');
+    const element = document.getElementById('editor');
     
     var socket = new ReconnectingWebSocket('ws://localhost:3030');
-
-    // const doc = connection.get('examples', 'textarea');
     const connection = new ShareDB.Connection(socket as any);
     
     socket.addEventListener('open', function (event) {
@@ -48,9 +44,20 @@ export function Sharedoc(props: SharedocProps) {
     const doc  = connection.get('examples', 'textarea');
     doc.subscribe(function(err: any) {
       if (err) throw err;
-      console.log(doc.data); // {comment: 'Hello world!'}
-      const binding = new StringBinding(element, doc, ['content']);
-      binding.setup();
+      console.log(doc.data);
+      var quill = new Quill('#editor', {theme: 'snow'});
+      quill.setContents(doc.data);
+      quill.on('text-change', function(delta: any, oldDelta: any, source: any) {
+        if (source !== 'user') return;
+        console.log('delta', delta);
+        const currentText = doc.data.content;
+        doc.submitOp(delta, {source: quill});
+        //
+      });
+      doc.on('op', function(op, source) {
+        if (source === quill) return;
+        quill.updateContents(op);
+      });
     }
     );
     
@@ -59,8 +66,7 @@ export function Sharedoc(props: SharedocProps) {
 
   return (
     <>
-      <textarea id="note" />
-      <span id="status-span">{status}</span>
+      <div id="editor"></div>
     </>
   );
 }
