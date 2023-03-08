@@ -10,6 +10,7 @@ import * as richText from 'rich-text';
 import * as Quill from 'quill';
 ShareDB.types.register(richText.type);
 import 'quill/dist/quill.snow.css';
+import './sharedoc.css'
 
 export function Sharedoc(props: SharedocProps) {
   
@@ -49,7 +50,11 @@ export function Sharedoc(props: SharedocProps) {
 
   return (
     <>
-      <div id="editor"></div>
+      <div id='container'>
+        <h1 id='header'>Collaborate to create notes!</h1>
+        <a id="back-button" href="/">Back</a>
+        <div id="editor"></div>
+      </div>
     </>
   );
 }
