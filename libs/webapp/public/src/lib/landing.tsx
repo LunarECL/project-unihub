@@ -43,6 +43,13 @@ export function Landing(props: LandingProps) {
                   Document Collaboration
                 </Button>
                 <Button
+                  onClick={() => navigate('/webrtc')}
+                  variant="contained"
+                  sx={{ ml: 2 }}
+                >
+                  WebRTC App
+                </Button>
+                <Button
                   onClick={() => {
                     logout({ returnTo: window.location.origin } as Omit<
                       LogoutOptions,

@@ -20,7 +20,8 @@
       "@unihub/api/webrtc": ["libs/api/webrtc/src/index.ts"],
       "@unihub/webapp/public": ["libs/webapp/public/src/index.ts"],
       "@unihub/webapp/sharedoc": ["libs/webapp/sharedoc/src/index.ts"],
-      "@unihub/webapp/ui": ["libs/webapp/ui/src/index.ts"]
+      "@unihub/webapp/ui": ["libs/webapp/ui/src/index.ts"],
+      "@unihub/webapp/webrtc": ["libs/webapp/webrtc/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
