@@ -4,6 +4,7 @@ import { Landing } from '@unihub/webapp/public';
 import { Sharedoc } from '@unihub/webapp/sharedoc';
 import { ThemeProviderWrapper } from './ThemeProviderWrapper';
 import ProtectedRoute from '../../../../libs/webapp/ui/src/lib/protected-route/protected-route';
+import {WebappTimetable} from '@unihub/webapp/timetable';
 
 export function App() {
   return (
@@ -13,6 +14,10 @@ export function App() {
         <Route
           path="/sharedDocument"
           element={<ProtectedRoute component={Sharedoc} />}
+        />
+        <Route
+          path="/timetable"
+          element={<ProtectedRoute component={WebappTimetable} />}
         />
       </Routes>
     </ThemeProviderWrapper>
