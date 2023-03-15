@@ -17,10 +17,6 @@ export function Webrtc(props: WebrtcProps) {
   const [pubShow, setPubShow] = useState<string>('hidden');
   const pubVideo = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<{ [key: string]: HTMLVideoElement }>({});
-  const [isWSOpen, setIsWSOpen] = useState<boolean>(false);
-  const [isJoined, setIsJoined] = useState<boolean>(false);
-
-  let checker = false;
 
   const uid = 'uid';
 
@@ -36,33 +32,26 @@ export function Webrtc(props: WebrtcProps) {
   useEffect(() => {
     signal = new IonSFUJSONRPCSignal('ws://localhost:8000/ws');
     client = new Client(signal, config);
-    signal.onopen = () => {
-      checker = true;
-    };
+    signal.onopen = () => client.join('test room', uid);
 
-    if (checker) {
-      client.join('test', uid).then(() => setIsJoined(true));
-      console.log('joined' + uid);
-
-      client.ontrack = (track: MediaStreamTrack, stream: MediaStream) => {
-        console.log('got track: ', track.id, 'for stream: ', stream.id);
-        if (track.kind === 'video') {
-          track.onunmute = () => {
-            setRemoteStream((remoteStream) => [
-              ...remoteStream,
-              { id: track.id, stream: stream },
-            ]);
-            setCurrentVideo(track.id);
-            stream.onremovetrack = (e) => {
-              setRemoteStream((remoteStream) =>
-                remoteStream.filter((item) => item.id !== e.track.id)
-              );
-            };
+    client.ontrack = (track: MediaStreamTrack, stream: MediaStream) => {
+      console.log('got track: ', track.id, 'for stream: ', stream.id);
+      if (track.kind === 'video') {
+        track.onunmute = () => {
+          setRemoteStream((remoteStream) => [
+            ...remoteStream,
+            { id: track.id, stream: stream },
+          ]);
+          setCurrentVideo(track.id);
+          stream.onremovetrack = (e) => {
+            setRemoteStream((remoteStream) =>
+              remoteStream.filter((item) => item.id !== e.track.id)
+            );
           };
-        }
-      };
-    }
-  }, [isWSOpen]);
+        };
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (!currentVideo) return;
@@ -88,7 +77,7 @@ export function Webrtc(props: WebrtcProps) {
             pubVideo.current.controls = true;
             pubVideo.current.muted = true;
             setPubShow('block');
-            if (isJoined) client.publish(media);
+            client.publish(media);
           }
         })
         .catch(console.error);
@@ -106,7 +95,7 @@ export function Webrtc(props: WebrtcProps) {
             pubVideo.current.controls = true;
             pubVideo.current.muted = true;
             setPubShow('block');
-            if (isJoined) client.publish(media);
+            client.publish(media);
           }
         })
         .catch(console.error);
