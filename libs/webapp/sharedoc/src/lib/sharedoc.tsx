@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import * as ShareDB from 'sharedb/lib/client';
 //@ts-ignore
 import * as richText from 'rich-text';
-//@ts-ignore
-import * as Quill from 'quill';
+import ReactQuill from 'react-quill';
 import 'quill/dist/quill.snow.css';
 import './sharedoc.css';
 import { Button, Typography, Grid } from '@mui/material';
@@ -16,6 +15,8 @@ ShareDB.types.register(richText.type);
 
 export function Sharedoc(props: SharedocProps) {
   const navigate = useNavigate();
+  const [doc, setDoc] = useState<any>(null);
+  const editorRef = useRef<ReactQuill>(null);
 
   useEffect(() => {
     const socket = new ReconnectingWebSocket('ws://localhost:3030');
@@ -24,29 +25,37 @@ export function Sharedoc(props: SharedocProps) {
     const doc = connection.get('examples', 'textarea');
     doc.subscribe(function (err: any) {
       if (err) throw err;
-
-      const quill = new Quill('#editor', { theme: 'snow' });
-
-      //Removing the first toolbar so only one shows up (Quill bug)
-      (document.querySelector('.ql-toolbar') as HTMLElement).style.display =
-        'none';
-
-      quill.setContents(doc.data);
-
-      quill.on(
-        'text-change',
-        function (delta: any, oldDelta: any, source: any) {
-          if (source !== 'user') return;
-          doc.submitOp(delta, { source: quill });
-        }
-      );
-
-      doc.on('op', function (op, source) {
-        if (source === quill) return;
-        quill.updateContents(op);
-      });
+      if (doc.type === null) {
+        throw Error('No document exist with id: textarea');
+      }
     });
+
+    doc.on('load', load);
+    doc.on('op', update);
+
+    function load() {
+      setDoc(doc);
+      editorRef.current?.getEditor().setContents(doc.data);
+    }
+
+    function update(op: any, source: any) {
+      if (!source) {
+        const editor = editorRef.current?.getEditor();
+        editor?.updateContents(op);
+      }
+    }
   }, []);
+
+  function handleChange(
+    content: string,
+    delta: any,
+    source: string,
+    editor: any
+  ) {
+    if (source === 'user') {
+      doc.submitOp(delta);
+    }
+  }
 
   return (
     <>
@@ -68,7 +77,7 @@ export function Sharedoc(props: SharedocProps) {
             </Button>
           </Grid>
         </Grid>
-        <div id="editor"></div>
+        <ReactQuill onChange={handleChange} ref={editorRef} />
       </div>
     </>
   );
