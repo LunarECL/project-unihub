@@ -1,1 +1,1 @@
-export * from './lib/webapp-ui';
+export * from './lib/protected-route/protected-route';
