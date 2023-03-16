@@ -9,12 +9,14 @@ import { SharedocModule } from '@unihub/api/sharedoc';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { WebrtcModule } from '@unihub/api/webrtc';
+import { ApiCoursesModule } from '@unihub/api/courses';
 
 @Module({
   imports: [
     AuthModule,
     SharedocModule,
     WebrtcModule,
+    ApiCoursesModule,
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({

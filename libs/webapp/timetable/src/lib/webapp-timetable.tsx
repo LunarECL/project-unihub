@@ -1,5 +1,3 @@
-import styles from './webapp-timetable.module.css';
-
 import {
   TableContainer,
   Table,
@@ -13,16 +11,9 @@ import {
   Box,
   SwipeableDrawer,
   TextField,
-  FormControl,
-  InputLabel,
-  Input,
-  InputAdornment,
-  FilledInput,
-  Paper,
   MenuItem,
   Grid,
 } from '@mui/material';
-import { grey } from '@mui/material/colors';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import React from 'react';
 /* eslint-disable-next-line */
@@ -38,10 +29,6 @@ function createData(
 ) {
   return { time, monday, tuesday, wednesday, thursday, friday };
 } //end createDate
-
-function rowKey(row: { time: string }) {
-  return row.time;
-} //end rowKey
 
 const rows = [
   createData('9:00', '', '', '', '', ''),
