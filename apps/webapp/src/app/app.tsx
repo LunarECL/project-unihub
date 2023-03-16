@@ -4,7 +4,7 @@ import { Landing } from '@unihub/webapp/public';
 import { Sharedoc } from '@unihub/webapp/sharedoc';
 import { ThemeProviderWrapper } from './ThemeProviderWrapper';
 import ProtectedRoute from '../../../../libs/webapp/ui/src/lib/protected-route/protected-route';
-import {WebappTimetable} from '@unihub/webapp/timetable';
+import { WebappTimetable } from '@unihub/webapp/timetable';
 
 export function App() {
   return (

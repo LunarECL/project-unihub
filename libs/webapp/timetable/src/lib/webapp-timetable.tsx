@@ -151,7 +151,11 @@ export function WebappTimetable(props: WebappTimetableProps) {
               onKeyDown={toggleDrawer(false)}
             >
               <TableContainer sx={{ width: '90%', margin: '0 auto' }}>
-                <Grid container sx={{marginTop: '2%', marginBottom: '2%'}} spacing={5}>
+                <Grid
+                  container
+                  sx={{ marginTop: '2%', marginBottom: '2%' }}
+                  spacing={5}
+                >
                   <Grid item sx={{ width: '75%' }}>
                     <TextField
                       id="outlined-search"
