@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import Joi from 'joi';
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
@@ -9,6 +9,8 @@ import { SharedocModule } from '@unihub/api/sharedoc';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { WebrtcModule } from '@unihub/api/webrtc';
+import { BullModule } from '@nestjs/bull';
+import { EmailModule } from '@unihub/api/email';
 
 @Module({
   imports: [
@@ -30,6 +32,12 @@ import { WebrtcModule } from '@unihub/api/webrtc';
         AUTH0_MANAGEMENT_CLIENT_SECRET: Joi.string().required(),
         AUTH0_ISSUER_URL: Joi.string().required(),
         AUTH0_AUDIENCE: Joi.string().required(),
+
+        EMAIL_SERVER: Joi.string().required(),
+        EMAIL_USERNAME: Joi.string().required(),
+        EMAIL_PASSWORD: Joi.string().required(),
+
+        REDIS_URL: Joi.string().required(),
       }),
       // TODO: modify later to module to block the empty value
     }),
@@ -53,6 +61,14 @@ import { WebrtcModule } from '@unihub/api/webrtc';
       synchronize: true,
       logging: true,
     }),
+    BullModule.forRootAsync({
+      imports: [ConfigModule.forRoot({ envFilePath: `.env` })],
+      useFactory: async (configService: ConfigService) => ({
+        url: configService.get<string>('REDIS_URL'),
+      }),
+      inject: [ConfigService],
+    }),
+    EmailModule,
   ],
   controllers: [AppController],
   providers: [AppService],

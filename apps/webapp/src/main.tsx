@@ -19,7 +19,10 @@ const Auth0ProviderWithRedirectCallback: React.FC<{
       onRedirectCallback={onRedirectCallback}
       domain={'dev-a6za28tl8esfwwky.us.auth0.com'}
       clientId={'aStDAa0osXQRNA41V5Al9diBTygvh2Ev'}
-      authorizationParams={{ redirect_uri: window.location.origin }}
+      authorizationParams={{
+        redirect_uri: window.location.origin,
+        audience: 'https://dev-a6za28tl8esfwwky.us.auth0.com/api/v2/',
+      }}
     >
       {children}
     </Auth0Provider>

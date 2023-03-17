@@ -8,6 +8,7 @@ import 'quill/dist/quill.snow.css';
 import './sharedoc.css';
 import { Button, Typography, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import { useGetShareDoc } from '@unihub/webapp/api';
 
 export interface SharedocProps {}
 
@@ -17,6 +18,7 @@ export function Sharedoc(props: SharedocProps) {
   const navigate = useNavigate();
   const [doc, setDoc] = useState<any>(null);
   const editorRef = useRef<ReactQuill>(null);
+  useGetShareDoc();
 
   useEffect(() => {
     const socket = new ReconnectingWebSocket('ws://localhost:3030');
