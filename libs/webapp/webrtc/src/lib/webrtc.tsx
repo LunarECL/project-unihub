@@ -2,6 +2,8 @@ import { useEffect, useState, useRef } from 'react';
 import { Client, LocalStream } from 'ion-sdk-js';
 import { IonSFUJSONRPCSignal } from 'ion-sdk-js/lib/signal/json-rpc-impl';
 import { Configuration } from 'ion-sdk-js/lib/client';
+import { Button } from '@mui/material';
+import { styled } from '@mui/material/styles';
 
 /* eslint-disable-next-line */
 export interface WebrtcProps {}
@@ -18,7 +20,7 @@ export function Webrtc(props: WebrtcProps) {
   const pubVideo = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<{ [key: string]: HTMLVideoElement }>({});
 
-  const uid = 'uid';
+  const uid = undefined as unknown as string; // undefined because we are using uid generated from ion-sfu
 
   const config: Configuration = {
     iceServers: [
@@ -30,24 +32,33 @@ export function Webrtc(props: WebrtcProps) {
   };
 
   useEffect(() => {
-    signal = new IonSFUJSONRPCSignal('ws://localhost:8000/ws');
-    client = new Client(signal, config);
-    signal.onopen = () => client.join('test room', uid);
+    signal ||= new IonSFUJSONRPCSignal('ws://localhost:8000/ws');
+    client ||= new Client(signal, config);
+    signal.onopen = () => {
+      client.join('test room', uid);
+    };
 
     client.ontrack = (track: MediaStreamTrack, stream: MediaStream) => {
       console.log('got track: ', track.id, 'for stream: ', stream.id);
+      console.log(remoteStreams);
       if (track.kind === 'video') {
-        track.onunmute = () => {
+        // only add stream if it is not already in the list
+        if (remoteStreams.find((item) => item.id === track.id)) {
+          // stream already in list
+          console.log('stream already in list');
+          return;
+        } else {
+          console.log('adding stream to list');
           setRemoteStream((remoteStream) => [
             ...remoteStream,
             { id: track.id, stream: stream },
           ]);
-          setCurrentVideo(track.id);
-          stream.onremovetrack = (e) => {
-            setRemoteStream((remoteStream) =>
-              remoteStream.filter((item) => item.id !== e.track.id)
-            );
-          };
+        }
+        setCurrentVideo(track.id);
+        stream.onremovetrack = (e) => {
+          setRemoteStream((remoteStream) =>
+            remoteStream.filter((item) => item.id !== e.track.id)
+          );
         };
       }
     };
@@ -56,12 +67,13 @@ export function Webrtc(props: WebrtcProps) {
   useEffect(() => {
     if (!currentVideo) return;
     const videoEl = remoteVideoRef.current[currentVideo];
+
     remoteStreams.map((ev) => {
       if (ev.id === currentVideo) {
         videoEl.srcObject = ev.stream;
       }
     });
-  }, [currentVideo, remoteStreams]);
+  }, [currentVideo]);
 
   const start = (event: boolean) => {
     if (event) {
@@ -77,6 +89,7 @@ export function Webrtc(props: WebrtcProps) {
             pubVideo.current.controls = true;
             pubVideo.current.muted = true;
             setPubShow('block');
+            console.log(media);
             client.publish(media);
           }
         })
@@ -95,6 +108,7 @@ export function Webrtc(props: WebrtcProps) {
             pubVideo.current.controls = true;
             pubVideo.current.muted = true;
             setPubShow('block');
+            console.log(media);
             client.publish(media);
           }
         })
@@ -102,41 +116,83 @@ export function Webrtc(props: WebrtcProps) {
     }
   };
 
+  const Header = styled('header')({
+    display: 'flex',
+    height: 64,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'black',
+    color: 'white',
+    '& > div:first-of-type': {
+      marginRight: 'auto',
+    },
+    '& > div:last-child': {
+      position: 'absolute',
+      top: '2px',
+      right: '5px',
+    },
+  });
+
   return (
-    <div className="flex flex-col h-screen relative">
-      <header className="flex h-16 justify-center items-center text-xl bg-black text-white">
+    <div
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
+        position: 'relative',
+      }}
+    >
+      <Header>
         <div>ion-sfu</div>
-        <div className="absolute top-2 right-5">
-          <button
+        <div>
+          <Button
             id="bnt_pubcam"
-            className="bg-blue-500 px-4 py-2 text-white rounded-lg mr-5"
+            variant="contained"
+            sx={{ marginRight: 2 }}
             onClick={() => start(true)}
           >
             Publish Camera
-          </button>
-          <button
+          </Button>
+          <Button
             id="bnt_pubscreen"
-            className="bg-green-500 px-4 py-2 text-white rounded-lg"
+            variant="contained"
+            color="success"
             onClick={() => start(false)}
           >
             Publish Screen
-          </button>
+          </Button>
         </div>
-      </header>
-      <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-5">
+      </Header>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+          gap: 5,
+        }}
+      >
         <video
-          className={`bg-black h-full w-full ${pubShow}`}
+          style={{
+            backgroundColor: 'black',
+            height: '100%',
+            width: '100%',
+            display: pubShow,
+          }}
           controls
           ref={pubVideo}
-        ></video>
+        />
         {remoteStreams.map((val, index) => {
+          console.log(remoteStreams);
           return (
             <video
               key={index}
-              ref={(el) => (remoteVideoRef.current[val.id] = el!)}
-              className="bg-black w-full h-full"
+              ref={(el) => (remoteVideoRef.current[val.id] = el as any)}
+              style={{
+                backgroundColor: 'black',
+                height: '100%',
+                width: '100%',
+              }}
               controls
-            ></video>
+            />
           );
         })}
       </div>
