@@ -1,6 +1,11 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne, JoinColumn } from 'typeorm';
-//I DON'T THINK IT SHOULD BE LIKE THIS 
-import { Courses } from '../../../courses/src/lib/courses.entity';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  OneToOne,
+  JoinColumn,
+} from 'typeorm';
+import { Courses } from '@unihub/api/courses'
 
 @Entity()
 export class Document {

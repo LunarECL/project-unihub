@@ -2,12 +2,11 @@ import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Document } from "./sharedoc.entity";
-//THIS PROB HAS TO BE DONE DIFFERENTLY
-import { Courses } from '../../../courses/src/lib/courses.entity';
+import { CoursesController } from '@unihub/api/courses';
 
 @Injectable()
 export class DocumentService {
-    constructor(@InjectRepository(Document) private timetableRepository: Repository<Document>, @InjectRepository(Courses) private coursesRepository: Repository<Courses>) {}
+    constructor(@InjectRepository(Document) private timetableRepository: Repository<Document>, private courseController: CoursesController) {}
 
     async addNewDocument(courseId:string, content: string, lecture_number: number): Promise<Document> {
         const document = new Document();
@@ -15,8 +14,10 @@ export class DocumentService {
         document.content = content;
         document.lecture_number = lecture_number;
 
-        const course = await this.coursesRepository.findOne({where: {id: courseId}});
-        document.course = course;
+        //Use coursescontroller to get the course
+        this.courseController.getCourseById(courseId).then((course) => {
+            document.course = course;
+        });
         return await this.timetableRepository.save(document);
     }//end addNewDocument
 

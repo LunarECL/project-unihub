@@ -19,20 +19,7 @@ export class CoursesService {
         });
     }//end getCourseById
 
-    // async addNewDocumentToCourse(id: string, documentId: string): Promise<Courses> {
-    //     const course = await this.getCourseById(id);
-    //     course.course_shareDB_docs.push(documentId);
-    //     return await this.timetableRepository.save(course);
-    // }//end addNewDocumentToCourse
-
-    // async getAllDocuments(id: string): Promise<Courses> {
-    //     return await this.timetableRepository.findOne({
-    //         where: {
-    //             id: id
-    //         },
-    //         select: ["course_shareDB_docs"]
-    //     });
-    // }//end getAllDocuments
+    //Add to user courses (either done here or in some user service)
 
     
 }//end TimeTableService
