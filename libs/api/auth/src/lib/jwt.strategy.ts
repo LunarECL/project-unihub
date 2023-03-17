@@ -14,9 +14,8 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         cache: true,
         rateLimit: true,
         jwksRequestsPerMinute: 5,
-        jwksUri: `${process.env.AUTH0_ISSUER_URL}.well-known/jwks.json`,
+        jwksUri: `${process.env.AUTH0_JWKS}`,
       }),
-
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       audience: process.env.AUTH0_AUDIENCE,
       issuer: `${process.env.AUTH0_ISSUER_URL}`,
@@ -24,9 +23,16 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  validate(payload: unknown): unknown {
-    console.log(payload);
-    console.log('check');
-    return payload;
+  /**
+   * If not work (Only returning 401 Unauthorized)
+   * @see https://stackoverflow.com/questions/75771282/nestjs-authguard-jwt-auth0-constantly-returns-401-unauthorized
+   *
+   * for getting email from payload
+   * @see https://community.auth0.com/t/can-i-add-email-address-to-the-access-token-when-calling-an-api/70163
+   */
+  validate(payload: any): { email: string; userId: string } {
+    const email = payload['https://example.com/email'];
+    const userId = payload['sub'];
+    return { email, userId };
   }
 }

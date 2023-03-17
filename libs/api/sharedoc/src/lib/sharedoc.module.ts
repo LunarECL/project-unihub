@@ -3,7 +3,7 @@ import { AppController } from './sharedoc.controller';
 import { ShareDBServer } from './sharedoc.gateway';
 
 @Module({
-  // controllers: [AppController],
+  controllers: [AppController],
   providers: [ShareDBServer],
 })
 export class SharedocModule {}

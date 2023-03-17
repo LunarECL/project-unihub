@@ -41,3 +41,17 @@ services:
     restart: always
     env_file:
       - .env
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    volumes:
+      - redisdata:/var/lib/redis
+    ports:
+      - 6379:6379
+    networks:
+      - app
+    restart: always
+
+volumes:
+  redisdata:

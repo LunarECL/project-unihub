@@ -2,7 +2,6 @@ import styles from './webapp-public.module.css';
 import { LogoutOptions, useAuth0 } from '@auth0/auth0-react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Grid, Skeleton } from '@mui/material';
-import { FaPencilAlt } from 'react-icons/fa';
 import React from 'react';
 
 /* eslint-disable-next-line */
@@ -15,7 +14,7 @@ export function Landing(props: LandingProps) {
   const login = () => {
     return loginWithRedirect({
       appState: {
-        returnTo: '/',
+        returnTo: '/home',
       },
     });
   };
@@ -36,11 +35,8 @@ export function Landing(props: LandingProps) {
           <>
             {isAuthenticated ? (
               <>
-                <Button
-                  onClick={() => navigate('/sharedDocument')}
-                  variant="contained"
-                >
-                  Document Collaboration
+                <Button onClick={() => navigate('/home')} variant="contained">
+                  Home
                 </Button>
                 <Button
                   onClick={() => {
