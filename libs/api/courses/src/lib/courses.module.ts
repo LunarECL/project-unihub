@@ -7,7 +7,7 @@ import { CoursesController } from './courses.controller';
 @Module({
   controllers: [CoursesController],
   imports: [TypeOrmModule.forFeature([Courses])],
-  providers: [CoursesService],
+  providers: [CoursesService, CoursesController],
   exports: [CoursesController],
 })
 export class ApiCoursesModule {}

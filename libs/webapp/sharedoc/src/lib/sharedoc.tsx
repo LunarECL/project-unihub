@@ -8,7 +8,7 @@ import * as Quill from 'quill';
 import 'quill/dist/quill.snow.css';
 import './sharedoc.css';
 import { Button, Typography, Grid } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 export interface SharedocProps {}
 
@@ -16,12 +16,14 @@ ShareDB.types.register(richText.type);
 
 export function Sharedoc(props: SharedocProps) {
   const navigate = useNavigate();
+  const { courseCode, lectureNumber } = useParams();
 
   useEffect(() => {
-    const socket = new ReconnectingWebSocket('ws://localhost:3030');
+    const url = `ws://localhost:3030/sharedDocument/${courseCode}/${lectureNumber}`;
+    const socket = new ReconnectingWebSocket(url);
     const connection = new ShareDB.Connection(socket as any);
 
-    const doc = connection.get('examples', 'textarea');
+    const doc = connection.get(courseCode!, lectureNumber!);
     doc.subscribe(function (err: any) {
       if (err) throw err;
 

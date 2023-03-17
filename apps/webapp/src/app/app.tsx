@@ -12,7 +12,7 @@ export function App() {
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route
-          path="/sharedDocument"
+          path="/sharedDocument/:courseCode/:lectureNumber"
           element={<ProtectedRoute component={Sharedoc} />}
         />
         <Route

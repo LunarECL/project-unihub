@@ -43,7 +43,7 @@ export function Landing(props: LandingProps) {
                   Timetable
                 </Button>
                 <Button
-                  onClick={() => navigate('/sharedDocument')}
+                  onClick={() => navigate('/sharedDocument/CSCC63/lecture1')}
                   variant="contained"
                 >
                   Document Collaboration
