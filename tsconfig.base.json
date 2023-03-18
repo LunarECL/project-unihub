@@ -16,14 +16,15 @@
     "baseUrl": ".",
     "paths": {
       "@unihub/api/auth": ["libs/api/auth/src/index.ts"],
+      "@unihub/api/courses": ["libs/api/courses/src/index.ts"],
       "@unihub/api/email": ["libs/api/email/src/index.ts"],
       "@unihub/api/sharedoc": ["libs/api/sharedoc/src/index.ts"],
       "@unihub/api/webrtc": ["libs/api/webrtc/src/index.ts"],
+      "@unihub/webapp/api": ["libs/webapp/api/src/index.ts"],
+      "@unihub/webapp/home": ["libs/webapp/home/src/index.ts"],
       "@unihub/webapp/public": ["libs/webapp/public/src/index.ts"],
       "@unihub/webapp/sharedoc": ["libs/webapp/sharedoc/src/index.ts"],
-      "@unihub/webapp/ui": ["libs/webapp/ui/src/index.ts"],
-      "@unihub/webapp/home": ["libs/webapp/home/src/index.ts"],
-      "@unihub/webapp/api": ["libs/webapp/api/src/index.ts"],
+      "@unihub/webapp/ui": ["libs/webapp/ui/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

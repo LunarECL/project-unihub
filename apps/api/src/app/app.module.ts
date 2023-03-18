@@ -8,16 +8,21 @@ import { AuthModule } from '@unihub/api/auth';
 import { SharedocModule } from '@unihub/api/sharedoc';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { WebrtcModule } from '@unihub/api/webrtc';
+// import { WebrtcModule } from '@unihub/api/webrtc';
 import { BullModule } from '@nestjs/bull';
 import { EmailModule } from '@unihub/api/email';
 import { User } from '@unihub/api/auth';
+import { Courses } from '@unihub/api/courses';
+import { Lecture } from '@unihub/api/courses';
+import { Section } from '@unihub/api/courses';
+import { CoursesModule } from '@unihub/api/courses';
 
 @Module({
   imports: [
     AuthModule,
     SharedocModule,
-    WebrtcModule,
+    // WebrtcModule,
+    CoursesModule,
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
@@ -58,7 +63,7 @@ import { User } from '@unihub/api/auth';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [User],
+      entities: [User, Courses, Lecture, Section],
       synchronize: true,
       logging: true,
     }),
