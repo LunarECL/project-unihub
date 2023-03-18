@@ -2,7 +2,7 @@ import styles from './webapp-public.module.css';
 import { LogoutOptions, useAuth0 } from '@auth0/auth0-react';
 import { useNavigate } from 'react-router-dom';
 import { Button, Grid, Skeleton } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 /* eslint-disable-next-line */
 export interface LandingProps {}
@@ -11,12 +11,14 @@ export function Landing(props: LandingProps) {
   const { loginWithRedirect, logout, isAuthenticated, isLoading } = useAuth0();
   const navigate = useNavigate();
 
-  const login = () => {
+  const login = async () => {
     return loginWithRedirect({
       appState: {
         returnTo: '/home',
       },
+
     });
+
   };
 
   return (

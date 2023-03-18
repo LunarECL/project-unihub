@@ -11,6 +11,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { WebrtcModule } from '@unihub/api/webrtc';
 import { BullModule } from '@nestjs/bull';
 import { EmailModule } from '@unihub/api/email';
+import { User } from '@unihub/api/auth';
 
 @Module({
   imports: [
@@ -57,7 +58,7 @@ import { EmailModule } from '@unihub/api/email';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [],
+      entities: [User],
       synchronize: true,
       logging: true,
     }),
