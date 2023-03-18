@@ -16,9 +16,7 @@ export function Landing(props: LandingProps) {
       appState: {
         returnTo: '/home',
       },
-
     });
-
   };
 
   return (

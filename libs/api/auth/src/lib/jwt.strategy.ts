@@ -11,7 +11,9 @@ import { Repository } from 'typeorm';
  */
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) {
+  constructor(
+    @InjectRepository(User) private readonly userRepository: Repository<User>
+  ) {
     super({
       secretOrKeyProvider: passportJwtSecret({
         cache: true,
@@ -33,17 +35,17 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    * for getting email from payload
    * @see https://community.auth0.com/t/can-i-add-email-address-to-the-access-token-when-calling-an-api/70163
    */
-  async validate(payload: any): Promise<{ email: string; userId: string; }> {
+  async validate(payload: any): Promise<{ email: string; userId: string }> {
     const email = payload['https://example.com/email'];
     const userId = payload['sub'];
 
     //Check if user already exists
-    const user = await this.userRepository.findOne({where: {email}});
-    if(!user) {
-      const newUser = this.userRepository.create({email, userId});
+    const user = await this.userRepository.findOne({ where: { email } });
+    if (!user) {
+      const newUser = this.userRepository.create({ email, userId });
       this.userRepository.save(newUser);
-    }//end if
-    
+    } //end if
+
     return { email, userId };
   }
 }

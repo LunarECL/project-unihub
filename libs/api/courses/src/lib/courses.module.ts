@@ -5,7 +5,11 @@ import { Lecture } from './entities/lecture.entity';
 import { Section } from './entities/section.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Courses]), TypeOrmModule.forFeature([Lecture]), TypeOrmModule.forFeature([Section])],
+  imports: [
+    TypeOrmModule.forFeature([Courses]),
+    TypeOrmModule.forFeature([Lecture]),
+    TypeOrmModule.forFeature([Section]),
+  ],
   controllers: [],
   providers: [],
   exports: [],

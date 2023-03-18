@@ -8,7 +8,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('/')
-  getUser(@CurrentUser() {email}): string {
+  getUser(@CurrentUser() { email }): string {
     return email;
   }
 }
