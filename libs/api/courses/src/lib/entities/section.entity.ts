@@ -30,6 +30,7 @@ export class Section {
   @ManyToOne(() => Courses, (course: Courses) => course.sections)
   course: Courses;
 
+  //   @Column({ nullable: false })
   @OneToMany(() => Lecture, (lecture) => lecture.section)
   lectures: Lecture[];
 } //end class Courses

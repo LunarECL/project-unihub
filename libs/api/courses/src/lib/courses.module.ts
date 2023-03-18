@@ -11,7 +11,7 @@ import { Section } from './entities/section.entity';
     TypeOrmModule.forFeature([Section]),
   ],
   controllers: [],
-  providers: [],
-  exports: [],
+  providers: [Lecture, Section, Courses],
+  exports: [Lecture, Section, Courses],
 })
 export class CoursesModule {}

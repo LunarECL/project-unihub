@@ -27,6 +27,7 @@ export class Courses {
   @Column({ nullable: false })
   sesision: string;
 
+  //   @Column({ nullable: false })
   @OneToMany(() => Section, (section) => section.course)
   sections: Section[];
 } //end class Courses

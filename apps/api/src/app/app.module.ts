@@ -16,6 +16,7 @@ import { Courses } from '@unihub/api/courses';
 import { Lecture } from '@unihub/api/courses';
 import { Section } from '@unihub/api/courses';
 import { CoursesModule } from '@unihub/api/courses';
+import { ShareDoc } from '@unihub/api/sharedoc';
 
 @Module({
   imports: [
@@ -63,7 +64,7 @@ import { CoursesModule } from '@unihub/api/courses';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [User, Courses, Lecture, Section],
+      entities: [User, Courses, Lecture, Section, ShareDoc],
       synchronize: true,
       logging: true,
     }),
