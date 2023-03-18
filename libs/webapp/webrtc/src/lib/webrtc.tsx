@@ -12,6 +12,9 @@ let client: Client;
 let signal: IonSFUJSONRPCSignal;
 
 export function Webrtc(props: WebrtcProps) {
+  const [cameraOn, setCameraOn] = useState(false);
+  const [screenOn, setScreenOn] = useState(false);
+
   const [remoteStreams, setRemoteStream] = useState<
     { id: string; stream: MediaStream }[]
   >([]);
@@ -39,16 +42,10 @@ export function Webrtc(props: WebrtcProps) {
     };
 
     client.ontrack = (track: MediaStreamTrack, stream: MediaStream) => {
-      console.log('got track: ', track.id, 'for stream: ', stream.id);
-      console.log(remoteStreams);
       if (track.kind === 'video') {
-        // only add stream if it is not already in the list
         if (remoteStreams.find((item) => item.id === track.id)) {
-          // stream already in list
-          console.log('stream already in list');
           return;
         } else {
-          console.log('adding stream to list');
           setRemoteStream((remoteStream) => [
             ...remoteStream,
             { id: track.id, stream: stream },
@@ -71,11 +68,28 @@ export function Webrtc(props: WebrtcProps) {
     remoteStreams.map((ev) => {
       if (ev.id === currentVideo) {
         videoEl.srcObject = ev.stream;
+        videoEl.autoplay = true;
       }
     });
   }, [currentVideo]);
 
-  const start = (event: boolean) => {
+  const handleCameraToggle = () => {
+    if (cameraOn) {
+      handleCameraStream(false);
+    } else {
+      handleCameraStream(true);
+    }
+  };
+
+  const handleScreenToggle = () => {
+    if (screenOn) {
+      handleScreenStream(false);
+    } else {
+      handleScreenStream(true);
+    }
+  };
+
+  const handleCameraStream = (event: boolean) => {
     if (event) {
       LocalStream.getUserMedia({
         resolution: 'vga',
@@ -83,18 +97,38 @@ export function Webrtc(props: WebrtcProps) {
         codec: 'vp8',
       })
         .then((media) => {
+          media.onremovetrack = (e) => {
+            setRemoteStream((remoteStream) =>
+              remoteStream.filter((item) => item.id !== e.track.id)
+            );
+          };
+
           if (pubVideo.current) {
             pubVideo.current.srcObject = media;
             pubVideo.current.autoplay = true;
             pubVideo.current.controls = true;
             pubVideo.current.muted = true;
             setPubShow('block');
-            console.log(media);
-            client.publish(media);
+            if (!remoteStreams.find((item) => item.id === media.id)) {
+              client.publish(media);
+            }
           }
         })
         .catch(console.error);
     } else {
+      const localTracks = client.transports?.[0].pc.getSenders();
+      localTracks?.map((track) => {
+        track.track?.stop();
+        client.transports?.[0].pc.removeTrack(track);
+      });
+
+      setPubShow('hidden');
+    }
+    setCameraOn(!cameraOn);
+  };
+
+  const handleScreenStream = (event: boolean) => {
+    if (event) {
       LocalStream.getDisplayMedia({
         resolution: 'vga',
         video: true,
@@ -107,13 +141,26 @@ export function Webrtc(props: WebrtcProps) {
             pubVideo.current.autoplay = true;
             pubVideo.current.controls = true;
             pubVideo.current.muted = true;
+
             setPubShow('block');
-            console.log(media);
+
             client.publish(media);
           }
+
+          client.publish(media);
         })
         .catch(console.error);
+    } else {
+      const localTracks = client.transports?.[0].pc.getSenders();
+      localTracks?.map((track) => {
+        track.track?.stop();
+        client.transports?.[0].pc.removeTrack(track);
+      });
+
+      setPubShow('hidden');
     }
+
+    setScreenOn(!screenOn);
   };
 
   const Header = styled('header')({
@@ -133,6 +180,33 @@ export function Webrtc(props: WebrtcProps) {
     },
   });
 
+  const displayRemoteStreams = () => {
+    return remoteStreams.map((val, index) => {
+      return (
+        <div
+          key={index}
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            height: '100%',
+            position: 'relative',
+          }}
+        >
+          <video
+            style={{
+              backgroundColor: 'black',
+              height: '100%',
+              width: '100%',
+            }}
+            muted
+            ref={(el) => (remoteVideoRef.current[val.id] = el as any)}
+            controls
+          />
+        </div>
+      );
+    });
+  };
+
   return (
     <div
       style={{
@@ -149,7 +223,7 @@ export function Webrtc(props: WebrtcProps) {
             id="bnt_pubcam"
             variant="contained"
             sx={{ marginRight: 2 }}
-            onClick={() => start(true)}
+            onClick={() => handleCameraToggle()}
           >
             Publish Camera
           </Button>
@@ -157,7 +231,7 @@ export function Webrtc(props: WebrtcProps) {
             id="bnt_pubscreen"
             variant="contained"
             color="success"
-            onClick={() => start(false)}
+            onClick={() => handleScreenToggle()}
           >
             Publish Screen
           </Button>
@@ -180,21 +254,7 @@ export function Webrtc(props: WebrtcProps) {
           controls
           ref={pubVideo}
         />
-        {remoteStreams.map((val, index) => {
-          console.log(remoteStreams);
-          return (
-            <video
-              key={index}
-              ref={(el) => (remoteVideoRef.current[val.id] = el as any)}
-              style={{
-                backgroundColor: 'black',
-                height: '100%',
-                width: '100%',
-              }}
-              controls
-            />
-          );
-        })}
+        {displayRemoteStreams()}
       </div>
     </div>
   );
