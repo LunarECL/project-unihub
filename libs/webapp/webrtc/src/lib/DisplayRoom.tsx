@@ -4,14 +4,15 @@ import { IonSFUJSONRPCSignal } from 'ion-sdk-js/lib/signal/json-rpc-impl';
 import { Configuration } from 'ion-sdk-js/lib/client';
 import { Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
+import { useParams } from 'react-router-dom';
 
 /* eslint-disable-next-line */
-export interface WebrtcProps {}
+export interface DisplayRoomProps {}
 
 let client: Client;
 let signal: IonSFUJSONRPCSignal;
 
-export function Webrtc(props: WebrtcProps) {
+export function DisplayRoom(props: DisplayRoomProps) {
   const [cameraOn, setCameraOn] = useState(false);
   const [screenOn, setScreenOn] = useState(false);
 
@@ -22,7 +23,8 @@ export function Webrtc(props: WebrtcProps) {
   const [pubShow, setPubShow] = useState<string>('hidden');
   const pubVideo = useRef<HTMLVideoElement>(null);
   const remoteVideoRef = useRef<{ [key: string]: HTMLVideoElement }>({});
-
+  // get roomId from params in the URL ("/room/:roomId")
+  const roomId = useParams().roomId as string;
   const uid = undefined as unknown as string; // undefined because we are using uid generated from ion-sfu
 
   const config: Configuration = {
@@ -38,7 +40,7 @@ export function Webrtc(props: WebrtcProps) {
     signal ||= new IonSFUJSONRPCSignal('ws://localhost:8000/ws');
     client ||= new Client(signal, config);
     signal.onopen = () => {
-      client.join('test room', uid);
+      client.join(roomId, uid);
     };
 
     client.ontrack = (track: MediaStreamTrack, stream: MediaStream) => {
@@ -260,4 +262,4 @@ export function Webrtc(props: WebrtcProps) {
   );
 }
 
-export default Webrtc;
+export default DisplayRoom;
