@@ -22,6 +22,6 @@ export class ShareDoc {
   lectureNumber: string; //lecture1, lecture2, lecture3, etc. (depends on the week)
 
   // @Column({ nullable: false })
-  @OneToOne(() => Lecture, (lecture) => lecture.shareDoc)
+  @ManyToOne(() => Lecture, (lecture) => lecture.shareDoc)
   lecture: Lecture;
 } //end class Courses

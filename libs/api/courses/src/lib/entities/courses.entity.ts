@@ -3,7 +3,7 @@ import {
   Entity,
   OneToMany,
   PrimaryColumn,
-  PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Section } from './section.entity';
 
@@ -19,13 +19,16 @@ export class Courses {
   courseNumber: string;
 
   @Column({ nullable: false })
-  tite: string;
+  title: string;
 
   @Column({ nullable: false })
   sec_cd: string;
 
   @Column({ nullable: false })
-  sesision: string;
+  session: string;
+
+  @UpdateDateColumn()
+  updated: Date;
 
   //   @Column({ nullable: false })
   @OneToMany(() => Section, (section) => section.course)

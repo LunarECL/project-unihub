@@ -1,31 +1,39 @@
 import {
   Column,
   Entity,
-  ManyToMany,
   ManyToOne,
   OneToMany,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Courses } from './courses.entity';
 import { Lecture } from './lecture.entity';
 
 @Entity()
 export class Section {
-  @PrimaryColumn({ nullable: false })
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({ nullable: false })
   sectionType: string;
 
-  @PrimaryColumn({ nullable: false })
+  @Column({ nullable: false })
   sectionNumber: string;
 
   @Column({ nullable: false })
   currentEnrollment: string;
 
   @Column({ nullable: false })
+  maxEnrollment: string;
+
+  @Column({ nullable: false })
   instructor: string;
 
   @Column({ nullable: false })
   delivery_mode: string;
+
+  @UpdateDateColumn()
+  updated: Date;
 
   @ManyToOne(() => Courses, (course: Courses) => course.sections)
   course: Courses;

@@ -17,6 +17,7 @@ import { Lecture } from '@unihub/api/courses';
 import { Section } from '@unihub/api/courses';
 import { CoursesModule } from '@unihub/api/courses';
 import { ShareDoc } from '@unihub/api/sharedoc';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
@@ -66,7 +67,7 @@ import { ShareDoc } from '@unihub/api/sharedoc';
       database: process.env.DB_NAME,
       entities: [User, Courses, Lecture, Section, ShareDoc],
       synchronize: true,
-      logging: true,
+      logging: false,
     }),
     BullModule.forRootAsync({
       imports: [ConfigModule.forRoot({ envFilePath: `.env` })],
@@ -76,6 +77,7 @@ import { ShareDoc } from '@unihub/api/sharedoc';
       inject: [ConfigService],
     }),
     EmailModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService],
