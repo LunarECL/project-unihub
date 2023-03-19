@@ -8,13 +8,22 @@ import { AuthModule } from '@unihub/api/auth';
 import { SharedocModule } from '@unihub/api/sharedoc';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { WebrtcModule } from '@unihub/api/webrtc';
 import { BullModule } from '@nestjs/bull';
 import { EmailModule } from '@unihub/api/email';
+import { User } from '@unihub/api/auth';
+import { Courses } from '@unihub/api/courses';
+import { Lecture } from '@unihub/api/courses';
+import { Section } from '@unihub/api/courses';
+import { CoursesModule } from '@unihub/api/courses';
+import { ShareDoc } from '@unihub/api/sharedoc';
+import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
     AuthModule,
     SharedocModule,
+    CoursesModule,
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
@@ -55,9 +64,9 @@ import { EmailModule } from '@unihub/api/email';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [],
+      entities: [User, Courses, Lecture, Section, ShareDoc],
       synchronize: true,
-      logging: true,
+      logging: false,
     }),
     BullModule.forRootAsync({
       imports: [ConfigModule.forRoot({ envFilePath: `.env` })],
@@ -67,6 +76,7 @@ import { EmailModule } from '@unihub/api/email';
       inject: [ConfigService],
     }),
     EmailModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService],
