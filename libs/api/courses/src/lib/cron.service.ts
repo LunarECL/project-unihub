@@ -64,9 +64,7 @@ export class CronService implements OnModuleInit {
       const session = course.session;
 
       const courseData = {
-        programCode,
-        courseLevel,
-        courseNumber,
+        programCode: programCode + courseLevel + courseNumber,
         title,
         sec_cd,
         session,
@@ -77,14 +75,7 @@ export class CronService implements OnModuleInit {
         .insert()
         .into(Courses)
         .values(courses)
-        .orUpdate([
-          'programCode',
-          'courseLevel',
-          'courseNumber',
-          'title',
-          'sec_cd',
-          'session',
-        ])
+        .orUpdate(['programCode', 'title', 'sec_cd', 'session'])
         .execute();
 
       const sections = new Array();

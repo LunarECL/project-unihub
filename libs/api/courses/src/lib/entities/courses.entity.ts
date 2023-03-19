@@ -13,16 +13,10 @@ export class Courses {
   programCode: string;
 
   @PrimaryColumn({ nullable: false })
-  courseLevel: string;
-
-  @PrimaryColumn({ nullable: false })
-  courseNumber: string;
+  sec_cd: string;
 
   @Column({ nullable: false })
   title: string;
-
-  @Column({ nullable: false })
-  sec_cd: string;
 
   @Column({ nullable: false })
   session: string;
