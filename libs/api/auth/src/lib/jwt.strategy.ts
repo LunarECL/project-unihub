@@ -5,6 +5,9 @@ import { passportJwtSecret } from 'jwks-rsa';
 import { User } from './users/users.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { EmailService } from '../../../email/src/lib/email.service';
+import axios from 'axios';
+import { ManagementService } from './management.service';
 
 /**
  * @see https://auth0.com/blog/developing-a-secure-api-with-nestjs-adding-authorization/
@@ -12,7 +15,9 @@ import { Repository } from 'typeorm';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    private readonly managementService: ManagementService,
+    private emailService: EmailService
   ) {
     super({
       secretOrKeyProvider: passportJwtSecret({
@@ -42,8 +47,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     //Check if user already exists
     const user = await this.userRepository.findOne({ where: { email } });
     if (!user) {
+      const data = await this.managementService.getIdpAccessToken(userId);
+      const name = data.data.name;
       const newUser = this.userRepository.create({ email, userId });
-      this.userRepository.save(newUser);
+      this.emailService.welcome(email, name);
+      await this.userRepository.save(newUser);
     } //end if
 
     return { email, userId };

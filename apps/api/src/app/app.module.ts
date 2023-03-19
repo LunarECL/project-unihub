@@ -65,7 +65,7 @@ import { ScheduleModule } from '@nestjs/schedule';
       database: process.env.DB_NAME,
       entities: [User, Courses, Lecture, Section, ShareDoc],
       synchronize: true,
-      logging: false,
+      logging: true,
     }),
     BullModule.forRootAsync({
       imports: [ConfigModule.forRoot({ envFilePath: `.env` })],
