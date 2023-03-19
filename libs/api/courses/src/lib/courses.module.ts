@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Courses } from './entities/courses.entity';
 import { Lecture } from './entities/lecture.entity';
 import { Section } from './entities/section.entity';
-// import { ScheduleModule } from '@nestjs/schedule';
+import { ScheduleModule } from '@nestjs/schedule';
 import { CronService } from './cron.service';
 
 @Module({
@@ -11,7 +11,7 @@ import { CronService } from './cron.service';
     TypeOrmModule.forFeature([Courses]),
     TypeOrmModule.forFeature([Lecture]),
     TypeOrmModule.forFeature([Section]),
-    // ScheduleModule.forRoot(),
+    ScheduleModule.forRoot(),
   ],
   controllers: [],
   providers: [Lecture, Section, Courses], // CronService],
