@@ -1,4 +1,4 @@
 export * from './lib/courses.module';
-export * from './lib/courses.service';
-export * from './lib/courses.controller';
-export * from './lib/courses.entity';
+export * from './lib/entities/courses.entity';
+export * from './lib/entities/lecture.entity';
+export * from './lib/entities/section.entity';

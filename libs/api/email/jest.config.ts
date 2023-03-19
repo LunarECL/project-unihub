@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'api-webrtc',
+  displayName: 'api-email',
   preset: '../../../jest.preset.js',
   globals: {
     'ts-jest': {
@@ -12,5 +12,5 @@ export default {
     '^.+\\.[tj]s$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../../coverage/libs/api/webrtc',
+  coverageDirectory: '../../../coverage/libs/api/email',
 };

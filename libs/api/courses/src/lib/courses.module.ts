@@ -1,13 +1,20 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Courses } from './courses.entity';
-import { CoursesService } from './courses.service';
-import { CoursesController } from './courses.controller';
+import { Courses } from './entities/courses.entity';
+import { Lecture } from './entities/lecture.entity';
+import { Section } from './entities/section.entity';
+// import { ScheduleModule } from '@nestjs/schedule';
+import { CronService } from './cron.service';
 
 @Module({
-  controllers: [CoursesController],
-  imports: [TypeOrmModule.forFeature([Courses])],
-  providers: [CoursesService, CoursesController],
-  exports: [CoursesController],
+  imports: [
+    TypeOrmModule.forFeature([Courses]),
+    TypeOrmModule.forFeature([Lecture]),
+    TypeOrmModule.forFeature([Section]),
+    // ScheduleModule.forRoot(),
+  ],
+  controllers: [],
+  providers: [Lecture, Section, Courses], // CronService],
+  exports: [Lecture, Section, Courses],
 })
-export class ApiCoursesModule {}
+export class CoursesModule {}

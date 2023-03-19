@@ -1,24 +1,27 @@
 import {
-  Entity,
-  PrimaryGeneratedColumn,
   Column,
+  Entity,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
   OneToOne,
-  JoinColumn,
+  PrimaryColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Courses } from '@unihub/api/courses'
+import { Lecture } from '@unihub/api/courses';
 
 @Entity()
-export class Document {
+export class ShareDoc {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
-  @Column()
+  @Column({ nullable: false })
   content: string;
 
-  @Column()
-  lecture_number: number;
+  @Column({ nullable: false })
+  lectureNumber: string; //lecture1, lecture2, lecture3, etc. (depends on the week)
 
-  @OneToOne(() => Courses)
-  @JoinColumn({ name: 'course_id' })
-  course: Courses;
-}
+  // @Column({ nullable: false })
+  @ManyToOne(() => Lecture, (lecture) => lecture.shareDoc)
+  lecture: Lecture;
+} //end class Courses
