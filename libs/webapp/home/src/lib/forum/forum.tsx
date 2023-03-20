@@ -26,6 +26,13 @@ export function Forum(props: DashboardProps) {
         >
           ShareDoc
         </Button>
+        <Button
+          onClick={() => navigate('/home/room/create')}
+          variant="contained"
+          sx={{ ml: 2 }}
+        >
+          WebRTC App
+        </Button>
       </Grid>
     </Grid>
   );

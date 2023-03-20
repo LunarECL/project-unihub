@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Box, Button, Container, TextField, Typography } from '@mui/material';
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 /* eslint-disable-next-line */
 export interface JoinRoomProps {}
@@ -15,7 +15,7 @@ export function JoinRoom(props: JoinRoomProps) {
 
   const handleJoinRoom = () => {
     // Code to handle joining the room
-    navigate(`/room/${roomLink}`);
+    navigate(`/home/room/${roomLink}`);
   };
 
   return (
@@ -39,5 +39,3 @@ export function JoinRoom(props: JoinRoomProps) {
     </Container>
   );
 }
-
-export default JoinRoom;

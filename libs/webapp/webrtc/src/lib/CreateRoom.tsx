@@ -12,7 +12,7 @@ export function CreateRoom(props: CreateRoomProps) {
   const handleCreateRoom = () => {
     console.log(roomName);
     // add the roomName to the database
-    navigate(`/room/${roomName}`);
+    navigate(`/home/room/${roomName}`);
   };
 
   const handleRoomNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -41,8 +41,6 @@ export function CreateRoom(props: CreateRoomProps) {
     </Container>
   );
 }
-
-export default CreateRoom;
 
 /*
 // for more than 4 streams, make them all 25% width and 50% height

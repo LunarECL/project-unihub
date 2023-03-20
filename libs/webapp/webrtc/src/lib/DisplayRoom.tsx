@@ -482,5 +482,3 @@ export function DisplayRoom(props: DisplayRoomProps) {
     </div>
   );
 }
-
-export default DisplayRoom;
