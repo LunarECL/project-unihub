@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ApiProvider } from '@unihub/webapp/api';
 import { Sharedoc } from '@unihub/webapp/sharedoc';
 import { Route, Routes } from 'react-router-dom';

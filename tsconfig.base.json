@@ -18,6 +18,7 @@
       "@unihub/api/auth": ["libs/api/auth/src/index.ts"],
       "@unihub/api/courses": ["libs/api/courses/src/index.ts"],
       "@unihub/api/email": ["libs/api/email/src/index.ts"],
+      "@unihub/api/push": ["libs/api/push/src/index.ts"],
       "@unihub/api/sharedoc": ["libs/api/sharedoc/src/index.ts"],
       "@unihub/webapp/api": ["libs/webapp/api/src/index.ts"],
       "@unihub/webapp/home": ["libs/webapp/home/src/index.ts"],

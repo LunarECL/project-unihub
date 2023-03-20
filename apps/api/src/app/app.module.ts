@@ -17,6 +17,7 @@ import { Section } from '@unihub/api/courses';
 import { CoursesModule } from '@unihub/api/courses';
 import { ShareDoc } from '@unihub/api/sharedoc';
 import { ScheduleModule } from '@nestjs/schedule';
+import { PushModule } from '@unihub/api/push';
 
 @Module({
   imports: [
@@ -76,6 +77,7 @@ import { ScheduleModule } from '@nestjs/schedule';
     }),
     EmailModule,
     ScheduleModule.forRoot(),
+    PushModule,
   ],
   controllers: [AppController],
   providers: [AppService],
