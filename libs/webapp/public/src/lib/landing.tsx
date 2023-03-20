@@ -43,7 +43,7 @@ export function Landing(props: LandingProps) {
                   Document Collaboration
                 </Button>
                 <Button
-                  onClick={() => navigate('/webrtc')}
+                  onClick={() => navigate('/room/create')}
                   variant="contained"
                   sx={{ ml: 2 }}
                 >

@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef, LegacyRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Client, LocalStream } from 'ion-sdk-js';
 import { IonSFUJSONRPCSignal } from 'ion-sdk-js/lib/signal/json-rpc-impl';
 import { Configuration } from 'ion-sdk-js/lib/client';
@@ -20,7 +20,6 @@ export function DisplayRoom(props: DisplayRoomProps) {
   const [screenOn, setScreenOn] = useState(false);
   const [gridCols, setGridCols] = useState(1);
   const [pubShow, setPubShow] = useState<string>('none');
-  const [noRemoteStreams, setNoRemoteStreams] = useState<boolean>(false);
 
   const backgroundColors = [
     '#FFC107', // Amber
@@ -69,7 +68,7 @@ export function DisplayRoom(props: DisplayRoomProps) {
     };
 
     client.ontrack = (track: MediaStreamTrack, stream: MediaStream) => {
-      //console.log(track, stream);
+      console.log(track, stream);
       //if stream is not in streams map
       if (!streams.current[stream.id]) {
         // create a video element
@@ -79,7 +78,8 @@ export function DisplayRoom(props: DisplayRoomProps) {
         videoElement.muted = true;
         videoElement.srcObject = stream;
         videoElement.style.backgroundColor = 'black';
-        videoElement.style.width = 'fit-content';
+        videoElement.style.width = '100%';
+        videoElement.style.objectFit = 'fill !important';
 
         // add video element to the map
         streams.current[stream.id] = {
@@ -87,7 +87,9 @@ export function DisplayRoom(props: DisplayRoomProps) {
           videoElement,
         };
         const length = Object.keys(streams.current).length;
+        console.log('length', length);
         const totalStreams = length + 1; // +1 for local stream
+        console.log('totalStreams', totalStreams);
 
         let tempGridCols = 0;
 
@@ -99,6 +101,7 @@ export function DisplayRoom(props: DisplayRoomProps) {
           tempGridCols = Math.ceil(Math.sqrt(totalStreams));
         }
 
+        console.log('gridCols', tempGridCols);
         const gridItemWidth = 12 / tempGridCols;
 
         const gridItem = document.createElement('div');
@@ -113,18 +116,15 @@ export function DisplayRoom(props: DisplayRoomProps) {
 
         const gridContainer = document.getElementById('stream-container');
         if (gridContainer) {
-          // gridContainer.appendChild(gridItem);
+          gridContainer.appendChild(gridItem);
         }
 
         stream.onremovetrack = () => {
           if (streams.current[stream.id]) {
             streams.current[stream.id].videoElement.remove();
             delete streams.current[stream.id];
-            displayRemoteStreams();
           }
         };
-
-        displayRemoteStreams();
       }
     };
   }, [streams]);
@@ -164,8 +164,8 @@ export function DisplayRoom(props: DisplayRoomProps) {
             pubVideo.current.autoplay = true;
             pubVideo.current.controls = true;
             pubVideo.current.muted = true;
-            client.publish(media);
             setPubShow('');
+            client.publish(media);
           }
         })
         .catch(console.error);
@@ -199,8 +199,8 @@ export function DisplayRoom(props: DisplayRoomProps) {
               pubVideo.current.autoplay = true;
               pubVideo.current.controls = true;
               pubVideo.current.muted = true;
-              client.publish(media);
               setPubShow('');
+              client.publish(media);
             }
           }
         })
@@ -234,117 +234,13 @@ export function DisplayRoom(props: DisplayRoomProps) {
     },
   });
 
-  const displayRemoteStreams = () => {
-    const gridContainer = document.getElementById('stream-container');
-    if (gridContainer) {
-      gridContainer.innerHTML = '';
-    }
-
-    const length = Object.keys(streams.current).length;
-
-    if (length === 1) {
-      // only one stream, so make it full screen
-      const videoElement =
-        streams.current[Object.keys(streams.current)[0]].videoElement;
-      videoElement.style.width = '100%';
-      videoElement.style.height = '100%';
-      videoElement.style.objectFit = 'cover';
-      videoElement.style.borderRadius = '10px';
-      videoElement.style.boxSizing = 'border-box';
-      videoElement.style.margin = '0px';
-
-      if (gridContainer) {
-        gridContainer.appendChild(videoElement);
-      }
-    } else if (length === 2) {
-      // two streams, so make them both 50% width
-      Object.keys(streams.current).forEach((key) => {
-        const videoElement = streams.current[key].videoElement;
-        videoElement.style.width = '50%';
-        videoElement.style.height = '100%';
-        videoElement.style.objectFit = 'cover';
-        videoElement.style.borderRadius = '10px';
-        videoElement.style.boxSizing = 'border-box';
-        videoElement.style.margin = '0px';
-
-        if (gridContainer) {
-          gridContainer.appendChild(videoElement);
-        }
-      });
-    } else if (length === 3) {
-      // three streams, so make them all 33% width
-      Object.keys(streams.current).forEach((key) => {
-        const videoElement = streams.current[key].videoElement;
-        videoElement.style.width = '50%';
-        videoElement.style.height = '50%';
-        videoElement.style.objectFit = 'cover';
-        videoElement.style.borderRadius = '10px';
-        videoElement.style.boxSizing = 'border-box';
-        videoElement.style.margin = '0px';
-
-        // for the 3rd stream, center it vertically
-        if (key === '2') {
-          videoElement.style.marginTop = '50%';
-          videoElement.style.transform = 'translateY(-50%)';
-        }
-
-        if (gridContainer) {
-          gridContainer.appendChild(videoElement);
-        }
-      });
-    } else if (length === 4) {
-      // four streams, so make them all 25% width
-      Object.keys(streams.current).forEach((key) => {
-        const videoElement = streams.current[key].videoElement;
-        videoElement.style.width = '50%';
-        videoElement.style.height = '50 %';
-        videoElement.style.objectFit = 'cover';
-        videoElement.style.borderRadius = '10px';
-        videoElement.style.boxSizing = 'border-box';
-        videoElement.style.margin = '0px';
-
-        if (gridContainer) {
-          gridContainer.appendChild(videoElement);
-        }
-      });
-    } else {
-      // for more than 4 streams, make them all 25% width and 50% height
-      Object.keys(streams.current).forEach((key) => {
-        const videoElement = streams.current[key].videoElement;
-        videoElement.style.width = '25%';
-        videoElement.style.height = '50%';
-        videoElement.style.objectFit = 'cover';
-        videoElement.style.borderRadius = '10px';
-        videoElement.style.boxSizing = 'border-box';
-        videoElement.style.margin = '0px';
-
-        if (gridContainer) {
-          gridContainer.appendChild(videoElement);
-        }
-      });
-    }
-  };
-
-  /*
-  style={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        position: 'relative',
-        width: '100%',
-        backgroundColor: 'lightgray',
-      }}
-  */
-
-  useEffect(() => {
-    displayRemoteStreams();
-  }, [streams.current]);
-
+  console.log(gridCols);
   return (
     <div
       style={{
-        height: '100vh',
-        width: '100vw',
+        display: 'flex',
+        flexDirection: 'column',
+        height: '100%',
         position: 'relative',
       }}
     >
@@ -369,36 +265,38 @@ export function DisplayRoom(props: DisplayRoomProps) {
           </Button>
         </div>
       </Header>
-      <div
-        id="local-stream"
-        className={
-          noRemoteStreams ? 'displayNoRemote' : 'localStreamBottomLeft'
-        }
-      >
-        <video
-          style={{ display: pubShow, width: '100%', height: '100%' }}
-          controls
-          ref={pubVideo}
-        ></video>
-        <video
-          style={{
-            backgroundColor:
-              backgroundColors[
-                Math.floor(Math.random() * backgroundColors.length)
-              ],
-            display: pubShow === 'none' ? '' : 'none',
-          }}
-          className="avatarVideo"
-          poster={placeholder}
-        ></video>
-      </div>
+
       <Grid
         id="stream-container"
         container
         spacing={1}
-        className="remoteGridContainer"
-        display={noRemoteStreams ? 'none' : ''}
-      ></Grid>
+        style={{ height: '100%', width: '100%' }}
+      >
+        <Grid id="local-stream-grid" item xs={12 / gridCols}>
+          <div>
+            <video
+              style={{ display: pubShow, width: '100%' }}
+              controls
+              ref={pubVideo}
+            ></video>
+            <video
+              style={{
+                backgroundColor:
+                  backgroundColors[
+                    Math.floor(Math.random() * backgroundColors.length)
+                  ],
+                borderRadius: '10px',
+                width: '100%',
+                objectFit: 'scale-down',
+                display: pubShow === 'none' ? '' : 'none',
+              }}
+              poster={placeholder}
+            ></video>
+          </div>
+        </Grid>
+      </Grid>
+
+      <div id="display "></div>
     </div>
   );
 }
