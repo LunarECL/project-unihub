@@ -95,6 +95,7 @@ export function WebappTimetable(props: WebappTimetableProps) {
     
     if(searchWord === ''){
       setCoursesRows(allCoursesRows);
+      setSearch('Code')
       return;
     }
 
@@ -340,7 +341,7 @@ export function WebappTimetable(props: WebappTimetableProps) {
                     </TableRow>
                   </TableHead>
                   <TableBody id="coursesDisplay">
-                    {coursesRows.slice(0,50).map((row: any, index: number) => (
+                    {coursesRows.slice(0,100).map((row: any, index: number) => (
                       <TableRow
                         key={index}
                         sx={{
