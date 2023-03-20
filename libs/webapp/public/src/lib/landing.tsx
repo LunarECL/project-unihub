@@ -39,6 +39,13 @@ export function Landing(props: LandingProps) {
                   Home
                 </Button>
                 <Button
+                  onClick={() => navigate('/room/create')}
+                  variant="contained"
+                  sx={{ ml: 2 }}
+                >
+                  WebRTC App
+                </Button>
+                <Button
                   onClick={() => {
                     logout({ returnTo: window.location.origin } as Omit<
                       LogoutOptions,
