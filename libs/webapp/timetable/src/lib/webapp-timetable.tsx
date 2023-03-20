@@ -59,15 +59,15 @@ const rows = [
 ];
 
 const colours = [
-  "#258767",
-  "#d7edf4",
-  "#b83999",
-  "#237283",
-  "#e71e54",
-  "#e1a8c1",
-  "#43147c",
-  "#7f7896",
-  "#180c80"
+  '#258767',
+  '#d7edf4',
+  '#b83999',
+  '#237283',
+  '#e71e54',
+  '#e1a8c1',
+  '#43147c',
+  '#7f7896',
+  '#180c80',
 ];
 
 const searchOpt = [
@@ -82,34 +82,39 @@ const searchOpt = [
 ];
 
 export function WebappTimetable(props: WebappTimetableProps) {
-  const [coursesRows, setCoursesRows] = useState<any>([]); //'filtered' courses
+  const [coursesRows, setCoursesRows] = useState<any>([]);
   const [courses, setCourses] = useState<any>([]);
   const [colIndex, setColIndex] = useState(0);
   const [allCoursesRows, setAllCoursesRows] = useState<any>([]);
-  const [search, setSearch] = useState('Code'); //search word
+  const [search, setSearch] = useState('Code'); 
 
   const navigate = useNavigate();
 
   const handleFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const searchWord = event.target.value;  
-    
-    if(searchWord === ''){
+    const searchWord = event.target.value;
+
+    console.log(searchWord === '');
+
+    if (searchWord === '') {
       setCoursesRows(allCoursesRows);
-      setSearch('Code')
+      setSearch('Code');
       return;
     }
 
     const newFilter = allCoursesRows.filter((course: any) => {
-      if(search === 'Code'){
-        return course.programCode.toLowerCase().includes(searchWord.toLowerCase());
-      }
-      else if(search === 'Name'){
-        return course.courseTitle.toLowerCase().includes(searchWord.toLowerCase());
+      if (search === 'Code') {
+        return course.programCode
+          .toLowerCase()
+          .includes(searchWord.toLowerCase());
+      } else if (search === 'Name') {
+        return course.courseTitle
+          .toLowerCase()
+          .includes(searchWord.toLowerCase());
       }
     });
 
     setCoursesRows(newFilter);
-  }//end handleFilter
+  }; //end handleFilter
 
   useEffect(() => {
     async function loadCourses() {
@@ -146,10 +151,14 @@ export function WebappTimetable(props: WebappTimetableProps) {
       }
 
       setState({ ...state, bottom: open });
+      if(open === false) {
+        (document.getElementById('outlined-search') as HTMLInputElement).value = '';
+        setCoursesRows(allCoursesRows);
+      }
     };
 
   //Need to deal with conflicts but that'll be when we store the courses in an array or smthn
-    //So using the db
+  //So using the db
   const displayCourse = (course: any) => {
     //Check if the course has lectures
     if (course.lectures) {
@@ -169,8 +178,9 @@ export function WebappTimetable(props: WebappTimetableProps) {
           day = 'friday';
         }
 
-        let lecTime = new Date(lecture.startTime);
-        let startTime = lecTime.getHours();
+        const date = new Date(lecture.startTime);
+
+        let startTime = date.getUTCHours();
         let endTime = startTime + lecture.totalMinutes / 60;
 
         if (endTime > 12 && startTime > 12) {
@@ -181,7 +191,7 @@ export function WebappTimetable(props: WebappTimetableProps) {
           startTime = startTime - 12;
         }
 
-        let iteration: number = 0
+        let iteration: number = 0;
 
         //Colour in the cells of the timetable
         for (let i = startTime; i < endTime; i++, iteration++) {
@@ -197,12 +207,14 @@ export function WebappTimetable(props: WebappTimetableProps) {
               (cell as HTMLElement).style.fontWeight = 'bold';
               if (iteration === 0) {
                 (cell as HTMLElement).innerHTML = course.course.programCode;
-              }//end if
+              } //end if
               //Colour in the cells of the timetable
               (cell as HTMLElement).style.borderBottomColor = colours[colIndex];
               (cell as HTMLElement).style.cursor = 'pointer';
               (cell as HTMLElement).addEventListener('click', () => {
-                navigate(`/home/sharedDocument/${course.course.programCode}/${course.id}/${course.lectures[index].id}`);
+                navigate(
+                  `/home/sharedDocument/${course.course.programCode}/${course.id}/${course.lectures[index].id}`
+                );
               });
             }
           }
@@ -217,7 +229,11 @@ export function WebappTimetable(props: WebappTimetableProps) {
   const addCourseTime = (index: number) => {
     //Get the index of the course in the courses array from the current index of the course in the coursesRows array
     const courseIndex = allCoursesRows.findIndex(
-      (course: any) => course.programCode === coursesRows[index].programCode && course.sec_cd === coursesRows[index].sec_cd && course.section=== coursesRows[index].section);
+      (course: any) =>
+        course.programCode === coursesRows[index].programCode &&
+        course.sec_cd === coursesRows[index].sec_cd &&
+        course.section === coursesRows[index].section
+    );
     displayCourse(courses[courseIndex]);
   };
 
@@ -325,7 +341,11 @@ export function WebappTimetable(props: WebappTimetableProps) {
                       helperText="Please select how you would like to search by"
                     >
                       {searchOpt.map((option) => (
-                        <MenuItem key={option.value} value={option.value} onClick={() => setSearch(option.value)}>
+                        <MenuItem
+                          key={option.value}
+                          value={option.value}
+                          onClick={() => setSearch(option.value)}
+                        >
                           {option.label}
                         </MenuItem>
                       ))}
@@ -344,23 +364,31 @@ export function WebappTimetable(props: WebappTimetableProps) {
                     </TableRow>
                   </TableHead>
                   <TableBody id="coursesDisplay">
-                    {coursesRows.slice(0,100).map((row: any, index: number) => (
-                      <TableRow
-                        key={index}
-                        sx={{
-                          '&:last-child td, &:last-child th': { border: 0 },
-                          cursor: 'pointer',
-                        }}
-                        onClick={() => addCourseTime(index)}
-                      >
-                        <TableCell align="center">{row.programCode}</TableCell>
-                        <TableCell align="center">{row.courseTitle}</TableCell>
-                        <TableCell align="center">{row.sec_cd}</TableCell>
-                        <TableCell align="center">{row.prof}</TableCell>
-                        <TableCell align="center">{row.section}</TableCell>
-                        <TableCell align="center">{row.deliveryMode}</TableCell>
-                      </TableRow>
-                    ))}
+                    {coursesRows
+                      .slice(0, 100)
+                      .map((row: any, index: number) => (
+                        <TableRow
+                          key={index}
+                          sx={{
+                            '&:last-child td, &:last-child th': { border: 0 },
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => addCourseTime(index)}
+                        >
+                          <TableCell align="center">
+                            {row.programCode}
+                          </TableCell>
+                          <TableCell align="center">
+                            {row.courseTitle}
+                          </TableCell>
+                          <TableCell align="center">{row.sec_cd}</TableCell>
+                          <TableCell align="center">{row.prof}</TableCell>
+                          <TableCell align="center">{row.section}</TableCell>
+                          <TableCell align="center">
+                            {row.deliveryMode}
+                          </TableCell>
+                        </TableRow>
+                      ))}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -373,4 +401,3 @@ export function WebappTimetable(props: WebappTimetableProps) {
 }
 
 export default WebappTimetable;
-

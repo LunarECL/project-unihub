@@ -37,9 +37,6 @@ export class ShareDBServer implements OnGatewayConnection, OnGatewayConnection {
     // Create initial document
     const courseCode = urlParams[0];
     const documentId = urlParams[3];
-    const lectureNumber = urlParams[4];
-
-    console.log(courseCode, documentId, lectureNumber);
 
     // Create initial document
     const doc = connection.get(courseCode, documentId);
@@ -47,24 +44,8 @@ export class ShareDBServer implements OnGatewayConnection, OnGatewayConnection {
     doc.fetch(async (err) => {
       if (err) throw err;
       if (doc.type === null) {
-        // const document = await this.shareDocService.getDocumentContent(
-        //   Number(documentId)
-        // );
-
-        let content = 'Start Typing';
-        // if (document !== '') {
-        //   content = document;
-        // }
-
+        let content = 'Start typing...';
         doc.create([{ insert: content }], 'rich-text');
-
-        // // Check if document already exists
-        // if (doc.type === null) {
-        //   doc.create([{ insert: content }], 'rich-text');
-        //   console.log('Created document');
-        // } else {
-        //   console.log('Document already exists');
-        // }
         return;
       }
     });

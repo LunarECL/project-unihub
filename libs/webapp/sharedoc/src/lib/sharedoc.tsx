@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import * as ShareDB from 'sharedb/lib/client';
 //@ts-ignore
@@ -10,6 +10,7 @@ import { Button, Typography, Grid } from '@mui/material';
 import { useGetShareDoc } from '@unihub/webapp/api';
 import { useNavigate, useParams } from 'react-router-dom';
 import { usePostDocumentContent } from '@unihub/webapp/api';
+import { useGetDocumentContent } from '@unihub/webapp/api';
 
 export interface SharedocProps {}
 
@@ -19,7 +20,28 @@ export function Sharedoc(props: SharedocProps) {
   const navigate = useNavigate();
   const [doc, setDoc] = useState<any>(null);
   const editorRef = useRef<ReactQuill>(null);
-  const { courseCode = '', sessionId = '', lectureId = '', documentId = '', lectureNumber = '' } = useParams();
+  const {
+    courseCode = '',
+    sessionId = '',
+    lectureId = '',
+    documentId = '',
+    lectureNumber = '',
+  } = useParams();
+
+  const [initialContent, setInitialContent] = useState('');
+
+  // useEffect(() => {
+  //   async function getContent() {
+  //     const content = await useGetDocumentContent(documentId);
+  //     setInitialContent(content);
+  //     console.log(content);
+  //   }
+
+  //   getContent();
+  //   return () => {
+  //     console.log('unmounting');
+  //   }
+  // }, [documentId]);
 
   useEffect(() => {
     const url = `ws://localhost:3030/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${documentId}/${lectureNumber}`;
@@ -28,11 +50,10 @@ export function Sharedoc(props: SharedocProps) {
     useGetShareDoc();
 
     const doc = connection.get(courseCode!, documentId!);
-    console.log(url);
     doc.subscribe(function (err: any) {
       if (err) throw err;
       if (doc.type === null) {
-        throw Error('No document exist with id: ' + lectureNumber);
+        throw Error('No document exist with id: ' + documentId);
       }
     });
 
@@ -40,7 +61,12 @@ export function Sharedoc(props: SharedocProps) {
     doc.on('op', update);
 
     function load() {
+      console.log('load');
+      console.log(initialContent);
       setDoc(doc);
+      if (doc.data.ops[0].insert === 'Start typing...' && initialContent) {
+        doc.data.ops[0].insert = initialContent;
+      }
       editorRef.current?.getEditor().setContents(doc.data);
     }
 
@@ -48,7 +74,6 @@ export function Sharedoc(props: SharedocProps) {
       if (!source) {
         const editor = editorRef.current?.getEditor();
         editor?.updateContents(op);
-        console.log(editor?.getContents());
       }
     }
 
@@ -90,7 +115,11 @@ export function Sharedoc(props: SharedocProps) {
             </Button>
           </Grid>
         </Grid>
-        <ReactQuill onChange={handleChange} ref={editorRef} style={{height: "100%"}}/>
+        <ReactQuill
+          onChange={handleChange}
+          ref={editorRef}
+          style={{ height: '100%' }}
+        />
       </div>
     </>
   );

@@ -4,3 +4,4 @@ export * from './lib/hooks/useGetEmail';
 export * from './lib/hooks/useGetCourses';
 export * from './lib/hooks/useGetAllDocuments';
 export * from './lib/hooks/usePostDocumentContent';
+export * from './lib/hooks/useGetDocumentContent';
