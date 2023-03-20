@@ -13,7 +13,7 @@ export class AppController {
   }
 
   @Get('documents')
-  // @UseGuards(AuthGuard('jwt')) => Giving an issue even though I'm logged in
+  @UseGuards(AuthGuard('jwt'))
   async getAllDocuments(
     @Query('lectureId') lectureId: string
   ): Promise<ShareDoc[]> {

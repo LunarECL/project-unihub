@@ -42,7 +42,7 @@ export class ShareDBServer implements OnGatewayConnection, OnGatewayConnection {
     console.log(courseCode, documentId, lectureNumber);
 
     // Create initial document
-    const doc = connection.get(courseCode, lectureNumber);
+    const doc = connection.get(courseCode, documentId);
 
     doc.fetch(async (err) => {
       if (err) throw err;

@@ -25,8 +25,9 @@ export function Sharedoc(props: SharedocProps) {
     const url = `ws://localhost:3030/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${documentId}/${lectureNumber}`;
     const socket = new ReconnectingWebSocket(url);
     const connection = new ShareDB.Connection(socket as any);
+    useGetShareDoc();
 
-    const doc = connection.get(courseCode!, lectureNumber!);
+    const doc = connection.get(courseCode!, documentId!);
     console.log(url);
     doc.subscribe(function (err: any) {
       if (err) throw err;
@@ -89,7 +90,7 @@ export function Sharedoc(props: SharedocProps) {
             </Button>
           </Grid>
         </Grid>
-        <ReactQuill onChange={handleChange} ref={editorRef} />
+        <ReactQuill onChange={handleChange} ref={editorRef} style={{height: "100%"}}/>
       </div>
     </>
   );

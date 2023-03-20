@@ -1,7 +1,7 @@
-import styles from './webapp-share-doc-list.module.css';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useGetAllDocuments } from '@unihub/webapp/api';
 import { useEffect, useState } from 'react';
+import { Box, Button, Grid, IconButton, Typography } from '@mui/material';
 
 /* eslint-disable-next-line */
 export interface WebappShareDocListProps {}
@@ -15,31 +15,76 @@ interface Document {
 export function WebappShareDocList(props: WebappShareDocListProps) {
   // //Get the courseCode, sessionId, lectureId from the url
   const { courseCode, sessionId, lectureId } = useParams();
+  const navigate = useNavigate();
 
   // Use state to store the documents and loading status
   const [documents, setDocuments] = useState<Document[]>([]);
 
   useEffect(() => {
     async function fetchDocuments() {
-      const res = await useGetAllDocuments(lectureId !== undefined ? lectureId : '');
+      const res = await useGetAllDocuments(
+        lectureId !== undefined ? lectureId : ''
+      );
       setDocuments(res);
     }
     fetchDocuments();
   }, [lectureId]);
 
-  const navigator = (docId: string, lectureNumber:string) => {
-    window.location.href = `/home/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${docId}/${lectureNumber}`;
-  };
-
-
+  //Make little icons for each document
+  //With the lecture number underneith
+  //May need to make a loading screen
   return (
-    <div className={styles['container']}>
-      <h1>{courseCode} lecture documents</h1>
-      {documents.map((doc) => (
-        <div key={doc.id}>
-          <h2 style={{ cursor: 'pointer' }} onClick={() => navigator(doc.id, doc.lectureNumber)}>{doc.lectureNumber}</h2>
-        </div>
-      ))}
+    <div style={{ marginLeft: '10%', marginRight: '10%', marginTop: '5%' }}>
+      <Grid container spacing={3}>
+        <Grid item xs={11}>
+          <Typography
+            variant="h1"
+            sx={{ fontSize: 35, mb: 2, marginBottom: '5%' }}
+          >
+            {courseCode} lecture documents
+          </Typography>
+        </Grid>
+        <Grid item xs={1}>
+          <Button
+            //navigate to the previous page
+            onClick={() => navigate(-1)}
+            variant="contained"
+          >
+            Back
+          </Button>
+        </Grid>
+      </Grid>
+      <Grid container spacing={10}>
+        {documents.map((doc) => (
+          <Grid item xs={12} sm={6} md={4} lg={3} key={doc.id}>
+            <Button
+              style={{ cursor: 'pointer', width: '100%' }}
+              onClick={() =>
+                navigate(
+                  `/home/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${doc.id}/${doc.lectureNumber}`
+                )
+              }
+            >
+              <Box
+                component="img"
+                sx={{
+                  maxHeight: { xs: 233, md: 167 },
+                  maxWidth: { xs: 350, md: 250 },
+                  color: 'primary.main',
+                }}
+                src="https://cdn.iconscout.com/icon/free/png-256/google-docs-1772228-1507812.png"
+              ></Box>
+            </Button>
+            <Typography
+              align="center"
+              variant="h1"
+              sx={{ fontSize: 24, mb: 2 }}
+            >
+              {doc.lectureNumber}
+            </Typography>
+          </Grid>
+        ))}
+      </Grid>
     </div>
   );
 }
