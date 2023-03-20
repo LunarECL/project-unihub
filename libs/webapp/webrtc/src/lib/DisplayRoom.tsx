@@ -347,7 +347,7 @@ export function DisplayRoom(props: DisplayRoomProps) {
 
   const generateInviteLink = async () => {
     // want to invite to this rooom
-    const link = `http://localhost:4200/room/${roomId}`;
+    const link = window.location.origin + `/home/room/${roomId}`;
 
     // copy to clipboard
     await navigator.clipboard.writeText(link);
