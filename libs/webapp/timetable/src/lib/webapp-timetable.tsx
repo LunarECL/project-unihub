@@ -82,10 +82,10 @@ const searchOpt = [
 ];
 
 export function WebappTimetable(props: WebappTimetableProps) {
-  const [coursesRows, setCoursesRows] = useState([]); //'filtered' courses
-  const [courses, setCourses] = useState([]);
+  const [coursesRows, setCoursesRows] = useState<any>([]); //'filtered' courses
+  const [courses, setCourses] = useState<any>([]);
   const [colIndex, setColIndex] = useState(0);
-  const [allCoursesRows, setAllCoursesRows] = useState([]);
+  const [allCoursesRows, setAllCoursesRows] = useState<any>([]);
   const [search, setSearch] = useState('Code'); //search word
 
   const navigate = useNavigate();
@@ -215,7 +215,10 @@ export function WebappTimetable(props: WebappTimetableProps) {
 
   // When user clicks on a course, it should be added to the timetable
   const addCourseTime = (index: number) => {
-    displayCourse(courses[index]);
+    //Get the index of the course in the courses array from the current index of the course in the coursesRows array
+    const courseIndex = allCoursesRows.findIndex(
+      (course: any) => course.programCode === coursesRows[index].programCode && course.sec_cd === coursesRows[index].sec_cd && course.section=== coursesRows[index].section);
+    displayCourse(courses[courseIndex]);
   };
 
   return (
