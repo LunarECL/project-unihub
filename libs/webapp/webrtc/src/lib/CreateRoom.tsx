@@ -1,16 +1,18 @@
 import React, { useState } from 'react';
 import { Box, Button, Container, TextField, Typography } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 
 /* eslint-disable-next-line */
 export interface CreateRoomProps {}
 
 export function CreateRoom(props: CreateRoomProps) {
   const [roomName, setRoomName] = useState('');
+  const navigate = useNavigate();
 
   const handleCreateRoom = () => {
     console.log(roomName);
     // add the roomName to the database
-    window.location.replace(`/room/${roomName}`);
+    navigate(`/room/${roomName}`);
   };
 
   const handleRoomNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
