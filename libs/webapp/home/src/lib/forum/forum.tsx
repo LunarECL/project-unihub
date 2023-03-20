@@ -21,20 +21,8 @@ export function Forum(props: DashboardProps) {
       style={{ minHeight: '100vh' }}
     >
       <Grid item xs={3}>
-        {/* <Button
-          onClick={() => navigate('/home/sharedDocument')}
-          variant="contained"
-        >
-          ShareDoc
-        </Button> */}
         <Button onClick={() => navigate('/home/timetable')} variant="contained">
           Timetable
-        </Button>
-        <Button
-          onClick={() => navigate('/home/sharedDocument/CSCC63/1/1/lecture1')}
-          variant="contained"
-        >
-          ShareDoc
         </Button>
       </Grid>
     </Grid>

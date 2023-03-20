@@ -9,6 +9,7 @@ import './sharedoc.css';
 import { Button, Typography, Grid } from '@mui/material';
 import { useGetShareDoc } from '@unihub/webapp/api';
 import { useNavigate, useParams } from 'react-router-dom';
+import { usePostDocumentContent } from '@unihub/webapp/api';
 
 export interface SharedocProps {}
 
@@ -18,19 +19,19 @@ export function Sharedoc(props: SharedocProps) {
   const navigate = useNavigate();
   const [doc, setDoc] = useState<any>(null);
   const editorRef = useRef<ReactQuill>(null);
-  useGetShareDoc();
-  const { courseCode, lectureNumber } = useParams();
+  const { courseCode = '', sessionId = '', lectureId = '', documentId = '', lectureNumber = '' } = useParams();
 
   useEffect(() => {
-    const url = `ws://localhost:3030/sharedDocument/${courseCode}/${lectureNumber}`;
+    const url = `ws://localhost:3030/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${documentId}/${lectureNumber}`;
     const socket = new ReconnectingWebSocket(url);
     const connection = new ShareDB.Connection(socket as any);
 
     const doc = connection.get(courseCode!, lectureNumber!);
+    console.log(url);
     doc.subscribe(function (err: any) {
       if (err) throw err;
       if (doc.type === null) {
-        throw Error('No document exist with id: textarea');
+        throw Error('No document exist with id: ' + lectureNumber);
       }
     });
 
@@ -46,8 +47,14 @@ export function Sharedoc(props: SharedocProps) {
       if (!source) {
         const editor = editorRef.current?.getEditor();
         editor?.updateContents(op);
+        console.log(editor?.getContents());
       }
     }
+
+    return () => {
+      doc.unsubscribe();
+      doc.destroy();
+    };
   }, []);
 
   function handleChange(

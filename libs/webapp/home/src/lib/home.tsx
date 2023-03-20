@@ -15,11 +15,11 @@ export function Home(props: WebappHomeProps) {
         <Route path="/" element={<Forum />} />
         <Route path="/timetable" element={<WebappTimetable />} />
         <Route
-          path="/sharedDocument/:courseCode/:sessionId/:lectureId/:lectureNumber" ///sharedDocument/CSCC63/1/lecture1
+          path="/sharedDocument/:courseCode/:sessionId/:lectureId/:documentId/:lectureNumber" ///sharedDocument/CSCC63/1/1/1
           element={<Sharedoc />}
         />
         <Route
-          path="/sharedDocument/:courseCode/:sessionId/:lectureId"
+          path="/sharedDocument/:courseCode/:sessionId/:lectureId/"
           element={<WebappShareDocList/>}
         />
       </Routes>
