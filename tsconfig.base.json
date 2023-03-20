@@ -22,6 +22,7 @@
       "@unihub/webapp/api": ["libs/webapp/api/src/index.ts"],
       "@unihub/webapp/home": ["libs/webapp/home/src/index.ts"],
       "@unihub/webapp/public": ["libs/webapp/public/src/index.ts"],
+      "@unihub/webapp/share-doc-list": ["libs/webapp/share-doc-list/src/index.ts"],
       "@unihub/webapp/sharedoc": ["libs/webapp/sharedoc/src/index.ts"],
       "@unihub/webapp/timetable": ["libs/webapp/timetable/src/index.ts"],
       "@unihub/webapp/ui": ["libs/webapp/ui/src/index.ts"]

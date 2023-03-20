@@ -72,7 +72,8 @@ export function Sharedoc(props: SharedocProps) {
           </Grid>
           <Grid item xs="auto">
             <Button
-              onClick={() => navigate('/')}
+              //navigate to the previous page
+              onClick={() => navigate(-1)}
               variant="contained"
               // float right
               sx={{ position: 'absolute', right: 0 }}

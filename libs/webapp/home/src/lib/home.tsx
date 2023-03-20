@@ -4,6 +4,7 @@ import { Sharedoc } from '@unihub/webapp/sharedoc';
 import { Route, Routes } from 'react-router-dom';
 import Forum from './forum/forum';
 import { WebappTimetable } from '@unihub/webapp/timetable';
+import { WebappShareDocList } from '@unihub/webapp/share-doc-list';
 
 export interface WebappHomeProps {}
 
@@ -12,15 +13,15 @@ export function Home(props: WebappHomeProps) {
     <ApiProvider>
       <Routes>
         <Route path="/" element={<Forum />} />
+        <Route path="/timetable" element={<WebappTimetable />} />
         <Route
-          path="/sharedDocument/:courseCode/:lectureNumber"
+          path="/sharedDocument/:courseCode/:sessionId/:lectureId/:lectureNumber" ///sharedDocument/CSCC63/1/lecture1
           element={<Sharedoc />}
         />
         <Route
-          path="/timetable"
-          element={<WebappTimetable />}
+          path="/sharedDocument/:courseCode/:sessionId/:lectureId"
+          element={<WebappShareDocList/>}
         />
-
       </Routes>
     </ApiProvider>
   );

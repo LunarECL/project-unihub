@@ -15,7 +15,8 @@ import {
   Grid,
 } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useGetCourses } from '@unihub/webapp/api';
 /* eslint-disable-next-line */
 export interface WebappTimetableProps {}
 
@@ -29,6 +30,17 @@ function createData(
 ) {
   return { time, monday, tuesday, wednesday, thursday, friday };
 } //end createDate
+
+function createCourseData(
+  programCode: string,
+  courseTitle: string,
+  sec_cd: string,
+  prof: string,
+  section: string, //sectionType + sectionNumber
+  deliveryMode: string
+) {
+  return { programCode, courseTitle, sec_cd, prof, section, deliveryMode };
+}
 
 const rows = [
   createData('9:00', '', '', '', '', ''),
@@ -57,6 +69,28 @@ const searchOpt = [
 ];
 
 export function WebappTimetable(props: WebappTimetableProps) {
+  const [coursesRows, setCoursesRows] = useState([]);
+  const [courses, setCourses] = useState([]);
+
+  useEffect(() => {
+    async function loadCourses() {
+      const courses = await useGetCourses();
+      setCourses(courses);
+      const rows = courses.map((course: any) => {
+        return createCourseData(
+          course.course.programCode,
+          course.course.title,
+          course.course.sec_cd,
+          course.instructor,
+          course.sectionType + course.sectionNumber,
+          course.delivery_mode
+        );
+      });
+      setCoursesRows(rows);
+    }
+    loadCourses();
+  }, []);
+
   const [state, setState] = React.useState({
     bottom: false,
   });
@@ -73,6 +107,79 @@ export function WebappTimetable(props: WebappTimetableProps) {
 
       setState({ ...state, bottom: open });
     };
+
+  const displayCourse = (course: any) => {
+    console.log(course);
+    //Check if the course has lectures
+    if (course.lectures) {
+      console.log(course.lectures);
+      //For each lecture display it on the timetable
+      course.lectures.forEach((lecture: any, index: number) => {
+        let day = '';
+        console.log(lecture.day);
+        // Display the lecture on the timetable
+        if (lecture.day === 0) {
+          day = 'monday';
+        } else if (lecture.day === 1) {
+          day = 'tuesday';
+        } else if (lecture.day === 2) {
+          day = 'wednesday';
+        } else if (lecture.day === 3) {
+          day = 'thursday';
+        } else if (lecture.day === 4) {
+          day = 'friday';
+        }
+
+        let lecTime = new Date(lecture.startTime);
+        let startTime = lecTime.getHours();
+        let endTime = startTime + lecture.totalMinutes / 60;
+
+        if (endTime > 12 && startTime > 12) {
+          endTime = endTime - 12;
+        }
+
+        if (startTime > 12) {
+          startTime = startTime - 12;
+        }
+
+        console.log(startTime);
+        console.log(endTime);
+
+        //Colour in the cells of the timetable
+        for (let i = startTime; i < endTime; i++) {
+          let row = rows.find((row) => row.time === i + ':00');
+          console.log('row');
+          console.log(row);
+          if (row) {
+            console.log(day);
+            const cell = document.querySelector(
+              `[data-day="${day}-${row.time}"]`
+            );
+            console.log(cell);
+            console.log(course);
+            console.log(course.course);
+            console.log(course.id);
+            console.log(course.lectures[index].id);
+            if (cell) {
+              (cell as HTMLElement).style.backgroundColor = 'red';
+              (cell as HTMLElement).style.color = 'white';
+              (cell as HTMLElement).style.fontWeight = 'bold';
+              (cell as HTMLElement).innerHTML = course.course.programCode;
+              (cell as HTMLElement).style.cursor = 'pointer';
+              (cell as HTMLElement).addEventListener('click', () => {
+                window.location.href = `/home/sharedDocument/${course.course.programCode}/${course.id}/${course.lectures[index].id}`;
+              });
+            }
+          }
+        }
+      });
+    }
+  };
+
+  // When user clicks on a course, it should be added to the timetable
+  const addCourseTime = (index: number) => {
+    displayCourse(courses[index]);
+  };
 
   return (
     <>
@@ -105,11 +212,21 @@ export function WebappTimetable(props: WebappTimetableProps) {
                   <TableCell component="th" scope="row">
                     {row.time}
                   </TableCell>
-                  <TableCell align="right">{row.monday}</TableCell>
-                  <TableCell align="right">{row.tuesday}</TableCell>
-                  <TableCell align="right">{row.wednesday}</TableCell>
-                  <TableCell align="right">{row.thursday}</TableCell>
-                  <TableCell align="right">{row.friday}</TableCell>
+                  <TableCell data-day={`monday-${row.time}`} align="center">
+                    {row.monday}
+                  </TableCell>
+                  <TableCell data-day={`tuesday-${row.time}`} align="center">
+                    {row.tuesday}
+                  </TableCell>
+                  <TableCell data-day={`wednesday-${row.time}`} align="center">
+                    {row.wednesday}
+                  </TableCell>
+                  <TableCell data-day={`thursday-${row.time}`} align="center">
+                    {row.thursday}
+                  </TableCell>
+                  <TableCell data-day={`friday-${row.time}`} align="center">
+                    {row.friday}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -121,8 +238,9 @@ export function WebappTimetable(props: WebappTimetableProps) {
         >
           <AddCircleOutlineIcon sx={{ fontSize: 45 }} />
         </IconButton>
+        {/* Wanna fix so drawer doesn't just pop up */}
         <Drawer
-          anchor="bottom"
+          anchor="top"
           open={state['bottom']}
           onClose={toggleDrawer(false)}
         >
@@ -133,9 +251,16 @@ export function WebappTimetable(props: WebappTimetableProps) {
             onOpen={toggleDrawer(true)}
           >
             <Box
-              sx={{ width: 'auto' }}
+              // sx={{ width: 'auto' }}
               role="presentation"
               onKeyDown={toggleDrawer(false)}
+              sx={{
+                bottom: 0,
+                left: 0,
+                right: 0,
+                height: '60vh',
+                padding: '1rem',
+              }}
             >
               <TableContainer sx={{ width: '90%', margin: '0 auto' }}>
                 <Grid
@@ -167,26 +292,33 @@ export function WebappTimetable(props: WebappTimetableProps) {
                     </TextField>
                   </Grid>
                 </Grid>
-
                 <Table aria-label="simple table">
                   <TableHead>
                     <TableRow sx={{ fontWeight: 'medium' }}>
-                      <TableCell align="center">Course Title</TableCell>
                       <TableCell align="center">Course Code</TableCell>
-                      <TableCell align="center">Lecture section</TableCell>
+                      <TableCell align="center">Course Title</TableCell>
+                      <TableCell align="center">Course Section</TableCell>
+                      <TableCell align="center">Instructor</TableCell>
+                      <TableCell align="center">Lecture/Tutorial</TableCell>
+                      <TableCell align="center">Delivery Mode</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {rows.map((row) => (
+                    {coursesRows.map((row: any, index: number) => (
                       <TableRow
-                        key={row.time}
+                        key={index}
                         sx={{
                           '&:last-child td, &:last-child th': { border: 0 },
+                          cursor: 'pointer',
                         }}
+                        onClick={() => addCourseTime(index)}
                       >
-                        <TableCell align="right">{row.monday}</TableCell>
-                        <TableCell align="right">{row.tuesday}</TableCell>
-                        <TableCell align="right">{row.monday}</TableCell>
+                        <TableCell align="center">{row.programCode}</TableCell>
+                        <TableCell align="center">{row.courseTitle}</TableCell>
+                        <TableCell align="center">{row.sec_cd}</TableCell>
+                        <TableCell align="center">{row.prof}</TableCell>
+                        <TableCell align="center">{row.section}</TableCell>
+                        <TableCell align="center">{row.deliveryMode}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>

@@ -6,6 +6,12 @@ import { CoursesService } from "./courses.service";
 export class CoursesController {
     constructor(private coursesService: CoursesService) {}
 
+    @Get('')
+    async getAllCourses(): Promise<any> {
+        return await this.coursesService.getAllCourses();
+    }//end getAllCourses
+
+
     // @Get()
     // async getAllCourses(): Promise<Courses[]> {
     //     return await this.coursesService.getAllCourses();

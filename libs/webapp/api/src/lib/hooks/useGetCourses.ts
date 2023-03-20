@@ -2,12 +2,12 @@ import axios from 'axios';
 import { useQuery } from 'react-query';
 
 const query = async () => {
-  const res = await axios.get('http://localhost:3333/api/sharedoc');
+  const res = await axios.get('http://localhost:3333/api/courses');
   return res.data;
 };
 
-export function useGetShareDoc() {
+export function useGetCourses() {
   return query();
 }
 
-export default useGetShareDoc;
+export default useGetCourses;
