@@ -2,7 +2,11 @@ import { useEffect, useState, useRef, LegacyRef } from 'react';
 import { Client, LocalStream } from 'ion-sdk-js';
 import { IonSFUJSONRPCSignal } from 'ion-sdk-js/lib/signal/json-rpc-impl';
 import { Configuration } from 'ion-sdk-js/lib/client';
-import { Button, Grid, Typography } from '@mui/material';
+import { Button } from '@mui/material';
+import ScreenShareSharpIcon from '@mui/icons-material/ScreenShare';
+import VideocamSharpIcon from '@mui/icons-material/Videocam';
+import StopScreenShareSharpIcon from '@mui/icons-material/StopScreenShare';
+import VideocamOffSharpIcon from '@mui/icons-material/VideocamOffSharp';
 import { styled } from '@mui/material/styles';
 import { useParams } from 'react-router-dom';
 import placeholder from '../assets/placeholder.png';
@@ -18,9 +22,9 @@ let signal: IonSFUJSONRPCSignal;
 export function DisplayRoom(props: DisplayRoomProps) {
   const [cameraOn, setCameraOn] = useState(false);
   const [screenOn, setScreenOn] = useState(false);
-  const [gridCols, setGridCols] = useState(1);
   const [pubShow, setPubShow] = useState<string>('none');
-  const [noRemoteStreams, setNoRemoteStreams] = useState<boolean>(false);
+  const [noRemoteStreams, setNoRemoteStreams] = useState<boolean>(true);
+  const [showControls, setShowControls] = useState<boolean>(false);
 
   const backgroundColors = [
     '#FFC107', // Amber
@@ -39,6 +43,13 @@ export function DisplayRoom(props: DisplayRoomProps) {
     '#CDDC39', // Lime
     '#FFEB3B', // Yellow
   ];
+
+  const randomNumber = Math.floor(Math.random() * backgroundColors.length);
+
+  // put the color in local storage if it doesn't exist
+  if (!localStorage.getItem('color')) {
+    localStorage.setItem('color', backgroundColors[randomNumber]);
+  }
 
   const streams = useRef<{
     [key: string]: {
@@ -69,9 +80,8 @@ export function DisplayRoom(props: DisplayRoomProps) {
     };
 
     client.ontrack = (track: MediaStreamTrack, stream: MediaStream) => {
-      //console.log(track, stream);
-      //if stream is not in streams map
       if (!streams.current[stream.id]) {
+        setNoRemoteStreams(false);
         // create a video element
         const videoElement = document.createElement('video');
         videoElement.autoplay = true;
@@ -86,41 +96,16 @@ export function DisplayRoom(props: DisplayRoomProps) {
           stream,
           videoElement,
         };
-        const length = Object.keys(streams.current).length;
-        const totalStreams = length + 1; // +1 for local stream
-
-        let tempGridCols = 0;
-
-        if (totalStreams === 2) {
-          setGridCols(2);
-          tempGridCols = 2;
-        } else {
-          setGridCols(Math.ceil(Math.sqrt(totalStreams)));
-          tempGridCols = Math.ceil(Math.sqrt(totalStreams));
-        }
-
-        const gridItemWidth = 12 / tempGridCols;
-
-        const gridItem = document.createElement('div');
-        gridItem.classList.add('grid-item');
-        // we want our grid to use gridItemWidth out of the 12 columns in the container
-        // so, if gridCols is 2, we want each grid item to take up 6 columns
-        // we can do this by adding the class "grid-item-6" to the grid item
-        gridItem.classList.add(`grid-item-${gridItemWidth}`);
-
-        // append video element to the grid item
-        gridItem.appendChild(videoElement);
-
-        const gridContainer = document.getElementById('stream-container');
-        if (gridContainer) {
-          // gridContainer.appendChild(gridItem);
-        }
 
         stream.onremovetrack = () => {
           if (streams.current[stream.id]) {
             streams.current[stream.id].videoElement.remove();
             delete streams.current[stream.id];
             displayRemoteStreams();
+          }
+
+          if (Object.keys(streams.current).length === 0) {
+            setNoRemoteStreams(true);
           }
         };
 
@@ -162,7 +147,7 @@ export function DisplayRoom(props: DisplayRoomProps) {
           if (pubVideo.current) {
             pubVideo.current.srcObject = media;
             pubVideo.current.autoplay = true;
-            pubVideo.current.controls = true;
+            pubVideo.current.controls = false;
             pubVideo.current.muted = true;
             client.publish(media);
             setPubShow('');
@@ -197,7 +182,7 @@ export function DisplayRoom(props: DisplayRoomProps) {
             if (pubVideo.current) {
               pubVideo.current.srcObject = media;
               pubVideo.current.autoplay = true;
-              pubVideo.current.controls = true;
+              pubVideo.current.controls = false;
               pubVideo.current.muted = true;
               client.publish(media);
               setPubShow('');
@@ -217,23 +202,6 @@ export function DisplayRoom(props: DisplayRoomProps) {
     setScreenOn(!screenOn);
   };
 
-  const Header = styled('header')({
-    display: 'flex',
-    height: 64,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'black',
-    color: 'white',
-    '& > div:first-of-type': {
-      marginRight: 'auto',
-    },
-    '& > div:last-child': {
-      position: 'absolute',
-      top: '2px',
-      right: '5px',
-    },
-  });
-
   const displayRemoteStreams = () => {
     const gridContainer = document.getElementById('stream-container');
     if (gridContainer) {
@@ -249,9 +217,9 @@ export function DisplayRoom(props: DisplayRoomProps) {
       videoElement.style.width = '100%';
       videoElement.style.height = '100%';
       videoElement.style.objectFit = 'cover';
-      videoElement.style.borderRadius = '10px';
       videoElement.style.boxSizing = 'border-box';
       videoElement.style.margin = '0px';
+      videoElement.classList.add('media-element');
 
       if (gridContainer) {
         gridContainer.appendChild(videoElement);
@@ -263,9 +231,9 @@ export function DisplayRoom(props: DisplayRoomProps) {
         videoElement.style.width = '50%';
         videoElement.style.height = '100%';
         videoElement.style.objectFit = 'cover';
-        videoElement.style.borderRadius = '10px';
         videoElement.style.boxSizing = 'border-box';
         videoElement.style.margin = '0px';
+        videoElement.classList.add('media-element');
 
         if (gridContainer) {
           gridContainer.appendChild(videoElement);
@@ -278,7 +246,7 @@ export function DisplayRoom(props: DisplayRoomProps) {
         videoElement.style.width = '50%';
         videoElement.style.height = '50%';
         videoElement.style.objectFit = 'cover';
-        videoElement.style.borderRadius = '10px';
+        videoElement.classList.add('media-element');
         videoElement.style.boxSizing = 'border-box';
         videoElement.style.margin = '0px';
 
@@ -293,112 +261,224 @@ export function DisplayRoom(props: DisplayRoomProps) {
         }
       });
     } else if (length === 4) {
-      // four streams, so make them all 25% width
+      // make 2 rows of 2 columns each
+      const row1 = document.createElement('div');
+      const row2 = document.createElement('div');
+      row1.style.width = '100%';
+      row1.style.height = '50%';
+      row2.style.width = '100%';
+      row2.style.height = '50%';
+      row1.style.display = 'flex';
+      row2.style.display = 'flex';
+      row1.style.flexDirection = 'row';
+      row2.style.flexDirection = 'row';
+
+      let count = 0;
+
       Object.keys(streams.current).forEach((key) => {
         const videoElement = streams.current[key].videoElement;
         videoElement.style.width = '50%';
-        videoElement.style.height = '50 %';
+        videoElement.style.height = '100%';
         videoElement.style.objectFit = 'cover';
-        videoElement.style.borderRadius = '10px';
+        videoElement.classList.add('media-element');
         videoElement.style.boxSizing = 'border-box';
         videoElement.style.margin = '0px';
 
-        if (gridContainer) {
-          gridContainer.appendChild(videoElement);
+        if (count < 2) {
+          if (row1) {
+            row1.appendChild(videoElement);
+          }
+        } else {
+          if (row2) {
+            row2.appendChild(videoElement);
+          }
         }
+
+        if (gridContainer) {
+          gridContainer.appendChild(row1);
+          gridContainer.appendChild(row2);
+        }
+
+        count += 1;
       });
     } else {
-      // for more than 4 streams, make them all 25% width and 50% height
+      // JUST SUPPORT 6 STREAMS FOR NOW
+      const row1 = document.createElement('div');
+      const row2 = document.createElement('div');
+      row1.style.width = '100%';
+      row1.style.height = '50%';
+      row2.style.width = '100%';
+      row2.style.height = '50%';
+      row1.style.display = 'flex';
+      row2.style.display = 'flex';
+      row1.style.flexDirection = 'row';
+      row2.style.flexDirection = 'row';
+
+      let count = 0;
+
       Object.keys(streams.current).forEach((key) => {
         const videoElement = streams.current[key].videoElement;
         videoElement.style.width = '25%';
-        videoElement.style.height = '50%';
+        videoElement.style.height = '100%';
         videoElement.style.objectFit = 'cover';
-        videoElement.style.borderRadius = '10px';
+        videoElement.classList.add('media-element');
         videoElement.style.boxSizing = 'border-box';
         videoElement.style.margin = '0px';
 
-        if (gridContainer) {
-          gridContainer.appendChild(videoElement);
+        if (count < 4) {
+          if (row1) {
+            row1.appendChild(videoElement);
+          }
+        } else {
+          if (row2) {
+            row2.appendChild(videoElement);
+          }
         }
+
+        if (gridContainer) {
+          gridContainer.appendChild(row1);
+          gridContainer.appendChild(row2);
+        }
+
+        count += 1;
       });
     }
   };
 
-  /*
-  style={{
-        display: 'flex',
-        flexDirection: 'column',
-        height: '100%',
-        position: 'relative',
-        width: '100%',
-        backgroundColor: 'lightgray',
-      }}
-  */
+  const generateInviteLink = async () => {
+    // want to invite to this rooom
+    const link = `http://localhost:4200/room/${roomId}`;
+
+    // copy to clipboard
+    await navigator.clipboard.writeText(link);
+
+    // display a message to the user that the link has been copied
+    alert('Invitation link copied to clipboard!');
+  };
+
+  const Header = styled('header')({
+    display: 'flex',
+    height: '10%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    // make background color grey transparent
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    color: 'white',
+    '& > div:first-of-type': {
+      marginRight: 'auto',
+    },
+    '& > div:last-child': {
+      position: 'absolute',
+      top: '2px',
+      right: '5px',
+    },
+  });
 
   useEffect(() => {
     displayRemoteStreams();
   }, [streams.current]);
 
   return (
-    <div
-      style={{
-        height: '100vh',
-        width: '100vw',
-        position: 'relative',
-      }}
-    >
-      <Header>
-        <div>ion-sfu</div>
-        <div>
-          <Button
-            id="bnt_pubcam"
-            variant="contained"
-            sx={{ marginRight: 2 }}
-            onClick={() => handleCameraToggle()}
-          >
-            Publish Camera
-          </Button>
-          <Button
-            id="bnt_pubscreen"
-            variant="contained"
-            color="success"
-            onClick={() => handleScreenToggle()}
-          >
-            Publish Screen
-          </Button>
-        </div>
-      </Header>
+    <div className="App">
+      <div className="App-header">
+        <div>{`Room: ${roomId}`}</div>
+        <Button
+          id="bnt_pubcam"
+          variant="contained"
+          onClick={() => generateInviteLink()}
+        >
+          Invititation Link
+        </Button>
+      </div>
       <div
         id="local-stream"
         className={
           noRemoteStreams ? 'displayNoRemote' : 'localStreamBottomLeft'
         }
+        onMouseEnter={() => setShowControls(true)}
+        onMouseLeave={() => setShowControls(false)}
       >
         <video
-          style={{ display: pubShow, width: '100%', height: '100%' }}
+          style={{
+            display: pubShow,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+          }}
+          className={noRemoteStreams ? '' : ' media-element'}
           controls
           ref={pubVideo}
         ></video>
         <video
           style={{
-            backgroundColor:
-              backgroundColors[
-                Math.floor(Math.random() * backgroundColors.length)
-              ],
+            // get background color from localstorage
+            backgroundColor: localStorage.getItem('color') as string,
             display: pubShow === 'none' ? '' : 'none',
           }}
-          className="avatarVideo"
+          className={
+            noRemoteStreams ? 'avatarVideo' : 'avatarVideo media-element'
+          }
           poster={placeholder}
         ></video>
+        <div
+          style={{ display: showControls ? '' : 'none' }}
+          className={noRemoteStreams ? 'controlsLarge' : 'controls'}
+        >
+          <div
+            style={{
+              display: cameraOn ? 'none' : 'flex',
+              justifyContent: 'center',
+            }}
+          >
+            <VideocamOffSharpIcon
+              onClick={() => handleCameraToggle()}
+              className={noRemoteStreams ? 'iconLarge' : 'icon'}
+              style={{ color: 'red' }}
+            ></VideocamOffSharpIcon>
+          </div>
+          <div
+            style={{
+              display: cameraOn ? 'flex' : 'none',
+              justifyContent: 'center',
+            }}
+          >
+            <VideocamSharpIcon
+              onClick={() => handleCameraToggle()}
+              className={noRemoteStreams ? 'iconLarge' : 'icon'}
+            ></VideocamSharpIcon>
+          </div>
+          <div
+            style={{
+              display: screenOn ? 'flex' : 'none',
+              justifyContent: 'center',
+            }}
+          >
+            <ScreenShareSharpIcon
+              onClick={() => handleScreenToggle()}
+              className={noRemoteStreams ? 'iconLarge' : 'icon'}
+            ></ScreenShareSharpIcon>
+          </div>
+          <div
+            style={{
+              display: screenOn ? 'none' : 'flex',
+              justifyContent: 'center',
+            }}
+          >
+            <StopScreenShareSharpIcon
+              onClick={() => handleScreenToggle()}
+              className={noRemoteStreams ? 'iconLarge' : 'icon'}
+              style={{ color: 'red' }}
+            ></StopScreenShareSharpIcon>
+          </div>
+        </div>
       </div>
-      <Grid
+      <div
         id="stream-container"
-        container
-        spacing={1}
         className="remoteGridContainer"
-        display={noRemoteStreams ? 'none' : ''}
-      ></Grid>
+        style={{
+          display: noRemoteStreams ? 'none' : '',
+        }}
+      ></div>
     </div>
   );
 }

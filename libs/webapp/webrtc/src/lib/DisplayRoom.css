@@ -5,31 +5,137 @@
 }
 
 .displayNoRemote {
-  width: 100%;
-  height: 100%;
+  width: 50%;
+  height: 50%;
   background-color: bisque;
+  border-radius: 8px;
+  transition: width 1s, height 1s;
+  margin: auto;
+  margin-top: 15%;
+  position: relative;
 }
 
 .localStreamBottomLeft {
   position: absolute;
-  bottom: 0;
-  left: 0;
+  padding-left: 10px;
+  padding-bottom: 10px;
   width: 20%;
   height: 25%;
+  left: 0;
+  bottom: 0;
+  transition: width 1s, height 1s;
 }
 
 .remoteGridContainer {
-  height: 100vh;
-  max-width: 80%;
-  margin-top: 0 !important;
-  margin-left: 20% !important;
-  background-color: blue;
-  position: relative;
+  position: absolute;
+  height: 90%;
+  width: 80%;
+  margin-left: 21% !important;
+  padding-right: 30px;
+  padding-bottom: 10px;
+  display: inline-block;
+  margin-top: 5% !important;
 }
 
 .avatarVideo {
   width: 100%;
   height: 100%;
-  object-fit: scale-down;
-  border-radius: 10px;
+  object-fit: scale-down !important;
+}
+
+.media-element {
+  border-radius: 8px;
+  border: 2px solid #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  object-fit: cover;
+}
+
+.App {
+  background: linear-gradient(to bottom, #000000, #111111);
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  overflow: hidden;
+  justify-content: center;
+}
+
+.Header {
+  position: absolute;
+  display: flex;
+  width: 100%;
+  height: 10%;
+  background-color: #000000;
+  color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.controls {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 10%;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 30px !important;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.controlsLarge {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 10%;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-bottom: 40px !important;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.icon {
+  width: 30px;
+  height: 30px;
+  margin: 0 10px;
+  cursor: pointer;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+.iconLarge {
+  width: 20% !important;
+  height: 20% !important;
+  margin: 0 10px;
+  cursor: pointer;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3);
+}
+
+.icon:hover {
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.5);
+}
+
+.App-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 50px;
+  background-color: #000000;
+  color: #ffffff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  box-sizing: border-box;
 }

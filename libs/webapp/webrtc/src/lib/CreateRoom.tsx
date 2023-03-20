@@ -41,3 +41,21 @@ export function CreateRoom(props: CreateRoomProps) {
 }
 
 export default CreateRoom;
+
+
+/*
+// for more than 4 streams, make them all 25% width and 50% height
+      Object.keys(streams.current).forEach((key) => {
+        const videoElement = streams.current[key].videoElement;
+        videoElement.style.width = '25%';
+        videoElement.style.height = '50%';
+        videoElement.style.objectFit = 'cover';
+        videoElement.classList.add('media-element');
+        videoElement.style.boxSizing = 'border-box';
+        videoElement.style.margin = '0px';
+
+        if (gridContainer) {
+          gridContainer.appendChild(videoElement);
+        }
+      });
+*/
