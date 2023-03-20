@@ -42,7 +42,6 @@ export function CreateRoom(props: CreateRoomProps) {
 
 export default CreateRoom;
 
-
 /*
 // for more than 4 streams, make them all 25% width and 50% height
       Object.keys(streams.current).forEach((key) => {
