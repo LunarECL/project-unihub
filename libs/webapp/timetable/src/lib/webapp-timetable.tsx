@@ -17,6 +17,7 @@ import {
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import React, { useEffect, useState } from 'react';
 import { useGetCourses } from '@unihub/webapp/api';
+import { useNavigate, useParams } from 'react-router-dom';
 /* eslint-disable-next-line */
 export interface WebappTimetableProps {}
 
@@ -57,6 +58,18 @@ const rows = [
   createData('8:00', '', '', '', '', ''),
 ];
 
+const colours = [
+  "#258767",
+  "#d7edf4",
+  "#b83999",
+  "#237283",
+  "#e71e54",
+  "#e1a8c1",
+  "#43147c",
+  "#7f7896",
+  "#180c80"
+];
+
 const searchOpt = [
   {
     value: 'Code',
@@ -69,8 +82,33 @@ const searchOpt = [
 ];
 
 export function WebappTimetable(props: WebappTimetableProps) {
-  const [coursesRows, setCoursesRows] = useState([]);
+  const [coursesRows, setCoursesRows] = useState([]); //'filtered' courses
   const [courses, setCourses] = useState([]);
+  const [colIndex, setColIndex] = useState(0);
+  const [allCoursesRows, setAllCoursesRows] = useState([]);
+  const [search, setSearch] = useState('Code'); //search word
+
+  const navigate = useNavigate();
+
+  const handleFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const searchWord = event.target.value;  
+    
+    if(searchWord === ''){
+      setCoursesRows(allCoursesRows);
+      return;
+    }
+
+    const newFilter = allCoursesRows.filter((course: any) => {
+      if(search === 'Code'){
+        return course.programCode.toLowerCase().includes(searchWord.toLowerCase());
+      }
+      else if(search === 'Name'){
+        return course.courseTitle.toLowerCase().includes(searchWord.toLowerCase());
+      }
+    });
+
+    setCoursesRows(newFilter);
+  }//end handleFilter
 
   useEffect(() => {
     async function loadCourses() {
@@ -86,6 +124,7 @@ export function WebappTimetable(props: WebappTimetableProps) {
           course.delivery_mode
         );
       });
+      setAllCoursesRows(rows);
       setCoursesRows(rows);
     }
     loadCourses();
@@ -108,15 +147,14 @@ export function WebappTimetable(props: WebappTimetableProps) {
       setState({ ...state, bottom: open });
     };
 
+  //Need to deal with conflicts but that'll be when we store the courses in an array or smthn
+    //So using the db
   const displayCourse = (course: any) => {
-    console.log(course);
     //Check if the course has lectures
     if (course.lectures) {
-      console.log(course.lectures);
       //For each lecture display it on the timetable
       course.lectures.forEach((lecture: any, index: number) => {
         let day = '';
-        console.log(lecture.day);
         // Display the lecture on the timetable
         if (lecture.day === 0) {
           day = 'monday';
@@ -142,35 +180,33 @@ export function WebappTimetable(props: WebappTimetableProps) {
           startTime = startTime - 12;
         }
 
-        console.log(startTime);
-        console.log(endTime);
+        let iteration: number = 0
 
         //Colour in the cells of the timetable
-        for (let i = startTime; i < endTime; i++) {
+        for (let i = startTime; i < endTime; i++, iteration++) {
           let row = rows.find((row) => row.time === i + ':00');
-          console.log('row');
-          console.log(row);
           if (row) {
-            console.log(day);
             const cell = document.querySelector(
               `[data-day="${day}-${row.time}"]`
             );
-            console.log(cell);
-            console.log(course);
-            console.log(course.course);
-            console.log(course.id);
-            console.log(course.lectures[index].id);
             if (cell) {
-              (cell as HTMLElement).style.backgroundColor = 'red';
+              (cell as HTMLElement).style.backgroundColor = colours[colIndex];
+              setColIndex((colIndex + 1) % colours.length);
               (cell as HTMLElement).style.color = 'white';
               (cell as HTMLElement).style.fontWeight = 'bold';
-              (cell as HTMLElement).innerHTML = course.course.programCode;
+              if (iteration === 0) {
+                (cell as HTMLElement).innerHTML = course.course.programCode;
+              }//end if
+              //Colour in the cells of the timetable
+              (cell as HTMLElement).style.borderBottomColor = colours[colIndex];
               (cell as HTMLElement).style.cursor = 'pointer';
               (cell as HTMLElement).addEventListener('click', () => {
-                window.location.href = `/home/sharedDocument/${course.course.programCode}/${course.id}/${course.lectures[index].id}`;
+                navigate(`/home/sharedDocument/${course.course.programCode}/${course.id}/${course.lectures[index].id}`);
               });
             }
           }
+
+          iteration++;
         }
       });
     }
@@ -196,11 +232,11 @@ export function WebappTimetable(props: WebappTimetableProps) {
             <TableHead>
               <TableRow sx={{ fontWeight: 'medium' }}>
                 <TableCell>Time</TableCell>
-                <TableCell align="right">Monday</TableCell>
-                <TableCell align="right">Tuesday</TableCell>
-                <TableCell align="right">Wednesday</TableCell>
-                <TableCell align="right">Thursday</TableCell>
-                <TableCell align="right">Friday</TableCell>
+                <TableCell align="center">Monday</TableCell>
+                <TableCell align="center">Tuesday</TableCell>
+                <TableCell align="center">Wednesday</TableCell>
+                <TableCell align="center">Thursday</TableCell>
+                <TableCell align="center">Friday</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -253,7 +289,6 @@ export function WebappTimetable(props: WebappTimetableProps) {
             <Box
               // sx={{ width: 'auto' }}
               role="presentation"
-              onKeyDown={toggleDrawer(false)}
               sx={{
                 bottom: 0,
                 left: 0,
@@ -273,6 +308,7 @@ export function WebappTimetable(props: WebappTimetableProps) {
                       id="outlined-search"
                       label="Find your course"
                       type="search"
+                      onChange={handleFilter}
                       fullWidth
                     />
                   </Grid>
@@ -285,7 +321,7 @@ export function WebappTimetable(props: WebappTimetableProps) {
                       helperText="Please select how you would like to search by"
                     >
                       {searchOpt.map((option) => (
-                        <MenuItem key={option.value} value={option.value}>
+                        <MenuItem key={option.value} value={option.value} onClick={() => setSearch(option.value)}>
                           {option.label}
                         </MenuItem>
                       ))}
@@ -303,8 +339,8 @@ export function WebappTimetable(props: WebappTimetableProps) {
                       <TableCell align="center">Delivery Mode</TableCell>
                     </TableRow>
                   </TableHead>
-                  <TableBody>
-                    {coursesRows.map((row: any, index: number) => (
+                  <TableBody id="coursesDisplay">
+                    {coursesRows.slice(0,50).map((row: any, index: number) => (
                       <TableRow
                         key={index}
                         sx={{
@@ -333,3 +369,4 @@ export function WebappTimetable(props: WebappTimetableProps) {
 }
 
 export default WebappTimetable;
+
