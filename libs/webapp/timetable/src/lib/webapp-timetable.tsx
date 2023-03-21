@@ -93,8 +93,6 @@ export function WebappTimetable(props: WebappTimetableProps) {
   const handleFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
     const searchWord = event.target.value;
 
-    console.log(searchWord === '');
-
     if (searchWord === '') {
       setCoursesRows(allCoursesRows);
       setSearch('Code');
@@ -180,7 +178,9 @@ export function WebappTimetable(props: WebappTimetableProps) {
 
         const date = new Date(lecture.startTime);
 
-        let startTime = date.getUTCHours();
+        // let startTime = date.getUTCHours(); //FOR DOCKER
+        let startTime = date.getHours();
+
         let endTime = startTime + lecture.totalMinutes / 60;
 
         if (endTime > 12 && startTime > 12) {

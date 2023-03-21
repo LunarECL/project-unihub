@@ -9,8 +9,8 @@ import './sharedoc.css';
 import { Button, Typography, Grid } from '@mui/material';
 import { useGetShareDoc } from '@unihub/webapp/api';
 import { useNavigate, useParams } from 'react-router-dom';
-import { usePostDocumentContent } from '@unihub/webapp/api';
 import { useGetDocumentContent } from '@unihub/webapp/api';
+import { usePostDocumentContent } from '@unihub/webapp/api';
 
 export interface SharedocProps {}
 
@@ -27,21 +27,6 @@ export function Sharedoc(props: SharedocProps) {
     documentId = '',
     lectureNumber = '',
   } = useParams();
-
-  const [initialContent, setInitialContent] = useState('');
-
-  // useEffect(() => {
-  //   async function getContent() {
-  //     const content = await useGetDocumentContent(documentId);
-  //     setInitialContent(content);
-  //     console.log(content);
-  //   }
-
-  //   getContent();
-  //   return () => {
-  //     console.log('unmounting');
-  //   }
-  // }, [documentId]);
 
   useEffect(() => {
     const url = `ws://localhost:3030/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${documentId}/${lectureNumber}`;
@@ -60,13 +45,9 @@ export function Sharedoc(props: SharedocProps) {
     doc.on('load', load);
     doc.on('op', update);
 
-    function load() {
-      console.log('load');
-      console.log(initialContent);
+    async function load() {
+      const content = await useGetDocumentContent(documentId);
       setDoc(doc);
-      if (doc.data.ops[0].insert === 'Start typing...' && initialContent) {
-        doc.data.ops[0].insert = initialContent;
-      }
       editorRef.current?.getEditor().setContents(doc.data);
     }
 
@@ -91,7 +72,13 @@ export function Sharedoc(props: SharedocProps) {
   ) {
     if (source === 'user') {
       doc.submitOp(delta);
+      console.log(doc.data);
     }
+  }
+
+  async function backButton() {
+    await usePostDocumentContent(documentId, doc.data.ops[0].insert);
+    navigate(-1);
   }
 
   return (
@@ -100,13 +87,13 @@ export function Sharedoc(props: SharedocProps) {
         <Grid container spacing={3}>
           <Grid item xs="auto">
             <Typography variant="h1" sx={{ fontSize: 24, mb: 2 }}>
-              Collaborate to create notes!
+              Collaborate to create notes for {courseCode} {lectureNumber}!
             </Typography>
           </Grid>
           <Grid item xs="auto">
             <Button
               //navigate to the previous page
-              onClick={() => navigate(-1)}
+              onClick={backButton}
               variant="contained"
               // float right
               sx={{ position: 'absolute', right: 0 }}

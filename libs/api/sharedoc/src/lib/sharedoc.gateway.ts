@@ -41,10 +41,17 @@ export class ShareDBServer implements OnGatewayConnection, OnGatewayConnection {
     // Create initial document
     const doc = connection.get(courseCode, documentId);
 
+    let content = await this.shareDocService.getDocumentContent(
+      Number(documentId)
+    );
+
+    if (content === '') {
+      content = 'Start typing...';
+    }
+
     doc.fetch(async (err) => {
       if (err) throw err;
       if (doc.type === null) {
-        let content = 'Start typing...';
         doc.create([{ insert: content }], 'rich-text');
         return;
       }
