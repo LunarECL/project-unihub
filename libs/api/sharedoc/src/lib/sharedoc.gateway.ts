@@ -10,6 +10,7 @@ import WebSocketJSONStream from '@teamwork/websocket-json-stream';
 import * as richText from 'rich-text';
 import { IncomingMessage } from 'http';
 import { DocumentService } from './sharedoc.service';
+import Delta from 'quill-delta';
 
 ShareDB.types.register(richText.type);
 const backend = new ShareDB({ presence: true });
@@ -28,7 +29,7 @@ export class ShareDBServer implements OnGatewayConnection, OnGatewayConnection {
   private server: any;
 
   // Listen for incoming WebSocket connections
-  public async handleConnection(client: any, request: IncomingMessage) {
+  public handleConnection(client: any, request: IncomingMessage) {
     const stream = new WebSocketJSONStream(client);
     backend.listen(stream);
 
@@ -40,21 +41,26 @@ export class ShareDBServer implements OnGatewayConnection, OnGatewayConnection {
 
     // Create initial document
     const doc = connection.get(courseCode, documentId);
-
-    let content = await this.shareDocService.getDocumentContent(
-      Number(documentId)
-    );
-
-    if (content === '') {
-      content = 'Start typing...';
-    }
-
-    doc.fetch(async (err) => {
-      if (err) throw err;
-      if (doc.type === null) {
-        doc.create([{ insert: content }], 'rich-text');
-        return;
+    //not waiting for this to finish
+    this.shareDocService.getDocumentContent(Number(documentId)).then((ops) => {
+      if (ops.length === 0) {
+        ops = [
+          {
+            insert: 'Start typing...',
+          },
+        ];
       }
+
+      const delta = new Delta(ops);
+
+      doc.fetch((err) => {
+        if (err) throw err;
+        if (doc.type === null) {
+          console.log('Creating document');
+          doc.create(delta, 'rich-text');
+          return;
+        }
+      });
     });
   }
 }

@@ -1,6 +1,6 @@
 import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
-import { ShareDoc } from './sharedoc.entity';
+import { ShareDoc } from './entities/sharedoc.entity';
 import { DocumentService } from './sharedoc.service';
 
 @Controller('sharedoc')
@@ -21,31 +21,30 @@ export class AppController {
       throw new Error('Invalid parameters');
     }
     return await this.shareDocService.getAllDocuments(Number(lectureId));
-  }//end getAllDocuments
+  } //end getAllDocuments
 
   @Get('document/content')
   @UseGuards(AuthGuard('jwt'))
   async getDocumentContent(
     @Query('documentId') documentId: string
-  ): Promise<string> {
+  ): Promise<Object[]> {
     if (!documentId) {
       throw new Error('Invalid parameters');
     }
     return await this.shareDocService.getDocumentContent(Number(documentId));
-  }//end getDocumentContent
+  } //end getDocumentContent
 
   @Post('document/content/')
   @UseGuards(AuthGuard('jwt'))
   async postDocumentContent(
-    @Query('documentId') documentId: string,
-    @Query('content') content: string
+    @Body() body: { documentId: string; ops: Object[] }
   ): Promise<void> {
-    if (!documentId || !content) {
+    if (!body.documentId || !body.ops) {
       throw new Error('Invalid parameters');
     }
     return await this.shareDocService.postDocumentContent(
-      Number(documentId),
-      content
+      Number(body.documentId),
+      body.ops
     );
-  }//end postDocumentContent
+  }
 }

@@ -2,13 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Courses, Lecture, Section } from '@unihub/api/courses';
 import { Repository } from 'typeorm';
-import { ShareDoc } from './sharedoc.entity';
+import { ShareDoc } from './entities/sharedoc.entity';
+import { Op } from './entities/ops.entity';
+import { Attribute } from './entities/attributes.entity';
 // import { CoursesController } from '@unihub/api/courses';
 
 @Injectable()
 export class DocumentService {
   constructor(
-    @InjectRepository(ShareDoc) private documentRepo: Repository<ShareDoc>
+    @InjectRepository(ShareDoc) private documentRepo: Repository<ShareDoc>,
+    @InjectRepository(Op) private opsRepo: Repository<Op>,
+    @InjectRepository(Attribute) private attributesRepo: Repository<Attribute>
   ) {}
 
   async getAllDocuments(lectureId: number): Promise<ShareDoc[]> {
@@ -83,7 +87,6 @@ export class DocumentService {
         const newDoc = new ShareDoc();
         newDoc.lecture = { id: lectureId } as Lecture;
         newDoc.lectureNumber = 'lecture' + counter;
-        newDoc.content = '';
         await this.documentRepo.save(newDoc);
         counter++;
       }
@@ -118,7 +121,6 @@ export class DocumentService {
         const newDoc = new ShareDoc();
         newDoc.lecture = { id: lectureId } as Lecture;
         newDoc.lectureNumber = 'lecture' + (Number(lastLecNumber) + 1);
-        newDoc.content = '';
         await this.documentRepo.save(newDoc);
       }
     }
@@ -129,22 +131,110 @@ export class DocumentService {
     });
   } //end getAllDocuments
 
-  async getDocumentContent(documentId: number): Promise<string> {
-    const document = await this.documentRepo.findOne({
-      where: { id: documentId },
+  async getDocumentContent(documentId: number): Promise<Object[]> {
+    //Get all the ops for this document
+    const ops = await this.opsRepo.find({
+      where: { document: { id: documentId } },
     });
 
-    return document.content;
+    //Create the ops array
+    const opsArray = [];
+    for (let i = 0; i < ops.length; i++) {
+      const op = {};
+      if (ops[i].retain) {
+        op['retain'] = ops[i].retain;
+      }
+      if (ops[i].insert) {
+        op['insert'] = ops[i].insert;
+      }
+      const count = await this.attributesRepo.count();
+
+      if (count === 0) {
+        opsArray.push(op);
+        continue;
+      }
+
+      const attribute = await this.attributesRepo.findOne({
+        where: {
+          op: { id: ops[i].id },
+        },
+      });
+
+      if (attribute) {
+        const attributeObject = {};
+        for (const [key, value] of Object.entries(attribute)) {
+          if (key !== 'id' && key !== 'op') {
+            //if the value is null we don't add it
+            if (value !== null) {
+              attributeObject[key] = value;
+            }
+          }
+        }
+        op['attributes'] = attributeObject;
+      }
+
+      opsArray.push(op);
+    }
+
+    return opsArray;
   } //end getDocumentContent
 
-  async postDocumentContent(
-    documentId: number,
-    content: string
-  ): Promise<void> {
-    const document = await this.documentRepo.findOne({
-      where: { id: documentId },
+  async postDocumentContent(documentId: number, ops: any): Promise<void> {
+    //Check if there are already ops for this document
+    const opsInDb = await this.opsRepo.find({
+      where: { document: { id: documentId } },
     });
-    document.content = content;
-    await this.documentRepo.save(document);
+
+    //If there are ops we delete them and their attributes
+    if (opsInDb.length > 0) {
+      const count = await this.attributesRepo.count();
+      if (count > 0) {
+        const subquery = this.attributesRepo
+          .createQueryBuilder('attribute')
+          .leftJoin('attribute.op', 'op')
+          .leftJoin('op.document', 'document')
+          .select('attribute.id')
+          .where('document.id = :documentId', { documentId });
+
+        await this.attributesRepo
+          .createQueryBuilder()
+          .delete()
+          .from(Attribute)
+          .where(`id IN (${subquery.getQuery()})`)
+          .setParameters(subquery.getParameters())
+          .execute();
+      }
+
+      await this.opsRepo.delete({ document: { id: documentId } });
+    }
+
+    //Add the ops to the database
+    for (let i = 0; i < ops.ops.length; i++) {
+      const op = new Op();
+      op.document = { id: documentId } as ShareDoc;
+      if (ops.ops[i]['retain']) {
+        op.retain = ops.ops[i]['retain'];
+      }
+      if (ops.ops[i]['insert']) {
+        op.insert = ops.ops[i]['insert'];
+      }
+
+      await this.opsRepo.save(op);
+
+      //Now set the attributes for this op
+      if (ops.ops[i]['attributes']) {
+        const attribute = new Attribute();
+        attribute.op = { id: op.id } as Op;
+        for (const [key, value] of Object.entries(ops.ops[i]['attributes'])) {
+          attribute[key] = value;
+        } //end for attribute
+        await this.attributesRepo
+          .createQueryBuilder()
+          .insert()
+          .into(Attribute)
+          .values(attribute)
+          .execute();
+      } //end if attributes
+    } //end for each attribute
   } //end postDocumentContent
 } //end TimeTableService

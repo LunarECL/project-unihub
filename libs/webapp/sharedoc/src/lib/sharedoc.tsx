@@ -9,7 +9,6 @@ import './sharedoc.css';
 import { Button, Typography, Grid } from '@mui/material';
 import { useGetShareDoc } from '@unihub/webapp/api';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useGetDocumentContent } from '@unihub/webapp/api';
 import { usePostDocumentContent } from '@unihub/webapp/api';
 
 export interface SharedocProps {}
@@ -45,8 +44,7 @@ export function Sharedoc(props: SharedocProps) {
     doc.on('load', load);
     doc.on('op', update);
 
-    async function load() {
-      const content = await useGetDocumentContent(documentId);
+    function load() {
       setDoc(doc);
       editorRef.current?.getEditor().setContents(doc.data);
     }
@@ -72,13 +70,13 @@ export function Sharedoc(props: SharedocProps) {
   ) {
     if (source === 'user') {
       doc.submitOp(delta);
-      console.log(doc.data);
     }
   }
 
-  async function backButton() {
-    await usePostDocumentContent(documentId, doc.data.ops[0].insert);
-    navigate(-1);
+  function backButton() {
+    usePostDocumentContent(documentId, doc.data).then((res) => {
+      navigate(-1);
+    });
   }
 
   return (
