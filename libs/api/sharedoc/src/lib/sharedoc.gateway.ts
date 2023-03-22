@@ -41,7 +41,6 @@ export class ShareDBServer implements OnGatewayConnection, OnGatewayConnection {
 
     // Create initial document
     const doc = connection.get(courseCode, documentId);
-    //not waiting for this to finish
     this.shareDocService.getDocumentContent(Number(documentId)).then((ops) => {
       if (ops.length === 0) {
         ops = [

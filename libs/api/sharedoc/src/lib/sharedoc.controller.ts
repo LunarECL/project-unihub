@@ -23,16 +23,16 @@ export class AppController {
     return await this.shareDocService.getAllDocuments(Number(lectureId));
   } //end getAllDocuments
 
-  @Get('document/content')
-  @UseGuards(AuthGuard('jwt'))
-  async getDocumentContent(
-    @Query('documentId') documentId: string
-  ): Promise<Object[]> {
-    if (!documentId) {
-      throw new Error('Invalid parameters');
-    }
-    return await this.shareDocService.getDocumentContent(Number(documentId));
-  } //end getDocumentContent
+  // @Get('document/content')
+  // @UseGuards(AuthGuard('jwt'))
+  // async getDocumentContent(
+  //   @Query('documentId') documentId: string
+  // ): Promise<Object[]> {
+  //   if (!documentId) {
+  //     throw new Error('Invalid parameters');
+  //   }
+  //   return await this.shareDocService.getDocumentContent(Number(documentId));
+  // } //end getDocumentContent
 
   @Post('document/content/')
   @UseGuards(AuthGuard('jwt'))

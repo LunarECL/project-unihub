@@ -13,6 +13,7 @@ import {
   TextField,
   MenuItem,
   Grid,
+  CircularProgress,
 } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import React, { useEffect, useState } from 'react';
@@ -86,7 +87,8 @@ export function WebappTimetable(props: WebappTimetableProps) {
   const [courses, setCourses] = useState<any>([]);
   const [colIndex, setColIndex] = useState(0);
   const [allCoursesRows, setAllCoursesRows] = useState<any>([]);
-  const [search, setSearch] = useState('Code'); 
+  const [search, setSearch] = useState('Code');
+  const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
 
@@ -116,6 +118,7 @@ export function WebappTimetable(props: WebappTimetableProps) {
 
   useEffect(() => {
     async function loadCourses() {
+      //May need to do pagination here because it takes too long
       const courses = await useGetCourses();
       setCourses(courses);
       const rows = courses.map((course: any) => {
@@ -130,6 +133,7 @@ export function WebappTimetable(props: WebappTimetableProps) {
       });
       setAllCoursesRows(rows);
       setCoursesRows(rows);
+      setLoading(false);
     }
     loadCourses();
   }, []);
@@ -149,8 +153,9 @@ export function WebappTimetable(props: WebappTimetableProps) {
       }
 
       setState({ ...state, bottom: open });
-      if(open === false) {
-        (document.getElementById('outlined-search') as HTMLInputElement).value = '';
+      if (open === false) {
+        (document.getElementById('outlined-search') as HTMLInputElement).value =
+          '';
         setCoursesRows(allCoursesRows);
       }
     };
@@ -306,93 +311,107 @@ export function WebappTimetable(props: WebappTimetableProps) {
             onClose={toggleDrawer(false)}
             onOpen={toggleDrawer(true)}
           >
-            <Box
-              // sx={{ width: 'auto' }}
-              role="presentation"
-              sx={{
-                bottom: 0,
-                left: 0,
-                right: 0,
-                height: '60vh',
-                padding: '1rem',
-              }}
-            >
-              <TableContainer sx={{ width: '90%', margin: '0 auto' }}>
-                <Grid
-                  container
-                  sx={{ marginTop: '2%', marginBottom: '2%' }}
-                  spacing={5}
-                >
-                  <Grid item sx={{ width: '75%' }}>
-                    <TextField
-                      id="outlined-search"
-                      label="Find your course"
-                      type="search"
-                      onChange={handleFilter}
-                      fullWidth
-                    />
+            {loading ? (
+              <Grid
+                item
+                xs={12}
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  marginTop: '20%',
+                }}
+              >
+                <CircularProgress />
+              </Grid>
+            ) : (
+              <Box
+                // sx={{ width: 'auto' }}
+                role="presentation"
+                sx={{
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  height: '60vh',
+                  padding: '1rem',
+                }}
+              >
+                <TableContainer sx={{ width: '90%', margin: '0 auto' }}>
+                  <Grid
+                    container
+                    sx={{ marginTop: '2%', marginBottom: '2%' }}
+                    spacing={5}
+                  >
+                    <Grid item sx={{ width: '75%' }}>
+                      <TextField
+                        id="outlined-search"
+                        label="Find your course"
+                        type="search"
+                        onChange={handleFilter}
+                        fullWidth
+                      />
+                    </Grid>
+                    <Grid item>
+                      <TextField
+                        id="outlined-select-search"
+                        select
+                        label="Search choice"
+                        defaultValue="Code"
+                        helperText="Please select how you would like to search by"
+                      >
+                        {searchOpt.map((option) => (
+                          <MenuItem
+                            key={option.value}
+                            value={option.value}
+                            onClick={() => setSearch(option.value)}
+                          >
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                      </TextField>
+                    </Grid>
                   </Grid>
-                  <Grid item>
-                    <TextField
-                      id="outlined-select-search"
-                      select
-                      label="Search choice"
-                      defaultValue="Code"
-                      helperText="Please select how you would like to search by"
-                    >
-                      {searchOpt.map((option) => (
-                        <MenuItem
-                          key={option.value}
-                          value={option.value}
-                          onClick={() => setSearch(option.value)}
-                        >
-                          {option.label}
-                        </MenuItem>
-                      ))}
-                    </TextField>
-                  </Grid>
-                </Grid>
-                <Table aria-label="simple table">
-                  <TableHead>
-                    <TableRow sx={{ fontWeight: 'medium' }}>
-                      <TableCell align="center">Course Code</TableCell>
-                      <TableCell align="center">Course Title</TableCell>
-                      <TableCell align="center">Course Section</TableCell>
-                      <TableCell align="center">Instructor</TableCell>
-                      <TableCell align="center">Lecture/Tutorial</TableCell>
-                      <TableCell align="center">Delivery Mode</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody id="coursesDisplay">
-                    {coursesRows
-                      .slice(0, 100)
-                      .map((row: any, index: number) => (
-                        <TableRow
-                          key={index}
-                          sx={{
-                            '&:last-child td, &:last-child th': { border: 0 },
-                            cursor: 'pointer',
-                          }}
-                          onClick={() => addCourseTime(index)}
-                        >
-                          <TableCell align="center">
-                            {row.programCode}
-                          </TableCell>
-                          <TableCell align="center">
-                            {row.courseTitle}
-                          </TableCell>
-                          <TableCell align="center">{row.sec_cd}</TableCell>
-                          <TableCell align="center">{row.prof}</TableCell>
-                          <TableCell align="center">{row.section}</TableCell>
-                          <TableCell align="center">
-                            {row.deliveryMode}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </Box>
+                  <Table aria-label="simple table">
+                    <TableHead>
+                      <TableRow sx={{ fontWeight: 'medium' }}>
+                        <TableCell align="center">Course Code</TableCell>
+                        <TableCell align="center">Course Title</TableCell>
+                        <TableCell align="center">Course Section</TableCell>
+                        <TableCell align="center">Instructor</TableCell>
+                        <TableCell align="center">Lecture/Tutorial</TableCell>
+                        <TableCell align="center">Delivery Mode</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody id="coursesDisplay">
+                      {coursesRows
+                        .slice(0, 100)
+                        .map((row: any, index: number) => (
+                          <TableRow
+                            key={index}
+                            sx={{
+                              '&:last-child td, &:last-child th': { border: 0 },
+                              cursor: 'pointer',
+                            }}
+                            onClick={() => addCourseTime(index)}
+                          >
+                            <TableCell align="center">
+                              {row.programCode}
+                            </TableCell>
+                            <TableCell align="center">
+                              {row.courseTitle}
+                            </TableCell>
+                            <TableCell align="center">{row.sec_cd}</TableCell>
+                            <TableCell align="center">{row.prof}</TableCell>
+                            <TableCell align="center">{row.section}</TableCell>
+                            <TableCell align="center">
+                              {row.deliveryMode}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </Box>
+            )}
           </SwipeableDrawer>
         </Drawer>
       </Stack>

@@ -6,7 +6,13 @@ import * as richText from 'rich-text';
 import ReactQuill from 'react-quill';
 import 'quill/dist/quill.snow.css';
 import './sharedoc.css';
-import { Button, Typography, Grid } from '@mui/material';
+import {
+  Button,
+  Typography,
+  Grid,
+  CircularProgress,
+  Skeleton,
+} from '@mui/material';
 import { useGetShareDoc } from '@unihub/webapp/api';
 import { useNavigate, useParams } from 'react-router-dom';
 import { usePostDocumentContent } from '@unihub/webapp/api';
@@ -19,6 +25,7 @@ export function Sharedoc(props: SharedocProps) {
   const navigate = useNavigate();
   const [doc, setDoc] = useState<any>(null);
   const editorRef = useRef<ReactQuill>(null);
+  const [loading, setLoading] = useState(false);
   const {
     courseCode = '',
     sessionId = '',
@@ -33,33 +40,39 @@ export function Sharedoc(props: SharedocProps) {
     const connection = new ShareDB.Connection(socket as any);
     useGetShareDoc();
 
-    const doc = connection.get(courseCode!, documentId!);
-    doc.subscribe(function (err: any) {
-      if (err) throw err;
-      if (doc.type === null) {
-        throw Error('No document exist with id: ' + documentId);
+    function loadDoc() {
+      const doc = connection.get(courseCode!, documentId!);
+      doc.subscribe(function (err: any) {
+        if (err) throw err;
+        if (doc.type === null) {
+          setLoading(true);
+        } else {
+          setLoading(false);
+        }
+      });
+
+      doc.on('load', load);
+      doc.on('op', update);
+
+      function load() {
+        setDoc(doc);
+        editorRef.current?.getEditor().setContents(doc.data);
       }
-    });
 
-    doc.on('load', load);
-    doc.on('op', update);
+      function update(op: any, source: any) {
+        if (!source) {
+          const editor = editorRef.current?.getEditor();
+          editor?.updateContents(op);
+        }
+      }
 
-    function load() {
-      setDoc(doc);
-      editorRef.current?.getEditor().setContents(doc.data);
+      return () => {
+        doc.unsubscribe();
+        doc.destroy();
+      };
     }
 
-    function update(op: any, source: any) {
-      if (!source) {
-        const editor = editorRef.current?.getEditor();
-        editor?.updateContents(op);
-      }
-    }
-
-    return () => {
-      doc.unsubscribe();
-      doc.destroy();
-    };
+    loadDoc();
   }, []);
 
   function handleChange(
@@ -74,9 +87,8 @@ export function Sharedoc(props: SharedocProps) {
   }
 
   function backButton() {
-    usePostDocumentContent(documentId, doc.data).then((res) => {
-      navigate(-1);
-    });
+    usePostDocumentContent(documentId, doc.data);
+    navigate(-1);
   }
 
   return (
@@ -85,7 +97,8 @@ export function Sharedoc(props: SharedocProps) {
         <Grid container spacing={3}>
           <Grid item xs="auto">
             <Typography variant="h1" sx={{ fontSize: 24, mb: 2 }}>
-              Collaborate to create notes for {courseCode} {lectureNumber}!
+              Collaborate to create notes for {courseCode} lecture{' '}
+              {lectureNumber.substring(lectureNumber.lastIndexOf('e') + 1)}!
             </Typography>
           </Grid>
           <Grid item xs="auto">
@@ -93,18 +106,21 @@ export function Sharedoc(props: SharedocProps) {
               //navigate to the previous page
               onClick={backButton}
               variant="contained"
-              // float right
               sx={{ position: 'absolute', right: 0 }}
             >
               Back
             </Button>
           </Grid>
         </Grid>
-        <ReactQuill
-          onChange={handleChange}
-          ref={editorRef}
-          style={{ height: '100%' }}
-        />
+        {loading ? (
+          <Skeleton variant="rounded" width={'100%'} height={'100%'} />
+        ) : (
+          <ReactQuill
+            onChange={handleChange}
+            ref={editorRef}
+            style={{ height: '100%' }}
+          />
+        )}
       </div>
     </>
   );
