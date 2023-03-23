@@ -20,7 +20,7 @@ export function Home(props: WebappHomeProps) {
         />
         <Route
           path="/sharedDocument/:courseCode/:sessionId/:lectureId/"
-          element={<WebappShareDocList/>}
+          element={<WebappShareDocList />}
         />
       </Routes>
     </ApiProvider>

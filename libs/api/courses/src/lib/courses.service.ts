@@ -16,8 +16,16 @@ export class CoursesService {
   //Get all the courses and their sections
   async getAllCourses(): Promise<Section[]> {
     return await this.sectionRepository.find({
-        select: ["id", "sectionType", "sectionNumber", "instructor", "delivery_mode", "course", "lectures"],
-        relations: ["course", "lectures"]
+      select: [
+        'id',
+        'sectionType',
+        'sectionNumber',
+        'instructor',
+        'delivery_mode',
+        'course',
+        'lectures',
+      ],
+      relations: ['course', 'lectures'],
     });
   } //end getAllCourses
 

@@ -64,8 +64,12 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
       </Grid>
       <Grid container spacing={10}>
         {loading ? (
-          <Grid item xs={12} sx={{ display: 'flex', justifyContent: 'center', marginTop: '20%' }}>
-            <CircularProgress/>
+          <Grid
+            item
+            xs={12}
+            sx={{ display: 'flex', justifyContent: 'center', marginTop: '20%' }}
+          >
+            <CircularProgress />
           </Grid>
         ) : (
           documents.map((doc) => (
@@ -93,7 +97,10 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
                 variant="h1"
                 sx={{ fontSize: 24, mb: 2 }}
               >
-                Lecture {doc.lectureNumber.substring(doc.lectureNumber.lastIndexOf('e') + 1)}
+                Lecture{' '}
+                {doc.lectureNumber.substring(
+                  doc.lectureNumber.lastIndexOf('e') + 1
+                )}
               </Typography>
             </Grid>
           ))

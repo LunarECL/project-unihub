@@ -22,7 +22,6 @@ export interface SharedocProps {}
 ShareDB.types.register(richText.type);
 
 export function Sharedoc(props: SharedocProps) {
-
   const navigate = useNavigate();
   const [doc, setDoc] = useState<any>(null);
   const editorRef = useRef<ReactQuill>(null);

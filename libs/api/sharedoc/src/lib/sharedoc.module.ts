@@ -8,7 +8,11 @@ import { Op } from './entities/ops.entity';
 import { Attribute } from './entities/attributes.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ShareDoc]), TypeOrmModule.forFeature([Op]), TypeOrmModule.forFeature([Attribute])],
+  imports: [
+    TypeOrmModule.forFeature([ShareDoc]),
+    TypeOrmModule.forFeature([Op]),
+    TypeOrmModule.forFeature([Attribute]),
+  ],
   controllers: [AppController],
   providers: [ShareDBServer, DocumentService],
 })

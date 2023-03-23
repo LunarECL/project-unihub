@@ -1,31 +1,30 @@
 import {
-    Column,
-    Entity,
-    ManyToMany,
-    ManyToOne,
-    OneToMany,
-    OneToOne,
-    PrimaryColumn,
-    PrimaryGeneratedColumn,
-  } from 'typeorm';
-    import { ShareDoc } from './sharedoc.entity';
-    import { Attribute } from './attributes.entity';
-  
-  @Entity()
-  export class Op {
-    @PrimaryGeneratedColumn()
-    id: number;
+  Column,
+  Entity,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+  PrimaryColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { ShareDoc } from './sharedoc.entity';
+import { Attribute } from './attributes.entity';
 
-    @Column({ nullable: true })
-    insert: string;
+@Entity()
+export class Op {
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({ nullable: true })
-    retain: number;
+  @Column({ nullable: true })
+  insert: string;
 
-    @ManyToOne(() => ShareDoc, (document) => document.ops)
-    document: ShareDoc;
+  @Column({ nullable: true })
+  retain: number;
 
-    @OneToOne(() => Attribute, (attribute) => attribute.op)
-    attributes: Attribute;
-  } //end class Op
-  
+  @ManyToOne(() => ShareDoc, (document) => document.ops)
+  document: ShareDoc;
+
+  @OneToOne(() => Attribute, (attribute) => attribute.op)
+  attributes: Attribute;
+} //end class Op

@@ -7,7 +7,7 @@ const query = async (documentId: string, ops: Object[]) => {
 
   const res = await axios.post(url, {
     documentId,
-    ops
+    ops,
   });
 
   return res.data;

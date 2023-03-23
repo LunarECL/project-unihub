@@ -15,7 +15,7 @@ const query = async (documentId: string) => {
 };
 
 export function useGetDocumentContent(documentId: string) {
-    return query(documentId);
+  return query(documentId);
 }
 
 export default useGetDocumentContent;
