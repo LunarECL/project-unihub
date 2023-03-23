@@ -1,13 +1,5 @@
-import {
-  Column,
-  Entity,
-  ManyToMany,
-  ManyToOne,
-  OneToMany,
-  OneToOne,
-  PrimaryColumn,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { Lecture } from '@unihub/api/courses';
 
 @Entity()

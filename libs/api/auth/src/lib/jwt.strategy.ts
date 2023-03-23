@@ -5,8 +5,7 @@ import { passportJwtSecret } from 'jwks-rsa';
 import { User } from './users/users.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { EmailService } from '../../../email/src/lib/email.service';
-import axios from 'axios';
+import { EmailService } from '@unihub/api/email';
 import { ManagementService } from './management.service';
 
 /**

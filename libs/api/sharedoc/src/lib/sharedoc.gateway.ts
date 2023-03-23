@@ -30,6 +30,7 @@ doc.fetch(function (err) {
   },
 })
 export class ShareDBServer implements OnGatewayConnection, OnGatewayConnection {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor() {}
 
   @WebSocketServer()

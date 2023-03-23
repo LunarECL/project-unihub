@@ -3,6 +3,7 @@ import { Button, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useGetEmail } from '@unihub/webapp/api';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface DashboardProps {}
 
 export function Forum(props: DashboardProps) {

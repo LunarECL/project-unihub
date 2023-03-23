@@ -7,6 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Section } from './section.entity';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { ShareDoc } from '@unihub/api/sharedoc';
 
 @Entity()

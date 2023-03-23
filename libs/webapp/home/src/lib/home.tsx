@@ -1,10 +1,13 @@
 import React from 'react';
 import { ApiProvider } from '@unihub/webapp/api';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { Sharedoc } from '@unihub/webapp/sharedoc';
 import { Route, Routes } from 'react-router-dom';
 import Forum from './forum/forum';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { DisplayRoom, CreateRoom, JoinRoom } from '@unihub/webapp/webrtc';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface WebappHomeProps {}
 
 export function Home(props: WebappHomeProps) {

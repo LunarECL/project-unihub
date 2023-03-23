@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import * as ShareDB from 'sharedb/lib/client';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
 import * as richText from 'rich-text';
 import ReactQuill from 'react-quill';
@@ -10,6 +11,7 @@ import { Button, Typography, Grid } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useGetShareDoc } from '@unihub/webapp/api';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface SharedocProps {}
 
 ShareDB.types.register(richText.type);
@@ -60,8 +62,7 @@ export function Sharedoc(props: SharedocProps) {
   }
 
   return (
-    <>
-      <div id="doc-container">
+    <div id="doc-container">
         <Grid container spacing={3}>
           <Grid item xs="auto">
             <Typography variant="h1" sx={{ fontSize: 24, mb: 2 }}>
@@ -81,7 +82,6 @@ export function Sharedoc(props: SharedocProps) {
         </Grid>
         <ReactQuill onChange={handleChange} ref={editorRef} />
       </div>
-    </>
   );
 }
 

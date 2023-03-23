@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { useQuery } from 'react-query';
 
 const query = async () => {
   const res = await axios.get('/api/auth');
@@ -9,5 +8,3 @@ const query = async () => {
 export function useGetEmail() {
   return query();
 }
-
-export default useGetEmail;

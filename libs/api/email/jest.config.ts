@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'api-email',
+  displayName: 'email',
   preset: '../../../jest.preset.js',
   globals: {
     'ts-jest': {

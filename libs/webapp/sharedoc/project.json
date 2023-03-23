@@ -9,7 +9,7 @@
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["libs/sharedoc/**/*.{ts,tsx,js,jsx}"]
+        "lintFilePatterns": ["libs/webapp/sharedoc/**/*.{ts,tsx,js,jsx}"]
       }
     },
     "test": {

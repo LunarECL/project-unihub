@@ -63,6 +63,7 @@ import { AuthGuard } from '@nestjs/passport';
 
 @Controller('sharedoc')
 export class AppController {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor() {}
 
   @UseGuards(AuthGuard('jwt'))
