@@ -279,6 +279,12 @@ export function WebappTimetable(props: WebappTimetableProps) {
                   navigate(
                     `/home/sharedDocument/${course.course.programCode}/${course.id}/${course.lectures[index].id}`
                   );
+
+                  //Set the hasDisplayed back to false
+                  hasDisplayed = false;
+
+                  //Set the colour index back to 0
+                  colIndex = 0;
                 });
               }
             }

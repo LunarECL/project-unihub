@@ -54,4 +54,19 @@ export class AppController {
       userId
     );
   }
+
+  @Get('document/user/canView')
+  @UseGuards(AuthGuard('jwt'))
+  async canUserViewDocument(
+    @Query('documentId') documentId: string,
+    @CurrentUser() { userId },
+  ): Promise<boolean> {
+    if (!documentId) {
+      throw new Error('Invalid parameters');
+    }
+    return await this.shareDocService.canUserViewDocument(
+      userId,
+      Number(documentId)
+    );
+  }
 }

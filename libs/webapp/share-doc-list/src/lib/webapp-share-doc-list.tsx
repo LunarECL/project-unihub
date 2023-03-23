@@ -56,7 +56,7 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
       usePostUserDocument(lectureId || '',  title).then((res) => {
         //Then navigate to the document
         navigate(
-          `/home/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${res.id}/${title}`
+          `/home/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${lectureId}/${title}`
         );
         console.log(res);
         setOpenDialog(false);

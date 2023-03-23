@@ -16,16 +16,19 @@ import {
 import { useGetShareDoc } from '@unihub/webapp/api';
 import { useNavigate, useParams } from 'react-router-dom';
 import { usePostDocumentContent } from '@unihub/webapp/api';
-
+import { useGetIfUserCanViewDoc } from '@unihub/webapp/api';
 export interface SharedocProps {}
 
 ShareDB.types.register(richText.type);
 
 export function Sharedoc(props: SharedocProps) {
   const navigate = useNavigate();
+  const [isAuthorized, setIsAuthorized] = useState<boolean | undefined>(
+    undefined
+  );
   const [doc, setDoc] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
   const editorRef = useRef<ReactQuill>(null);
-  const [loading, setLoading] = useState(false);
   const {
     courseCode = '',
     sessionId = '',
@@ -35,49 +38,51 @@ export function Sharedoc(props: SharedocProps) {
   } = useParams();
 
   useEffect(() => {
-    // if (!localStorage.getItem('page-reloaded')) {
-    //   localStorage.setItem('page-reloaded', 'true');
-    //   location.reload();
-    // }
-
     const url = `ws://localhost:3030/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${documentId}/${lectureNumber}`;
     const socket = new ReconnectingWebSocket(url);
     const connection = new ShareDB.Connection(socket as any);
     useGetShareDoc();
 
+    const doc = connection.get(courseCode!, documentId!);
+    // Check that the user is authorized to view the document
+    useGetIfUserCanViewDoc(documentId).then((res) => {
+      if (res === false) {
+        alert('You are not authorized to view this document');
+        navigate(-1);
+      } else {
+        setIsAuthorized(true);
+        doc.subscribe(function (err: any) {
+          if (err) throw err;
 
-      const doc = connection.get(courseCode!, documentId!);
-      doc.subscribe(function (err: any) {
-        if (err) throw err;
-      
-        if (!doc.type) {
-          setLoading(true);
-          location.reload();
-        } else {
-          setLoading(false);
+          if (!doc.type) {
+            setLoading(true);
+            location.reload();
+          } else {
+            setLoading(false);
+          }
+        });
+
+        doc.on('load', load);
+        doc.on('op', update);
+
+        function load() {
+          setDoc(doc);
+          editorRef.current?.getEditor().setContents(doc.data);
         }
-      });
 
-      doc.on('load', load);
-      doc.on('op', update);
-
-      function load() {
-        setDoc(doc);
-        editorRef.current?.getEditor().setContents(doc.data);
-      }
-
-      function update(op: any, source: any) {
-        if (!source) {
-          const editor = editorRef.current?.getEditor();
-          editor?.updateContents(op);
+        function update(op: any, source: any) {
+          if (!source) {
+            const editor = editorRef.current?.getEditor();
+            editor?.updateContents(op);
+          }
         }
       }
+    });
 
-      return () => {
-        doc.unsubscribe();
-        doc.destroy();
-      };
-
+    return () => {
+      doc.unsubscribe();
+      doc.destroy();
+    };
   }, []);
 
   function handleChange(
@@ -98,34 +103,36 @@ export function Sharedoc(props: SharedocProps) {
 
   return (
     <>
-      <div id="doc-container">
-        <Grid container spacing={3}>
-          <Grid item xs="auto">
-            <Typography variant="h1" sx={{ fontSize: 24, mb: 2 }}>
-              Collaborate to create notes for {courseCode}, {lectureNumber}
-            </Typography>
+      {isAuthorized ? (
+        <div id="doc-container">
+          <Grid container spacing={3}>
+            <Grid item xs="auto">
+              <Typography variant="h1" sx={{ fontSize: 24, mb: 2 }}>
+                Collaborate to create notes for {courseCode}, {lectureNumber}
+              </Typography>
+            </Grid>
+            <Grid item xs="auto">
+              <Button
+                //navigate to the previous page
+                onClick={backButton}
+                variant="contained"
+                sx={{ position: 'absolute', right: 0 }}
+              >
+                Back
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item xs="auto">
-            <Button
-              //navigate to the previous page
-              onClick={backButton}
-              variant="contained"
-              sx={{ position: 'absolute', right: 0 }}
-            >
-              Back
-            </Button>
-          </Grid>
-        </Grid>
-        {loading ? (
-          <Skeleton variant="rounded" width={'100%'} height={'100%'} />
-        ) : (
-          <ReactQuill
-            onChange={handleChange}
-            ref={editorRef}
-            style={{ height: '100%' }}
-          />
-        )}
-      </div>
+          {loading ? (
+            <Skeleton variant="rounded" width={'100%'} height={'100%'} />
+          ) : (
+            <ReactQuill
+              onChange={handleChange}
+              ref={editorRef}
+              style={{ height: '100%' }}
+            />
+          )}
+        </div>
+      ) : null}
     </>
   );
 }

@@ -283,4 +283,25 @@ export class DocumentService {
 
     await this.documentRepo.save(document);
   } //end createUserDocument
-} //end TimeTableService
+
+  async canUserViewDocument(userId: string, documentId: number) {
+    const document = await this.documentRepo.findOne({
+      where: { id: documentId },
+    });
+
+    //Get the user
+    const userRepository = this.connection.getRepository(User);
+    const user = await userRepository.findOne({
+      where: { userId: userId },
+    });
+
+    const result = await this.documentRepo
+      .createQueryBuilder('document')
+      .leftJoin('document.users', 'users')
+      .where('document.id = :documentId', { documentId })
+      .andWhere('users.userId = :userId', { userId })
+      .getOne();
+
+    return !!result;
+  } //end canUserViewDocument
+} //end DocumentService
