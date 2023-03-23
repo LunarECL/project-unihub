@@ -63,25 +63,25 @@ export function Sharedoc(props: SharedocProps) {
 
   return (
     <div id="doc-container">
-        <Grid container spacing={3}>
-          <Grid item xs="auto">
-            <Typography variant="h1" sx={{ fontSize: 24, mb: 2 }}>
-              Collaborate to create notes!
-            </Typography>
-          </Grid>
-          <Grid item xs="auto">
-            <Button
-              onClick={() => navigate('/')}
-              variant="contained"
-              // float right
-              sx={{ position: 'absolute', right: 0 }}
-            >
-              Back
-            </Button>
-          </Grid>
+      <Grid container spacing={3}>
+        <Grid item xs="auto">
+          <Typography variant="h1" sx={{ fontSize: 24, mb: 2 }}>
+            Collaborate to create notes!
+          </Typography>
         </Grid>
-        <ReactQuill onChange={handleChange} ref={editorRef} />
-      </div>
+        <Grid item xs="auto">
+          <Button
+            onClick={() => navigate('/')}
+            variant="contained"
+            // float right
+            sx={{ position: 'absolute', right: 0 }}
+          >
+            Back
+          </Button>
+        </Grid>
+      </Grid>
+      <ReactQuill onChange={handleChange} ref={editorRef} />
+    </div>
   );
 }
 
