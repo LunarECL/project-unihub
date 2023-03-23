@@ -22,6 +22,7 @@ export interface SharedocProps {}
 ShareDB.types.register(richText.type);
 
 export function Sharedoc(props: SharedocProps) {
+
   const navigate = useNavigate();
   const [doc, setDoc] = useState<any>(null);
   const editorRef = useRef<ReactQuill>(null);
@@ -35,6 +36,11 @@ export function Sharedoc(props: SharedocProps) {
   } = useParams();
 
   useEffect(() => {
+    // if (!localStorage.getItem('page-reloaded')) {
+    //   localStorage.setItem('page-reloaded', 'true');
+    //   location.reload();
+    // }
+
     const url = `ws://localhost:3030/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${documentId}/${lectureNumber}`;
     const socket = new ReconnectingWebSocket(url);
     const connection = new ShareDB.Connection(socket as any);
@@ -46,6 +52,7 @@ export function Sharedoc(props: SharedocProps) {
         if (err) throw err;
         if (doc.type === null) {
           setLoading(true);
+          location.reload();
         } else {
           setLoading(false);
         }
