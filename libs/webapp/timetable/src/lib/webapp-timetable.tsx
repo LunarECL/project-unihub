@@ -218,8 +218,8 @@ export function WebappTimetable(props: WebappTimetableProps) {
 
         const date = new Date(lecture.startTime);
 
-        // let startTime = date.getUTCHours(); //FOR DOCKER
-        let startTime = date.getHours();
+        let startTime = date.getUTCHours(); //FOR DOCKER
+        // let startTime = date.getHours();
 
         let endTime = startTime + lecture.totalMinutes / 60;
 
