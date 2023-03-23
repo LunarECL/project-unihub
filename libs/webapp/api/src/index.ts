@@ -5,3 +5,6 @@ export * from './lib/hooks/useGetCourses';
 export * from './lib/hooks/useGetAllDocuments';
 export * from './lib/hooks/usePostDocumentContent';
 export * from './lib/hooks/useGetDocumentContent';
+export * from './lib/hooks/useGetUserLectures';
+export * from './lib/hooks/useDeleteUserLecture';
+export * from './lib/hooks/usePostUserLecture';

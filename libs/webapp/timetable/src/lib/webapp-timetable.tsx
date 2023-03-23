@@ -19,6 +19,9 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import React, { useEffect, useState } from 'react';
 import { useGetCourses } from '@unihub/webapp/api';
 import { useNavigate, useParams } from 'react-router-dom';
+import { usePostUserLecture } from '@unihub/webapp/api';
+import { useGetUserLectures } from '@unihub/webapp/api';
+import { useDeleteUserLecture } from '@unihub/webapp/api';
 /* eslint-disable-next-line */
 export interface WebappTimetableProps {}
 
@@ -42,6 +45,16 @@ function createCourseData(
   deliveryMode: string
 ) {
   return { programCode, courseTitle, sec_cd, prof, section, deliveryMode };
+}
+
+function displayCourseData(
+  programCode: string,
+  day: string,
+  lectureId: string,
+  startTime: string,
+  totalMinutes: number
+) {
+  return { programCode, day, lectureId, startTime, totalMinutes };
 }
 
 const rows = [
@@ -82,10 +95,13 @@ const searchOpt = [
   },
 ];
 
+let allCourses: any[] = [];
+
+let colIndex = 0;
+
 export function WebappTimetable(props: WebappTimetableProps) {
   const [coursesRows, setCoursesRows] = useState<any>([]);
   const [courses, setCourses] = useState<any>([]);
-  const [colIndex, setColIndex] = useState(0);
   const [allCoursesRows, setAllCoursesRows] = useState<any>([]);
   const [search, setSearch] = useState('Code');
   const [loading, setLoading] = useState(true);
@@ -117,23 +133,38 @@ export function WebappTimetable(props: WebappTimetableProps) {
   }; //end handleFilter
 
   useEffect(() => {
-    async function loadCourses() {
+    function loadCourses() {
       //May need to do pagination here because it takes too long
-      const courses = await useGetCourses();
-      setCourses(courses);
-      const rows = courses.map((course: any) => {
-        return createCourseData(
-          course.course.programCode,
-          course.course.title,
-          course.course.sec_cd,
-          course.instructor,
-          course.sectionType + course.sectionNumber,
-          course.delivery_mode
-        );
+      useGetCourses().then((courses) => {
+        setCourses(courses);
+        const rows = courses.map((course: any) => {
+          return createCourseData(
+            course.course.programCode,
+            course.course.title,
+            course.course.sec_cd,
+            course.instructor,
+            course.sectionType + course.sectionNumber,
+            course.delivery_mode
+          );
+        });
+        setAllCoursesRows(rows);
+        setCoursesRows(rows);
+        setLoading(false);
+
+        //Get the user's lectures
+        useGetUserLectures().then((sectionIds) => {
+          sectionIds.forEach((sectionId: any) => {
+            const course = courses.find(
+              (course: any) => course.id === sectionId.id
+            );
+            if (course) {
+              displayCourse(course, false);
+              //Add the course to the users lectures
+              allCourses.push(course);
+            }
+          });
+        });
       });
-      setAllCoursesRows(rows);
-      setCoursesRows(rows);
-      setLoading(false);
     }
     loadCourses();
   }, []);
@@ -160,9 +191,23 @@ export function WebappTimetable(props: WebappTimetableProps) {
       }
     };
 
+  // const handleDelete = async (sectionId: string) => {
+  //   //Delete the section from the db
+  //   await useDeleteUserLecture(sectionId);
+
+  //   //Remove the course from the allCourses array
+  //   allCourses = allCourses.filter((course: any) => course.id !== sectionId);
+
+  //   //Remove the course from the timetable
+  //   const course = courses.find((course: any) => course.id === sectionId);
+  //   if (course) {
+  //     displayCourse(course, true);
+  //   }
+  // };
+
   //Need to deal with conflicts but that'll be when we store the courses in an array or smthn
   //So using the db
-  const displayCourse = (course: any) => {
+  const displayCourse = (course: any, isRemove: boolean) => {
     //Check if the course has lectures
     if (course.lectures) {
       //For each lecture display it on the timetable
@@ -206,27 +251,33 @@ export function WebappTimetable(props: WebappTimetableProps) {
               `[data-day="${day}-${row.time}"]`
             );
             if (cell) {
-              (cell as HTMLElement).style.backgroundColor = colours[colIndex];
-              setColIndex((colIndex + 1) % colours.length);
-              (cell as HTMLElement).style.color = 'white';
-              (cell as HTMLElement).style.fontWeight = 'bold';
-              if (iteration === 0) {
-                (cell as HTMLElement).innerHTML = course.course.programCode;
-              } //end if
-              //Colour in the cells of the timetable
-              (cell as HTMLElement).style.borderBottomColor = colours[colIndex];
-              (cell as HTMLElement).style.cursor = 'pointer';
-              (cell as HTMLElement).addEventListener('click', () => {
-                navigate(
-                  `/home/sharedDocument/${course.course.programCode}/${course.id}/${course.lectures[index].id}`
-                );
-              });
+              if (isRemove) {
+                //Remove everything
+                (cell as HTMLElement).innerHTML = '';
+              } else {
+                (cell as HTMLElement).style.backgroundColor = colours[colIndex];
+                (cell as HTMLElement).style.color = 'white';
+                (cell as HTMLElement).style.fontWeight = 'bold';
+                if (iteration === 0) {
+                  (cell as HTMLElement).innerHTML = course.course.programCode;
+                } //end if
+                (cell as HTMLElement).style.borderBottomColor =
+                  colours[colIndex];
+                (cell as HTMLElement).style.cursor = 'pointer';
+                //Add an x button
+                (cell as HTMLElement).addEventListener('click', () => {
+                  navigate(
+                    `/home/sharedDocument/${course.course.programCode}/${course.id}/${course.lectures[index].id}`
+                  );
+                });
+              }
             }
           }
 
           iteration++;
         }
       });
+      colIndex = (colIndex + 1) % colours.length;
     }
   };
 
@@ -239,7 +290,9 @@ export function WebappTimetable(props: WebappTimetableProps) {
         course.sec_cd === coursesRows[index].sec_cd &&
         course.section === coursesRows[index].section
     );
-    displayCourse(courses[courseIndex]);
+    usePostUserLecture(courses[courseIndex].id);
+    allCourses.push(courses[courseIndex]);
+    displayCourse(courses[courseIndex], false);
   };
 
   return (

@@ -6,10 +6,14 @@ import {
   Delete,
   Param,
   Body,
+  UseGuards,
 } from '@nestjs/common';
+// import { CurrentUser } from '@unihub/api/auth';
+import { CurrentUser } from '../../../auth/src/lib/current-user.decorator';
 import { CoursesService } from './courses.service';
-// import { Courses } from "./courses.entity";
+import { AuthGuard } from '@nestjs/passport';
 
+@UseGuards(AuthGuard('jwt'))
 @Controller('courses')
 export class CoursesController {
   constructor(private coursesService: CoursesService) {}
@@ -19,13 +23,22 @@ export class CoursesController {
     return await this.coursesService.getAllCourses();
   } //end getAllCourses
 
-  // @Get()
-  // async getAllCourses(): Promise<Courses[]> {
-  //     return await this.coursesService.getAllCourses();
-  // }//end getAllCourses
+  @Get('/user/lectures')
+  async getUserCourses(@CurrentUser() { userId }): Promise<any> {
+    return await this.coursesService.getUserLectures(userId);
+  }
 
-  // @Get(":id")
-  // async getCourseById(@Param("id") id: string): Promise<Courses> {
-  //     return await this.coursesService.getCourseById(id);
-  // }//end getCourseById
+  @Post('/user/lecture')
+  async addUserLecture(@CurrentUser() { userId }, @Body() body): Promise<any> {
+    console.log('body', body);
+    return await this.coursesService.addToUserLecture(userId, body.sectionId);
+  }
+
+  @Delete('/user/section/')
+  async deleteUserLecture(
+    @CurrentUser() { userId },
+    @Param('lectureId') sectionId: string
+  ): Promise<any> {
+    return await this.coursesService.removeFromUserLecture(userId, sectionId);
+  }
 } //end CoursesController

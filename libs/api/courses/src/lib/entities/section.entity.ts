@@ -1,6 +1,9 @@
+import { User } from '@unihub/api/auth';
 import {
   Column,
   Entity,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -41,4 +44,8 @@ export class Section {
   //   @Column({ nullable: false })
   @OneToMany(() => Lecture, (lecture) => lecture.section)
   lectures: Lecture[];
+
+  @ManyToMany(() => User)
+  @JoinTable()
+  users: User[];
 } //end class Courses
