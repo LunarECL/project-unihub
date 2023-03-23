@@ -55,7 +55,6 @@ export class CoursesService {
   } //end getUserLectures
 
   async addToUserLecture(userId: string, sectionId: string): Promise<void> {
-
     const numSecId = Number(sectionId);
     console.log(numSecId);
 

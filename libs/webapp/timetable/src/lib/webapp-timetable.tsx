@@ -324,22 +324,26 @@ export function WebappTimetable(props: WebappTimetableProps) {
                   //Check if the lecture conflicts with the lecture of the course already in the timetable
 
                   const dateCourseLecture = new Date(courseLecture.startTime);
-                  const newDate = new Date(dateCourseLecture.getTime() + courseLecture.totalMinutes * 60000);
+                  const newDate = new Date(
+                    dateCourseLecture.getTime() +
+                      courseLecture.totalMinutes * 60000
+                  );
                   console.log(newDate.toISOString());
 
                   const dateLecture = new Date(lecture.startTime);
-                  const newDate2 = new Date(dateLecture.getTime() + lecture.totalMinutes * 60000);
+                  const newDate2 = new Date(
+                    dateLecture.getTime() + lecture.totalMinutes * 60000
+                  );
                   if (
-                    (dateLecture >=  dateCourseLecture &&
-                      dateLecture<=
-                      newDate) ||
-                    (dateCourseLecture >=
-                      dateLecture &&
-                      dateCourseLecture <=
-                      newDate2)
+                    (dateLecture >= dateCourseLecture &&
+                      dateLecture <= newDate) ||
+                    (dateCourseLecture >= dateLecture &&
+                      dateCourseLecture <= newDate2)
                   ) {
                     //Conflict
-                    alert(`The course you are trying to add has a conflict with ${course.course.programCode} already in the timetable. We will not add it to your courses.`);
+                    alert(
+                      `The course you are trying to add has a conflict with ${course.course.programCode} already in the timetable. We will not add it to your courses.`
+                    );
                     isConflict = true;
                   }
                 }
