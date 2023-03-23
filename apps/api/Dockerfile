@@ -1,4 +1,4 @@
-FROM ghcr.io/UofT-UTSC-CS-sandbox/unihub/base:latest AS builder
+FROM ghcr.io/uoft-utsc-cs-sandbox/unihub/base:latest AS builder
 
 # Production Build
 WORKDIR /app/builder

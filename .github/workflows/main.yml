@@ -60,7 +60,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-          images: ghcr.io/UofT-UTSC-CS-sandbox/unihub/base
+          images: ghcr.io/uoft-utsc-cs-sandbox/unihub/base
 
       - name: Build and push Docker image
         if: ${{ (github.event_name == 'workflow_dispatch') || (steps.check-deps.outputs.any_changed == 'true') }}
@@ -68,7 +68,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: ghcr.io/UofT-UTSC-CS-sandbox/unihub/base:latest
+          tags: ghcr.io/uoft-utsc-cs-sandbox/unihub/base:latest
           labels: ${{ steps.meta.outputs.labels }}
 
   build-webapp-image:
@@ -96,7 +96,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-          images: ghcr.io/UofT-UTSC-CS-sandbox/unihub/webapp
+          images: ghcr.io/uoft-utsc-cs-sandbox/unihub/webapp
 
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
@@ -104,7 +104,7 @@ jobs:
           context: .
           file: ./apps/webapp/Dockerfile
           push: true
-          tags: ghcr.io/UofT-UTSC-CS-sandbox/unihub/webapp:latest
+          tags: ghcr.io/uoft-utsc-cs-sandbox/unihub/webapp:latest
           labels: ${{ steps.meta.outputs.labels }}
 
   build-api-image:
@@ -129,7 +129,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
-          images: ghcr.io/UofT-UTSC-CS-sandbox/unihub/api
+          images: ghcr.io/uoft-utsc-cs-sandbox/unihub/api
 
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
@@ -137,5 +137,5 @@ jobs:
           context: .
           file: ./apps/api/Dockerfile
           push: true
-          tags: ghcr.io/UofT-UTSC-CS-sandbox/unihub/api:latest
+          tags: ghcr.io/uoft-utsc-cs-sandbox/unihub/api:latest
           labels: ${{ steps.meta.outputs.labels }}
