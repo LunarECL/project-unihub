@@ -8,13 +8,13 @@ export class EmailConsumer {
 
   @Process('send-welcome')
   async sendWelcomeEmail(job: Job) {
-    console.log('sendWelcomeEmail');
+    console.log('sendWelcomeEmail ' + job?.data.email + ' ' + job?.data.name);
     await this.mailService.sendMail({
       to: job?.data.email,
       from: 'info@unihub.one',
       subject: 'Welcome to UniHub - Your One Stop for Academic Success!',
       html: `
-    <p>Dear ${job.data.owner},</p>
+    <p>Dear ${job.data.name},</p>
     <p>Welcome to UniHub! We are thrilled to have you join our community of students and scholars. UniHub is here to help you excel in your academic journey by connecting you with resources, peers.</p>
     <p>If you have any questions or need support, feel free to reach out to us at any time.</p>
     <p>Wishing you the best in your studies,</p>

@@ -24,6 +24,13 @@ export function Forum(props: DashboardProps) {
         <Button onClick={() => navigate('/home/timetable')} variant="contained">
           Timetable
         </Button>
+        <Button
+          onClick={() => navigate('/home/room/create')}
+          variant="contained"
+          sx={{ ml: 2 }}
+        >
+          WebRTC App
+        </Button>
       </Grid>
     </Grid>
   );

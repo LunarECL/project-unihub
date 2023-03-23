@@ -7,8 +7,8 @@ import { MailerService } from '@nestjs-modules/mailer';
 export class EmailService {
   constructor(@InjectQueue('email') private emailQueue: Queue) {}
 
-  welcome(owner: string, email: string) {
-    this.emailQueue.add('send-welcome', { owner, email });
+  welcome(email: string, name: string) {
+    this.emailQueue.add('send-welcome', { email, name });
   }
 
   invite(owner: string, email: string, groupName: string, groupId: string) {

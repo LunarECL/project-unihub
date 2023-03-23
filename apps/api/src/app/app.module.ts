@@ -67,7 +67,7 @@ import { Attribute } from '@unihub/api/sharedoc';
       database: process.env.DB_NAME,
       entities: [User, Courses, Lecture, Section, ShareDoc, Op, Attribute],
       synchronize: true,
-      logging: false,
+      logging: true,
     }),
     BullModule.forRootAsync({
       imports: [ConfigModule.forRoot({ envFilePath: `.env` })],

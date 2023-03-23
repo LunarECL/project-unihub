@@ -13,6 +13,9 @@ import { EmailConsumer } from './email.consumer';
     MailerModule.forRoot({
       transport: {
         host: process.env.EMAIL_SERVER,
+        port: 465,
+        ignoreTLS: true,
+        secure: true,
         auth: {
           user: process.env.EMAIL_USERNAME,
           pass: process.env.EMAIL_PASSWORD,
