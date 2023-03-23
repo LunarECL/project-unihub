@@ -34,11 +34,12 @@ export class CoursesController {
     return await this.coursesService.addToUserLecture(userId, body.sectionId);
   }
 
-  @Delete('/user/section/')
+  @Delete('/user/section/:sectionId')
   async deleteUserLecture(
     @CurrentUser() { userId },
-    @Param('lectureId') sectionId: string
+    @Param('sectionId') sectionId: string
   ): Promise<any> {
+    console.log('sectionId', sectionId);
     return await this.coursesService.removeFromUserLecture(userId, sectionId);
   }
 } //end CoursesController

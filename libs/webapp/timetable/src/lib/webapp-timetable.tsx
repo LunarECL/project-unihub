@@ -47,16 +47,6 @@ function createCourseData(
   return { programCode, courseTitle, sec_cd, prof, section, deliveryMode };
 }
 
-function displayCourseData(
-  programCode: string,
-  day: string,
-  lectureId: string,
-  startTime: string,
-  totalMinutes: number
-) {
-  return { programCode, day, lectureId, startTime, totalMinutes };
-}
-
 const rows = [
   createData('9:00', '', '', '', '', ''),
   createData('10:00', '', '', '', '', ''),
@@ -99,6 +89,8 @@ let allCourses: any[] = [];
 
 let colIndex = 0;
 
+let hasDisplayed = false;
+
 export function WebappTimetable(props: WebappTimetableProps) {
   const [coursesRows, setCoursesRows] = useState<any>([]);
   const [courses, setCourses] = useState<any>([]);
@@ -133,6 +125,18 @@ export function WebappTimetable(props: WebappTimetableProps) {
   }; //end handleFilter
 
   useEffect(() => {
+    //Get the user's lectures
+    useGetUserLectures().then((courses) => {
+      if (hasDisplayed) {
+        return;
+      }
+      courses.forEach((course: any) => {
+        displayCourse(course, false);
+        allCourses.push(course);
+      });
+      hasDisplayed = true;
+    });
+
     function loadCourses() {
       //May need to do pagination here because it takes too long
       useGetCourses().then((courses) => {
@@ -150,20 +154,6 @@ export function WebappTimetable(props: WebappTimetableProps) {
         setAllCoursesRows(rows);
         setCoursesRows(rows);
         setLoading(false);
-
-        //Get the user's lectures
-        useGetUserLectures().then((sectionIds) => {
-          sectionIds.forEach((sectionId: any) => {
-            const course = courses.find(
-              (course: any) => course.id === sectionId.id
-            );
-            if (course) {
-              displayCourse(course, false);
-              //Add the course to the users lectures
-              allCourses.push(course);
-            }
-          });
-        });
       });
     }
     loadCourses();
@@ -191,19 +181,19 @@ export function WebappTimetable(props: WebappTimetableProps) {
       }
     };
 
-  // const handleDelete = async (sectionId: string) => {
-  //   //Delete the section from the db
-  //   await useDeleteUserLecture(sectionId);
+  const handleDelete = (sectionId: string) => {
+    //Delete the section from the db
+    useDeleteUserLecture(sectionId).then(() => {
+      //Remove the course from the allCourses array
+      allCourses = allCourses.filter((course: any) => course.id !== sectionId);
 
-  //   //Remove the course from the allCourses array
-  //   allCourses = allCourses.filter((course: any) => course.id !== sectionId);
-
-  //   //Remove the course from the timetable
-  //   const course = courses.find((course: any) => course.id === sectionId);
-  //   if (course) {
-  //     displayCourse(course, true);
-  //   }
-  // };
+      //Remove the course from the timetable
+      const course = courses.find((course: any) => course.id === sectionId);
+      if (course) {
+        displayCourse(course, true);
+      }
+    });
+  };
 
   //Need to deal with conflicts but that'll be when we store the courses in an array or smthn
   //So using the db
@@ -254,12 +244,32 @@ export function WebappTimetable(props: WebappTimetableProps) {
               if (isRemove) {
                 //Remove everything
                 (cell as HTMLElement).innerHTML = '';
+                (cell as HTMLElement).style.backgroundColor = 'transparent';
+                (cell as HTMLElement).style.border = '';
+                (cell as HTMLElement).style.borderColor = '';
               } else {
                 (cell as HTMLElement).style.backgroundColor = colours[colIndex];
                 (cell as HTMLElement).style.color = 'white';
                 (cell as HTMLElement).style.fontWeight = 'bold';
                 if (iteration === 0) {
                   (cell as HTMLElement).innerHTML = course.course.programCode;
+                  //Add an x button
+                  const xButton = document.createElement('button');
+                  xButton.innerText = 'x';
+                  xButton.style.border = 'none';
+                  xButton.style.background = 'transparent';
+                  xButton.style.color = 'white';
+                  xButton.style.cursor = 'pointer';
+                  xButton.style.float = 'right';
+                  xButton.style.font = 'bold 20px Arial, sans-serif';
+                  xButton.style.marginTop = '-4px';
+                  (cell as HTMLElement).appendChild(xButton);
+
+                  //Add a click event listener to the x button
+                  xButton.addEventListener('click', (event) => {
+                    event.stopPropagation(); //Prevent the click event from bubbling up to the cell element
+                    handleDelete(course.id);
+                  });
                 } //end if
                 (cell as HTMLElement).style.borderBottomColor =
                   colours[colIndex];
@@ -378,7 +388,6 @@ export function WebappTimetable(props: WebappTimetableProps) {
               </Grid>
             ) : (
               <Box
-                // sx={{ width: 'auto' }}
                 role="presentation"
                 sx={{
                   bottom: 0,
@@ -471,5 +480,3 @@ export function WebappTimetable(props: WebappTimetableProps) {
     </>
   );
 }
-
-export default WebappTimetable;

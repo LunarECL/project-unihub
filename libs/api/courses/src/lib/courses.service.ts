@@ -39,7 +39,16 @@ export class CoursesService {
 
     const sections = await this.sectionRepository.find({
       where: { users: { userId: userId } },
-      select: ['id'],
+      select: [
+        'id',
+        'sectionType',
+        'sectionNumber',
+        'instructor',
+        'delivery_mode',
+        'course',
+        'lectures',
+      ],
+      relations: ['course', 'lectures'],
     });
 
     return sections;
@@ -82,10 +91,12 @@ export class CoursesService {
     userId: string,
     sectionId: string
   ): Promise<void> {
+    console.log('sectionId', sectionId);
     const numSecId = Number(sectionId);
     //Get the lecture
     const section = await this.sectionRepository.findOne({
       where: { id: numSecId },
+      relations: ['users'],
     });
 
     const userRepository = this.connection.getRepository(User);
