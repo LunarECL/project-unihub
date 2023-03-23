@@ -218,8 +218,8 @@ export function WebappTimetable(props: WebappTimetableProps) {
 
         const date = new Date(lecture.startTime);
 
-        let startTime = date.getUTCHours(); //FOR DOCKER
-        // let startTime = date.getHours();
+        // let startTime = date.getUTCHours(); //FOR DOCKER
+        let startTime = date.getHours();
 
         let endTime = startTime + lecture.totalMinutes / 60;
 
@@ -300,6 +300,60 @@ export function WebappTimetable(props: WebappTimetableProps) {
         course.sec_cd === coursesRows[index].sec_cd &&
         course.section === coursesRows[index].section
     );
+
+    //Check if the course is already in the timetable
+    if (
+      allCourses.find((course: any) => course.id === courses[courseIndex].id)
+    ) {
+      return;
+    }
+
+    let isConflict = false;
+
+    //Check if the course has conflicts with the courses already in the timetable
+    if (allCourses.length > 0) {
+      //Check if the course has lectures
+      if (courses[courseIndex].lectures) {
+        //For each lecture check if it conflicts with the lectures of the courses already in the timetable
+        courses[courseIndex].lectures.forEach((lecture: any) => {
+          //Check if the lecture conflicts with the lectures of the courses already in the timetable
+          allCourses.forEach((course: any) => {
+            if (course.lectures) {
+              course.lectures.forEach((courseLecture: any) => {
+                if (lecture.day === courseLecture.day) {
+                  //Check if the lecture conflicts with the lecture of the course already in the timetable
+
+                  const dateCourseLecture = new Date(courseLecture.startTime);
+                  const newDate = new Date(dateCourseLecture.getTime() + courseLecture.totalMinutes * 60000);
+                  console.log(newDate.toISOString());
+
+                  const dateLecture = new Date(lecture.startTime);
+                  const newDate2 = new Date(dateLecture.getTime() + lecture.totalMinutes * 60000);
+                  if (
+                    (dateLecture >=  dateCourseLecture &&
+                      dateLecture<=
+                      newDate) ||
+                    (dateCourseLecture >=
+                      dateLecture &&
+                      dateCourseLecture <=
+                      newDate2)
+                  ) {
+                    //Conflict
+                    alert(`The course you are trying to add has a conflict with ${course.course.programCode} already in the timetable. We will not add it to your courses.`);
+                    isConflict = true;
+                  }
+                }
+              });
+            }
+          });
+        });
+      }
+    }
+
+    if (isConflict) {
+      return;
+    }
+
     usePostUserLecture(courses[courseIndex].id);
     allCourses.push(courses[courseIndex]);
     displayCourse(courses[courseIndex], false);
