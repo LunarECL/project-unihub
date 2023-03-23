@@ -1,23 +1,26 @@
 import {
   Column,
   Entity,
+  JoinTable,
   ManyToMany,
   ManyToOne,
   OneToMany,
-  OneToOne,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Lecture } from '@unihub/api/courses';
 import { Op } from './ops.entity';
+import { User } from '@unihub/api/auth';
 
 @Entity()
 export class ShareDoc {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ nullable: false })
+  @Column({ nullable: true })
   lectureNumber: string; //lecture1, lecture2, lecture3, etc. (depends on the week)
+
+  @Column({ nullable: true })
+  userTitle: string; //title of the document
 
   // @Column({ nullable: false })
   @ManyToOne(() => Lecture, (lecture) => lecture.shareDoc)
@@ -25,4 +28,8 @@ export class ShareDoc {
 
   @OneToMany(() => Op, (op) => op.document)
   ops: [];
+
+  @ManyToMany(() => User)
+  @JoinTable()
+  users: User[];
 } //end class Courses

@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Courses, Lecture, Section } from '@unihub/api/courses';
-import { Repository } from 'typeorm';
+import { Connection, Equal, In, IsNull, Not, Repository } from 'typeorm';
 import { ShareDoc } from './entities/sharedoc.entity';
 import { Op } from './entities/ops.entity';
 import { Attribute } from './entities/attributes.entity';
+import { User } from '@unihub/api/auth';
 // import { CoursesController } from '@unihub/api/courses';
 
 @Injectable()
@@ -12,10 +13,14 @@ export class DocumentService {
   constructor(
     @InjectRepository(ShareDoc) private documentRepo: Repository<ShareDoc>,
     @InjectRepository(Op) private opsRepo: Repository<Op>,
-    @InjectRepository(Attribute) private attributesRepo: Repository<Attribute>
+    @InjectRepository(Attribute) private attributesRepo: Repository<Attribute>,
+    private connection: Connection
   ) {}
 
-  async getAllDocuments(lectureId: number): Promise<ShareDoc[]> {
+  async getAllDocuments(
+    lectureId: number,
+    userId: string
+  ): Promise<ShareDoc[]> {
     //Get the sec_cd
     const section = await this.documentRepo.manager
       .getRepository(Section)
@@ -73,10 +78,25 @@ export class DocumentService {
       return;
     }
 
-    //Check if there are any documents in the database
-    const document = await this.documentRepo.find({
-      where: { lecture: { id: lectureId } },
+    // //Check if there are any documents in the database
+    // const document = await this.documentRepo.find({
+    //   where: { lecture: { id: lectureId } },
+    // });
+
+    const lectureDocuments = await this.documentRepo.find({
+      where: [{ lecture: { id: lectureId }, lectureNumber: Not(IsNull()) }],
     });
+
+    const userDocuments = await this.documentRepo
+      .createQueryBuilder('document')
+      .leftJoinAndSelect('document.users', 'user')
+      .where('document.lecture = :lectureId AND user.userId = :userId', {
+        lectureId,
+        userId,
+      })
+      .getMany();
+
+    const document = lectureDocuments.concat(userDocuments);
 
     if (document.length === 0) {
       //Create all the documents for every lecture
@@ -94,7 +114,7 @@ export class DocumentService {
 
     //If we should add another document we add it here
     const lastDoc = await this.documentRepo.findOne({
-      where: { lecture: { id: lectureId } },
+      where: { lecture: { id: lectureId }, lectureNumber: Not(IsNull()) },
       order: { id: 'DESC' },
     });
 
@@ -125,10 +145,13 @@ export class DocumentService {
       }
     }
 
-    //Return all the documents for the lecture
-    return await this.documentRepo.find({
-      where: { lecture: { id: lectureId } },
+    const newlectureDocuments = await this.documentRepo.find({
+      where: [{ lecture: { id: lectureId }, lectureNumber: Not(IsNull()) }],
     });
+
+    const newRetDocument = newlectureDocuments.concat(userDocuments);
+
+    return newRetDocument;
   } //end getAllDocuments
 
   async getDocumentContent(documentId: number): Promise<Object[]> {
@@ -237,4 +260,27 @@ export class DocumentService {
       } //end if attributes
     } //end for each attribute
   } //end postDocumentContent
+
+  async createUserDocument(
+    lectureId: number,
+    documentName: string,
+    userId: string
+  ) {
+    const document = new ShareDoc();
+    document.lecture = { id: lectureId } as Lecture;
+    document.userTitle = documentName;
+    const userRepository = this.connection.getRepository(User);
+
+    //Get the user
+    const user = await userRepository.findOne({
+      where: { userId: userId },
+    });
+
+    if (user) {
+      document.users = [];
+      document.users.push(user);
+    }
+
+    await this.documentRepo.save(document);
+  } //end createUserDocument
 } //end TimeTableService

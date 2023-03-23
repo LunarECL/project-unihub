@@ -7,8 +7,16 @@ import {
   CircularProgress,
   Grid,
   IconButton,
+  TextField,
   Typography,
 } from '@mui/material';
+
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+import { usePostUserDocument } from '@unihub/webapp/api';
 
 /* eslint-disable-next-line */
 export interface WebappShareDocListProps {}
@@ -17,6 +25,7 @@ interface Document {
   id: string;
   lectureNumber: string;
   lectureId: string;
+  userTitle: string;
 }
 
 export function WebappShareDocList(props: WebappShareDocListProps) {
@@ -29,6 +38,31 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
 
   // Use state to store the documents and loading status
   const [documents, setDocuments] = useState<Document[]>([]);
+
+  const [openDialog, setOpenDialog] = useState(false);
+
+  const handleClickOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const handleCreateDocument = () => {
+    //First create the document for the lecture
+    const title = (document.getElementById('document-name') as HTMLInputElement).value;
+    if (title !== '') {
+      usePostUserDocument(lectureId || '',  title).then((res) => {
+        //Then navigate to the document
+        navigate(
+          `/home/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${res.id}/${title}`
+        );
+        console.log(res);
+        setOpenDialog(false);
+      });
+    }
+  };
 
   useEffect(() => {
     async function fetchDocuments() {
@@ -43,12 +77,9 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
 
   return (
     <div style={{ marginLeft: '10%', marginRight: '10%', marginTop: '5%' }}>
-      <Grid container spacing={3}>
+      <Grid container spacing={0}>
         <Grid item xs={11}>
-          <Typography
-            variant="h1"
-            sx={{ fontSize: 35, mb: 2, marginBottom: '5%' }}
-          >
+          <Typography variant="h1" sx={{ fontSize: 35, mb: 2 }}>
             {courseCode} lecture documents
           </Typography>
         </Grid>
@@ -60,6 +91,33 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
           >
             Back
           </Button>
+        </Grid>
+        <Grid item xs={12}>
+          <Button
+            variant="text"
+            sx={{ marginBottom: '4%', float: 'left' }}
+            onClick={handleClickOpenDialog}
+          >
+            Create your own document!
+          </Button>
+          {/* fix the way this looks later */}
+          <Dialog open={openDialog} onClose={handleCloseDialog} sx={{width: '100%', height: '100%'}} maxWidth='lg'>
+            <DialogTitle>Create a new document</DialogTitle>
+            <DialogContent>
+              <TextField
+                id="document-name"
+                label="Name of your document"
+                type="name"
+                variant="standard"
+                // onChange={handleFilter}
+                fullWidth
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseDialog}>Cancel</Button>
+              <Button onClick={handleCreateDocument}>Create</Button>
+            </DialogActions>
+          </Dialog>
         </Grid>
       </Grid>
       <Grid container spacing={10}>
@@ -78,7 +136,7 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
                 style={{ cursor: 'pointer', width: '100%' }}
                 onClick={() =>
                   navigate(
-                    `/home/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${doc.id}/${doc.lectureNumber}`
+                    `/home/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${doc.id}/${doc.lectureNumber ? doc.lectureNumber : doc.userTitle}`
                   )
                 }
               >
@@ -97,10 +155,7 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
                 variant="h1"
                 sx={{ fontSize: 24, mb: 2 }}
               >
-                Lecture{' '}
-                {doc.lectureNumber.substring(
-                  doc.lectureNumber.lastIndexOf('e') + 1
-                )}
+                {doc.lectureNumber === null ? doc.userTitle : doc.lectureNumber}
               </Typography>
             </Grid>
           ))

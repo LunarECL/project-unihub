@@ -52,14 +52,18 @@ export class ShareDBServer implements OnGatewayConnection, OnGatewayConnection {
 
       const delta = new Delta(ops);
 
-      doc.fetch((err) => {
-        if (err) throw err;
-        if (doc.type === null) {
-          console.log('Creating document');
-          doc.create(delta, 'rich-text');
-          return;
-        }
+      return new Promise((resolve, reject) => {
+        doc.fetch((err) => {
+          if (err) return reject(err);
+          if (doc.type === null) {
+            console.log('Creating document', Date.now());
+            doc.create(delta, 'rich-text');
+            return resolve("done");
+          }
+        });
       });
+
+      
     });
   }
 }

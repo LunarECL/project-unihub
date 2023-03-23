@@ -45,11 +45,12 @@ export function Sharedoc(props: SharedocProps) {
     const connection = new ShareDB.Connection(socket as any);
     useGetShareDoc();
 
-    function loadDoc() {
+
       const doc = connection.get(courseCode!, documentId!);
       doc.subscribe(function (err: any) {
         if (err) throw err;
-        if (doc.type === null) {
+      
+        if (!doc.type) {
           setLoading(true);
           location.reload();
         } else {
@@ -76,9 +77,7 @@ export function Sharedoc(props: SharedocProps) {
         doc.unsubscribe();
         doc.destroy();
       };
-    }
 
-    loadDoc();
   }, []);
 
   function handleChange(
@@ -103,8 +102,7 @@ export function Sharedoc(props: SharedocProps) {
         <Grid container spacing={3}>
           <Grid item xs="auto">
             <Typography variant="h1" sx={{ fontSize: 24, mb: 2 }}>
-              Collaborate to create notes for {courseCode} lecture{' '}
-              {lectureNumber.substring(lectureNumber.lastIndexOf('e') + 1)}!
+              Collaborate to create notes for {courseCode}, {lectureNumber}
             </Typography>
           </Grid>
           <Grid item xs="auto">
