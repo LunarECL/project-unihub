@@ -28,12 +28,14 @@ UnIHuB is a comprehensive platform designed to bring all the tools and resources
 To run this project on your local environment, follow these steps:
 
 1. Clone the repository:
+
    ```
    git clone https://github.com/your-repo/unihub.git
    cd unihub
    ```
 
 2. Install dependencies:
+
    ```
    yarn
    ```
@@ -41,6 +43,7 @@ To run this project on your local environment, follow these steps:
 3. Copy the `.env.example` file to a new file called `.env` and update the values with your own API keys and credentials.
 
 4. Build the Docker image:
+
    ```
    docker build . -t my-base-image:nx-base
    ```
