@@ -289,11 +289,9 @@ export class DocumentService {
       where: { id: documentId },
     });
 
-    //Get the user
-    const userRepository = this.connection.getRepository(User);
-    const user = await userRepository.findOne({
-      where: { userId: userId },
-    });
+    if (document.lectureNumber) {
+      return true;
+    }
 
     const result = await this.documentRepo
       .createQueryBuilder('document')

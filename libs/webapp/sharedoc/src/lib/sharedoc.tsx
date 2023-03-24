@@ -21,11 +21,11 @@ export interface SharedocProps {}
 
 ShareDB.types.register(richText.type);
 
+let isAuthorized = false;
+
 export function Sharedoc(props: SharedocProps) {
   const navigate = useNavigate();
-  const [isAuthorized, setIsAuthorized] = useState<boolean | undefined>(
-    undefined
-  );
+  // const [isAuthorized, setIsAuthorized] = useState(true);
   const [doc, setDoc] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const editorRef = useRef<ReactQuill>(null);
@@ -49,8 +49,8 @@ export function Sharedoc(props: SharedocProps) {
       if (res === false) {
         alert('You are not authorized to view this document');
         navigate(-1);
-      } else {
-        setIsAuthorized(true);
+      }else {
+        isAuthorized = true;
         doc.subscribe(function (err: any) {
           if (err) throw err;
 
@@ -78,6 +78,23 @@ export function Sharedoc(props: SharedocProps) {
         }
       }
     });
+
+    
+
+    doc.on('load', load);
+    doc.on('op', update);
+
+    function load() {
+      setDoc(doc);
+      editorRef.current?.getEditor().setContents(doc.data);
+    }
+
+    function update(op: any, source: any) {
+      if (!source) {
+        const editor = editorRef.current?.getEditor();
+        editor?.updateContents(op);
+      }
+    }
 
     return () => {
       doc.unsubscribe();
