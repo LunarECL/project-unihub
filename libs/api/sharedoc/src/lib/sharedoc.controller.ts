@@ -17,12 +17,15 @@ export class AppController {
   @UseGuards(AuthGuard('jwt'))
   async getAllDocuments(
     @Query('lectureId') lectureId: string,
-    @CurrentUser() { userId },
+    @CurrentUser() { userId }
   ): Promise<ShareDoc[]> {
     if (!lectureId) {
       throw new Error('Invalid parameters');
     }
-    return await this.shareDocService.getAllDocuments(Number(lectureId), userId);
+    return await this.shareDocService.getAllDocuments(
+      Number(lectureId),
+      userId
+    );
   } //end getAllDocuments
 
   @Post('document/content/')
@@ -43,8 +46,8 @@ export class AppController {
   @UseGuards(AuthGuard('jwt'))
   async createDocument(
     @Body() body: { lectureId: string; documentName: string },
-    @CurrentUser() { userId },
-  ): Promise<void> {
+    @CurrentUser() { userId }
+  ): Promise<number> {
     if (!body.lectureId || !body.documentName) {
       throw new Error('Invalid parameters');
     }
@@ -59,14 +62,28 @@ export class AppController {
   @UseGuards(AuthGuard('jwt'))
   async canUserViewDocument(
     @Query('documentId') documentId: string,
-    @CurrentUser() { userId },
-  ): Promise<boolean> {
+    @CurrentUser() { userId }
+  ): Promise<Object> {
     if (!documentId) {
       throw new Error('Invalid parameters');
     }
     return await this.shareDocService.canUserViewDocument(
       userId,
       Number(documentId)
+    );
+  }
+
+  @Post('document/user/share')
+  @UseGuards(AuthGuard('jwt'))
+  async shareDocument(
+    @Body() body: { documentId: string; userEmail: string }
+  ): Promise<boolean> {
+    if (!body.documentId || !body.userEmail) {
+      throw new Error('Invalid parameters');
+    }
+    return await this.shareDocService.addUserToDocument(
+      body.userEmail,
+      Number(body.documentId)
     );
   }
 }

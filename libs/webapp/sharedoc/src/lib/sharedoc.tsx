@@ -12,23 +12,29 @@ import {
   Grid,
   CircularProgress,
   Skeleton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
 } from '@mui/material';
 import { useGetShareDoc } from '@unihub/webapp/api';
 import { useNavigate, useParams } from 'react-router-dom';
 import { usePostDocumentContent } from '@unihub/webapp/api';
 import { useGetIfUserCanViewDoc } from '@unihub/webapp/api';
+import { usePostShareDocument } from '@unihub/webapp/api';
 export interface SharedocProps {}
 
 ShareDB.types.register(richText.type);
 
-let isAuthorized = false;
-
 export function Sharedoc(props: SharedocProps) {
   const navigate = useNavigate();
-  // const [isAuthorized, setIsAuthorized] = useState(true);
+  const [isAuthorized, setIsAuthorized] = useState(false);
   const [doc, setDoc] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const editorRef = useRef<ReactQuill>(null);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [isUserDoc, setIsUserDoc] = useState(false);
   const {
     courseCode = '',
     sessionId = '',
@@ -41,45 +47,35 @@ export function Sharedoc(props: SharedocProps) {
     const url = `ws://localhost:3030/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${documentId}/${lectureNumber}`;
     const socket = new ReconnectingWebSocket(url);
     const connection = new ShareDB.Connection(socket as any);
-    useGetShareDoc();
-
     const doc = connection.get(courseCode!, documentId!);
-    // Check that the user is authorized to view the document
-    useGetIfUserCanViewDoc(documentId).then((res) => {
-      if (res === false) {
+
+    const authorizeUser = async () => {
+      const res = await useGetIfUserCanViewDoc(documentId);
+      if (!res.isAuthorized) {
         alert('You are not authorized to view this document');
         navigate(-1);
-      }else {
-        isAuthorized = true;
-        doc.subscribe(function (err: any) {
-          if (err) throw err;
-
-          if (!doc.type) {
-            setLoading(true);
-            location.reload();
-          } else {
-            setLoading(false);
-          }
-        });
-
-        doc.on('load', load);
-        doc.on('op', update);
-
-        function load() {
-          setDoc(doc);
-          editorRef.current?.getEditor().setContents(doc.data);
-        }
-
-        function update(op: any, source: any) {
-          if (!source) {
-            const editor = editorRef.current?.getEditor();
-            editor?.updateContents(op);
-          }
+      } else {
+        // isAuthorized = true; // update state here
+        setIsAuthorized(true);
+        if (res.isUser) {
+          setIsUserDoc(true);
         }
       }
-    });
+    };
 
-    
+    authorizeUser();
+
+    console.log('isUserDoc: ', isUserDoc);
+
+    doc.subscribe(function (err: any) {
+      if (err) throw err;
+      if (!doc.type) {
+        setLoading(true);
+        location.reload();
+      } else {
+        setLoading(false);
+      }
+    });
 
     doc.on('load', load);
     doc.on('op', update);
@@ -87,6 +83,7 @@ export function Sharedoc(props: SharedocProps) {
     function load() {
       setDoc(doc);
       editorRef.current?.getEditor().setContents(doc.data);
+      setLoading(false);
     }
 
     function update(op: any, source: any) {
@@ -97,10 +94,12 @@ export function Sharedoc(props: SharedocProps) {
     }
 
     return () => {
-      doc.unsubscribe();
-      doc.destroy();
+      if (doc) {
+        doc.unsubscribe();
+        doc.destroy();
+      }
     };
-  }, []);
+  }, [isAuthorized]);
 
   function handleChange(
     content: string,
@@ -118,17 +117,42 @@ export function Sharedoc(props: SharedocProps) {
     navigate(-1);
   }
 
+  const handleClickOpenDialog = () => {
+    setOpenDialog(true);
+  };
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
+  };
+
+  const handleShare = () => {
+    //Add the user to the document
+    //Get the user email from the text field
+    const userEmail = (
+      document.getElementById('user-email') as HTMLInputElement
+    ).value;
+    usePostShareDocument(documentId, userEmail).then((res) => {
+      console.log(res);
+      if (res === false) {
+        alert('User does not exist');
+      } else {
+        alert('User added to document');
+      }
+    });
+    setOpenDialog(false);
+  };
+
   return (
     <>
       {isAuthorized ? (
         <div id="doc-container">
-          <Grid container spacing={3}>
-            <Grid item xs="auto">
+          <Grid container spacing={0}>
+            <Grid item xs={8}>
               <Typography variant="h1" sx={{ fontSize: 24, mb: 2 }}>
                 Collaborate to create notes for {courseCode}, {lectureNumber}
               </Typography>
             </Grid>
-            <Grid item xs="auto">
+            <Grid item xs={4}>
               <Button
                 //navigate to the previous page
                 onClick={backButton}
@@ -138,6 +162,42 @@ export function Sharedoc(props: SharedocProps) {
                 Back
               </Button>
             </Grid>
+            {isUserDoc ? (
+              <Grid item xs={8}>
+                <Button
+                  variant="text"
+                  sx={{ mb: 2, left: -5 }}
+                  onClick={handleClickOpenDialog}
+                >
+                  Share with other users!
+                </Button>
+
+                <Dialog
+                  open={openDialog}
+                  onClose={handleCloseDialog}
+                  sx={{ width: '100%', height: '100%' }}
+                  maxWidth="lg"
+                >
+                  <DialogTitle>Share with other users on UniHub!</DialogTitle>
+                  <DialogContent>
+                    <TextField
+                      id="user-email"
+                      label="User email"
+                      type="user-email"
+                      variant="standard"
+                      // onChange={handleFilter}
+                      fullWidth
+                    />
+                  </DialogContent>
+                  <DialogActions>
+                    <Button onClick={handleCloseDialog}>Cancel</Button>
+                    <Button onClick={handleShare}>Share</Button>
+                  </DialogActions>
+                </Dialog>
+              </Grid>
+            ) : (
+              <></>
+            )}
           </Grid>
           {loading ? (
             <Skeleton variant="rounded" width={'100%'} height={'100%'} />

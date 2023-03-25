@@ -282,6 +282,7 @@ export class DocumentService {
     }
 
     await this.documentRepo.save(document);
+    return document.id;
   } //end createUserDocument
 
   async canUserViewDocument(userId: string, documentId: number) {
@@ -290,7 +291,7 @@ export class DocumentService {
     });
 
     if (document.lectureNumber) {
-      return true;
+      return { isAuthorized: true, isUser: false };
     }
 
     const result = await this.documentRepo
@@ -300,6 +301,29 @@ export class DocumentService {
       .andWhere('users.userId = :userId', { userId })
       .getOne();
 
-    return !!result;
+    return { isAuthorized: !!result, isUser: true };
   } //end canUserViewDocument
+
+  async addUserToDocument(userEmail: string, documentId: number) {
+    const userRepository = this.connection.getRepository(User);
+
+    //Get the user
+    const user = await userRepository.findOne({
+      where: { email: userEmail },
+    });
+
+    if (!user) {
+      return false;
+    }
+
+    const document = await this.documentRepo.findOne({
+      where: { id: documentId },
+      relations: ['users'],
+    });
+
+    document.users.push(user);
+
+    await this.documentRepo.save(document);
+    return true;
+  }
 } //end DocumentService

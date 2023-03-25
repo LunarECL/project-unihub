@@ -59,11 +59,11 @@ export class CoursesService {
 
   async addToUserLecture(userId: string, sectionId: string): Promise<void> {
     const numSecId = Number(sectionId);
-    console.log(numSecId);
 
     //Get the section
     const section = await this.sectionRepository.findOne({
       where: { id: numSecId },
+      relations: ['users'],
     });
 
     const userRepository = this.connection.getRepository(User);
@@ -73,17 +73,12 @@ export class CoursesService {
       where: { userId: userId },
     });
 
-    //Add the user to the section
-    let newUsers = section.users || [];
-
     //If the user is already in the section, return
-    if (newUsers.some((u) => u.userId === user.userId)) {
+    if (section.users.some((u) => u.userId === user.userId)) {
       return;
     }
 
-    newUsers.push(user);
-
-    section.users = newUsers;
+    section.users.push(user);
 
     //Save the section
     await this.sectionRepository.save(section);
@@ -93,7 +88,6 @@ export class CoursesService {
     userId: string,
     sectionId: string
   ): Promise<void> {
-    console.log('sectionId', sectionId);
     const numSecId = Number(sectionId);
     //Get the lecture
     const section = await this.sectionRepository.findOne({
@@ -129,46 +123,57 @@ export class CoursesService {
             userId: user.userId,
           },
         },
+        select: ['id', 'users'],
         relations: ['users'],
       });
+
+      let documentsToRemove: ShareDoc[] = [];
 
       if (documents.length > 0) {
         //Find the ops with the document id
         const ops = await this.connection.getRepository(Op);
 
         for (let document of documents) {
-          const opsToDelete = await ops.find({
-            where: {
-              document: {
-                id: document.id,
-              },
-            },
-          });
-
-          if (opsToDelete.length > 0) {
-            for (let op of opsToDelete) {
-              const attributes = this.connection.getRepository(Attribute);
-
-              const attributesToDelete = await attributes.find({
-                where: {
-                  op: {
-                    id: op.id,
-                  },
+          if (document.users.length > 0) {
+            document.users = document.users.filter(
+              (u) => u.userId !== user.userId
+            );
+            await documentRepository.save(document);
+          } else {
+            const opsToDelete = await ops.find({
+              where: {
+                document: {
+                  id: document.id,
                 },
-              });
+              },
+            });
 
-              await attributes.remove(attributesToDelete);
+            if (opsToDelete.length > 0) {
+              for (let op of opsToDelete) {
+                const attributes = this.connection.getRepository(Attribute);
+
+                const attributesToDelete = await attributes.find({
+                  where: {
+                    op: {
+                      id: op.id,
+                    },
+                  },
+                });
+
+                await attributes.remove(attributesToDelete);
+              }
+
+              await ops.remove(opsToDelete);
             }
-
-            await ops.remove(opsToDelete);
+            documentsToRemove.push(document);
           }
         }
 
-        await documentRepository.remove(documents);
+        await documentRepository.remove(documentsToRemove);
       }
     }
     //Save the section
-    
+
     await this.sectionRepository.save(section);
   } //end removeFromUserLecture
 } //end TimeTableService

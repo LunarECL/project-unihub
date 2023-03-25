@@ -58,12 +58,10 @@ export class ShareDBServer implements OnGatewayConnection, OnGatewayConnection {
           if (doc.type === null) {
             console.log('Creating document', Date.now());
             doc.create(delta, 'rich-text');
-            return resolve("done");
+            return resolve('done');
           }
         });
       });
-
-      
     });
   }
 }

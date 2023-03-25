@@ -10,3 +10,4 @@ export * from './lib/hooks/useDeleteUserLecture';
 export * from './lib/hooks/usePostUserLecture';
 export * from './lib/hooks/usePostUserDocument';
 export * from './lib/hooks/useGetIfUserCanViewDoc';
+export * from './lib/hooks/usePostShareDocument';

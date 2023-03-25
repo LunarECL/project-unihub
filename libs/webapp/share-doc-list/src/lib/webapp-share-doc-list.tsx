@@ -51,14 +51,14 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
 
   const handleCreateDocument = () => {
     //First create the document for the lecture
-    const title = (document.getElementById('document-name') as HTMLInputElement).value;
+    const title = (document.getElementById('document-name') as HTMLInputElement)
+      .value;
     if (title !== '') {
-      usePostUserDocument(lectureId || '',  title).then((res) => {
+      usePostUserDocument(lectureId || '', title).then((res) => {
         //Then navigate to the document
         navigate(
-          `/home/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${lectureId}/${title}`
+          `/home/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${res}/${title}`
         );
-        console.log(res);
         setOpenDialog(false);
       });
     }
@@ -101,7 +101,12 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
             Create your own document!
           </Button>
           {/* fix the way this looks later */}
-          <Dialog open={openDialog} onClose={handleCloseDialog} sx={{width: '100%', height: '100%'}} maxWidth='lg'>
+          <Dialog
+            open={openDialog}
+            onClose={handleCloseDialog}
+            sx={{ width: '100%', height: '100%' }}
+            maxWidth="lg"
+          >
             <DialogTitle>Create a new document</DialogTitle>
             <DialogContent>
               <TextField
@@ -136,7 +141,9 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
                 style={{ cursor: 'pointer', width: '100%' }}
                 onClick={() =>
                   navigate(
-                    `/home/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${doc.id}/${doc.lectureNumber ? doc.lectureNumber : doc.userTitle}`
+                    `/home/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${
+                      doc.id
+                    }/${doc.lectureNumber ? doc.lectureNumber : doc.userTitle}`
                   )
                 }
               >

@@ -183,16 +183,18 @@ export function WebappTimetable(props: WebappTimetableProps) {
 
   const handleDelete = (sectionId: string) => {
     //Delete the section from the db
-    useDeleteUserLecture(sectionId).then(() => {
-      //Remove the course from the allCourses array
-      allCourses = allCourses.filter((course: any) => course.id !== sectionId);
+    // useDeleteUserLecture(sectionId).then(() => {
 
-      //Remove the course from the timetable
-      const course = courses.find((course: any) => course.id === sectionId);
-      if (course) {
-        displayCourse(course, true);
-      }
-    });
+    // });
+
+    //Remove the course from the allCourses array
+    allCourses = allCourses.filter((course: any) => course.id !== sectionId);
+
+    //Remove the course from the timetable
+    const course = courses.find((course: any) => course.id === sectionId);
+    if (course) {
+      displayCourse(course, true);
+    }
   };
 
   //Need to deal with conflicts but that'll be when we store the courses in an array or smthn
@@ -334,7 +336,6 @@ export function WebappTimetable(props: WebappTimetableProps) {
                     dateCourseLecture.getTime() +
                       courseLecture.totalMinutes * 60000
                   );
-                  console.log(newDate.toISOString());
 
                   const dateLecture = new Date(lecture.startTime);
                   const newDate2 = new Date(
