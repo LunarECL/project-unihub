@@ -1,0 +1,66 @@
+.card {
+  border-radius: 5px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+  display: inline-block;
+  position: relative;
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.name {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  font-size: 0.8rem;
+  z-index: 2;
+}
+
+.card-icons {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  z-index: 2;
+}
+
+.icon-element {
+  color: #dde2eb;
+  margin: 0 2px;
+  background-color: #15202f;
+  background-size: cover;
+  background-position: center;
+  padding: 3px;
+  cursor: pointer;
+}
+
+.active {
+  color: #22201c;
+  background-color: #dde2eb;
+}
+
+.inactive {
+  color: #dde2eb;
+  background-color: #22201c;
+}
+
+.inactive:hover {
+  background-color: #0d141c !important;
+}
+
+.active:hover {
+  background-color: #ebeff5 !important;
+}
