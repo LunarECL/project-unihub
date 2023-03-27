@@ -2,8 +2,6 @@ import axios from 'axios';
 import { useQuery } from 'react-query';
 
 const query = async (sectionId: string) => {
-  // const url = `/api/sharedoc/document/content`;
-
   const url = `/api/courses/user/section/${sectionId}`;
   // const url = `http://localhost:3333/api/courses/user/section/${sectionId}`;
 

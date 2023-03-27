@@ -65,8 +65,6 @@ export function Sharedoc(props: SharedocProps) {
 
     authorizeUser();
 
-    console.log('isUserDoc: ', isUserDoc);
-
     doc.subscribe(function (err: any) {
       if (err) throw err;
       if (!doc.type) {
@@ -132,7 +130,6 @@ export function Sharedoc(props: SharedocProps) {
       document.getElementById('user-email') as HTMLInputElement
     ).value;
     usePostShareDocument(documentId, userEmail).then((res) => {
-      console.log(res);
       if (res === false) {
         alert('User does not exist');
       } else {

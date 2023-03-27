@@ -30,18 +30,17 @@ export class ShareDBServer implements OnGatewayConnection, OnGatewayConnection {
 
   // Listen for incoming WebSocket connections
   public handleConnection(client: any, request: IncomingMessage) {
-    const stream = new WebSocketJSONStream(client);
-    backend.listen(stream);
-
     const urlParams = request.url?.split('/').slice(-5);
 
     // Create initial document
     const courseCode = urlParams[0];
     const documentId = urlParams[3];
 
-    // Create initial document
-    const doc = connection.get(courseCode, documentId);
     this.shareDocService.getDocumentContent(Number(documentId)).then((ops) => {
+      const stream = new WebSocketJSONStream(client);
+      backend.listen(stream);
+      // Create initial document
+      const doc = connection.get(courseCode, documentId);
       if (ops.length === 0) {
         ops = [
           {
@@ -56,7 +55,6 @@ export class ShareDBServer implements OnGatewayConnection, OnGatewayConnection {
         doc.fetch((err) => {
           if (err) return reject(err);
           if (doc.type === null) {
-            console.log('Creating document', Date.now());
             doc.create(delta, 'rich-text');
             return resolve('done');
           }
