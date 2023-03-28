@@ -16,13 +16,12 @@ services:
       - ./certs:/etc/nginx/certs
       - ./vhost:/etc/nginx/vhost.d
       - ./html:/usr/share/nginx/html
-      - ./conf:/etc/nginx/conf.d
     environment:
-      - DEFAULT_HOST=unihub.one
+      - DEFAULT_HOST=adballoon.me
 
-  nginx-proxy-acme:
-    image: nginxproxy/acme-companion
-    container_name: nginx-proxy-acme
+  letsencrypt-nginx-proxy-companion:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    container_name: letsencrypt-nginx-proxy-companion
     depends_on:
       - 'nginx-proxy'
     volumes:
@@ -33,6 +32,7 @@ services:
       - ./acme:/etc/acme.sh
     environment:
       - DEFAULT_EMAIL=unihubone@gmail.com
+      - NGINX_PROXY_CONTAINER=nginx-proxy # Add this line
 
   api:
     container_name: api
@@ -41,8 +41,9 @@ services:
       - 3333:3333
       - 3030:3030
     environment:
-      - VIRTUAL_HOST=api.unihub.one
-      - LETSENCRYPT_HOST=api.unihub.one
+      - VIRTUAL_HOST=api.adballoon.me
+      - LETSENCRYPT_HOST=api.adballoon.me
+      - LETSENCRYPT_EMAIL=unihubone@gmail.com
     networks:
       - app
     restart: always
@@ -55,8 +56,9 @@ services:
     ports:
       - 4200:4200
     environment:
-      - VIRTUAL_HOST=unihub.one
-      - LETSENCRYPT_HOST=unihub.one
+      - VIRTUAL_HOST=adballoon.me
+      - LETSENCRYPT_HOST=adballoon.me
+      - LETSENCRYPT_EMAIL=unihubone@gmail.com
     networks:
       - app
     restart: always
@@ -84,8 +86,9 @@ services:
       - app
     restart: always
     environment:
-      - VIRTUAL_HOST=ion.unihub.one
-      - LETSENCRYPT_HOST=ion.unihub.one
+      - VIRTUAL_HOST=ion.adballoon.me
+      - LETSENCRYPT_HOST=ion.adballoon.me
+      - LETSENCRYPT_EMAIL=unihubone@gmail.com
 
 volumes:
   redisdata:
