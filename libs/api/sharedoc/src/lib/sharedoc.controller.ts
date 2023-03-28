@@ -90,13 +90,11 @@ export class AppController {
   @Get('document/content')
   @UseGuards(AuthGuard('jwt'))
   async getDocumentContent(
-    @Query('documentId') documentId: string,
+    @Query('documentId') documentId: string
   ): Promise<Object> {
     if (!documentId) {
       throw new Error('Invalid parameters');
     }
-    return await this.shareDocService.getDocumentContent(
-      Number(documentId)
-    );
+    return await this.shareDocService.getDocumentContent(Number(documentId));
   }
 }
