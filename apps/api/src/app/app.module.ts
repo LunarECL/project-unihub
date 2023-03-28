@@ -17,6 +17,8 @@ import { Section } from '@unihub/api/courses';
 import { CoursesModule } from '@unihub/api/courses';
 import { ShareDoc } from '@unihub/api/sharedoc';
 import { ScheduleModule } from '@nestjs/schedule';
+import { Op } from '@unihub/api/sharedoc';
+import { Attribute } from '@unihub/api/sharedoc';
 
 @Module({
   imports: [
@@ -63,7 +65,7 @@ import { ScheduleModule } from '@nestjs/schedule';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [User, Courses, Lecture, Section, ShareDoc],
+      entities: [User, Courses, Lecture, Section, ShareDoc, Op, Attribute],
       synchronize: true,
       logging: true,
     }),
