@@ -154,7 +154,7 @@ export function Sharedoc(props: SharedocProps) {
                 //navigate to the previous page
                 onClick={backButton}
                 variant="contained"
-                id='BackButton'
+                id="BackButton"
               >
                 Back
               </Button>
@@ -164,7 +164,7 @@ export function Sharedoc(props: SharedocProps) {
                 <Button
                   variant="text"
                   // sx={{ mb: 2, left: -5 }}
-                  id='ShareButton'
+                  id="ShareButton"
                   onClick={handleClickOpenDialog}
                 >
                   Share with other users!

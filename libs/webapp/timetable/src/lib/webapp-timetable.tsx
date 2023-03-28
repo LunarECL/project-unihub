@@ -362,16 +362,9 @@ export function WebappTimetable(props: WebappTimetableProps) {
 
   return (
     <>
-      <Stack
-        direction="row"
-        spacing={10}
-        className={styles.Stack}
-      >
+      <Stack direction="row" spacing={10} className={styles.Stack}>
         <TableContainer>
-          <Table
-            className={styles.Table}
-            aria-label="simple table"
-          >
+          <Table className={styles.Table} aria-label="simple table">
             <TableHead>
               <TableRow className={styles.TableRowHead}>
                 <TableCell>Time</TableCell>
@@ -384,26 +377,38 @@ export function WebappTimetable(props: WebappTimetableProps) {
             </TableHead>
             <TableBody>
               {rows.map((row) => (
-                <TableRow
-                  key={row.time}
-                  className={styles.TableRow}
-                >
+                <TableRow key={row.time} className={styles.TableRow}>
                   <TableCell component="th" scope="row">
                     {row.time}
                   </TableCell>
-                  <TableCell data-day={`monday-${row.time}`} className={styles.centeredcell}>
+                  <TableCell
+                    data-day={`monday-${row.time}`}
+                    className={styles.centeredcell}
+                  >
                     {row.monday}
                   </TableCell>
-                  <TableCell data-day={`tuesday-${row.time}`} className={styles.centeredcell}>
+                  <TableCell
+                    data-day={`tuesday-${row.time}`}
+                    className={styles.centeredcell}
+                  >
                     {row.tuesday}
                   </TableCell>
-                  <TableCell data-day={`wednesday-${row.time}`} className={styles.centeredcell}>
+                  <TableCell
+                    data-day={`wednesday-${row.time}`}
+                    className={styles.centeredcell}
+                  >
                     {row.wednesday}
                   </TableCell>
-                  <TableCell data-day={`thursday-${row.time}`} className={styles.centeredcell}>
+                  <TableCell
+                    data-day={`thursday-${row.time}`}
+                    className={styles.centeredcell}
+                  >
                     {row.thursday}
                   </TableCell>
-                  <TableCell data-day={`friday-${row.time}`} className={styles.centeredcell}>
+                  <TableCell
+                    data-day={`friday-${row.time}`}
+                    className={styles.centeredcell}
+                  >
                     {row.friday}
                   </TableCell>
                 </TableRow>
@@ -429,24 +434,13 @@ export function WebappTimetable(props: WebappTimetableProps) {
             onOpen={toggleDrawer(true)}
           >
             {loading ? (
-              <Grid
-                item
-                xs={12}
-                className={styles.Loading}
-              >
+              <Grid item xs={12} className={styles.Loading}>
                 <CircularProgress />
               </Grid>
             ) : (
-              <Box
-                role="presentation"
-                className={styles.Box}
-              >
-                <TableContainer className={styles.CourseListContainer}> 
-                  <Grid
-                    container
-                    className={styles.DrawerGrid}
-                    spacing={5}
-                  >
+              <Box role="presentation" className={styles.Box}>
+                <TableContainer className={styles.CourseListContainer}>
+                  <Grid container className={styles.DrawerGrid} spacing={5}>
                     <Grid item className={styles.GridItemSearchBar}>
                       <TextField
                         id="outlined-search"
@@ -479,12 +473,24 @@ export function WebappTimetable(props: WebappTimetableProps) {
                   <Table aria-label="simple table">
                     <TableHead>
                       <TableRow className={styles.TableRowHead}>
-                        <TableCell className={styles.centeredcell}>Course Code</TableCell>
-                        <TableCell className={styles.centeredcell}>Course Title</TableCell>
-                        <TableCell className={styles.centeredcell}>Course Section</TableCell>
-                        <TableCell className={styles.centeredcell}>Instructor</TableCell>
-                        <TableCell className={styles.centeredcell}>Lecture/Tutorial</TableCell>
-                        <TableCell className={styles.centeredcell}>Delivery Mode</TableCell>
+                        <TableCell className={styles.centeredcell}>
+                          Course Code
+                        </TableCell>
+                        <TableCell className={styles.centeredcell}>
+                          Course Title
+                        </TableCell>
+                        <TableCell className={styles.centeredcell}>
+                          Course Section
+                        </TableCell>
+                        <TableCell className={styles.centeredcell}>
+                          Instructor
+                        </TableCell>
+                        <TableCell className={styles.centeredcell}>
+                          Lecture/Tutorial
+                        </TableCell>
+                        <TableCell className={styles.centeredcell}>
+                          Delivery Mode
+                        </TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody id="coursesDisplay">
@@ -502,9 +508,15 @@ export function WebappTimetable(props: WebappTimetableProps) {
                             <TableCell className={styles.centeredcell}>
                               {row.courseTitle}
                             </TableCell>
-                            <TableCell className={styles.centeredcell}>{row.sec_cd}</TableCell>
-                            <TableCell className={styles.centeredcell}>{row.prof}</TableCell>
-                            <TableCell className={styles.centeredcell}>{row.section}</TableCell>
+                            <TableCell className={styles.centeredcell}>
+                              {row.sec_cd}
+                            </TableCell>
+                            <TableCell className={styles.centeredcell}>
+                              {row.prof}
+                            </TableCell>
+                            <TableCell className={styles.centeredcell}>
+                              {row.section}
+                            </TableCell>
                             <TableCell className={styles.centeredcell}>
                               {row.deliveryMode}
                             </TableCell>

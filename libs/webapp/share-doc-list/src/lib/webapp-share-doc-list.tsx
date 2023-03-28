@@ -127,11 +127,7 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
       </Grid>
       <Grid container spacing={10}>
         {loading ? (
-          <Grid
-            item
-            xs={12}
-            className={styles.Loading}
-          >
+          <Grid item xs={12} className={styles.Loading}>
             <CircularProgress />
           </Grid>
         ) : (
