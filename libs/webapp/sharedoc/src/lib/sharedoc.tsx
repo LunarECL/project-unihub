@@ -23,7 +23,7 @@ export function Sharedoc(props: SharedocProps) {
   useGetShareDoc();
 
   useEffect(() => {
-    const socket = new ReconnectingWebSocket('ws://localhost:3030');
+    const socket = new ReconnectingWebSocket('wss://ion.unihub.one/ws');
     const connection = new ShareDB.Connection(socket as any);
 
     const doc = connection.get('examples', 'textarea');
