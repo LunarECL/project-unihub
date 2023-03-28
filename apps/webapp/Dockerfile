@@ -8,12 +8,15 @@ ARG BUILD_FLAG
 WORKDIR /app/builder
 COPY . /app/builder
 RUN npx nx run webapp:build:production
+RUN ls -la /app/builder/dist/apps/webapp # Add this line to print the contents
 
 FROM nginx:1.23.0-alpine
 
 WORKDIR /usr/share/nginx/html
 
 EXPOSE 80
+
+COPY --from=builder /app/builder/apps/webapp/nginx.conf /etc/nginx/nginx.conf
 
 COPY --from=builder /app/builder/dist/apps/webapp /usr/share/nginx/html/
 
