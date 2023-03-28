@@ -1,17 +1,12 @@
-import { useEffect, useState, useRef, LegacyRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Client, LocalStream } from 'ion-sdk-js';
 import { IonSFUJSONRPCSignal } from 'ion-sdk-js/lib/signal/json-rpc-impl';
 import { Configuration } from 'ion-sdk-js/lib/client';
-import { Button } from '@mui/material';
-import ScreenShareSharpIcon from '@mui/icons-material/ScreenShare';
-import VideocamSharpIcon from '@mui/icons-material/Videocam';
-import StopScreenShareSharpIcon from '@mui/icons-material/StopScreenShare';
-import VideocamOffSharpIcon from '@mui/icons-material/VideocamOffSharp';
 import { styled } from '@mui/material/styles';
 import { useParams } from 'react-router-dom';
-import placeholder from '../assets/placeholder.png';
 
 import './DisplayRoom.css';
+import { Card } from '../components/Card';
 
 /* eslint-disable-next-line */
 export interface DisplayRoomProps {}
@@ -21,10 +16,10 @@ let signal: IonSFUJSONRPCSignal;
 
 export function DisplayRoom(props: DisplayRoomProps) {
   const [cameraOn, setCameraOn] = useState(false);
+
   const [screenOn, setScreenOn] = useState(false);
   const [pubShow, setPubShow] = useState<string>('none');
   const [noRemoteStreams, setNoRemoteStreams] = useState<boolean>(true);
-  const [showControls, setShowControls] = useState<boolean>(false);
 
   const backgroundColors = [
     '#FFC107', // Amber
@@ -127,6 +122,7 @@ export function DisplayRoom(props: DisplayRoomProps) {
     if (screenOn) {
       handleScreenStream(false);
     } else {
+      // FIX:
       // when clicking on screen option, it takes you to another screen share page
       // where you can select the screen you want to share
       // but, if you click cancel, don't turn on the screen
@@ -209,17 +205,21 @@ export function DisplayRoom(props: DisplayRoomProps) {
     }
 
     const length = Object.keys(streams.current).length;
+    console.log(length);
 
     if (length === 1) {
+      console.log('displaying one stream');
       // only one stream, so make it full screen
       const videoElement =
         streams.current[Object.keys(streams.current)[0]].videoElement;
-      videoElement.style.width = '100%';
-      videoElement.style.height = '100%';
-      videoElement.style.objectFit = 'cover';
-      videoElement.style.boxSizing = 'border-box';
-      videoElement.style.margin = '0px';
+      // remove all existing classes
+      while (videoElement.classList.length > 0) {
+        videoElement.classList.remove(videoElement.classList.item(0) as string);
+      }
+
       videoElement.classList.add('media-element');
+      videoElement.classList.add('one-stream');
+      videoElement.classList.add('stream');
 
       if (gridContainer) {
         gridContainer.appendChild(videoElement);
@@ -228,61 +228,80 @@ export function DisplayRoom(props: DisplayRoomProps) {
       // two streams, so make them both 50% width
       Object.keys(streams.current).forEach((key) => {
         const videoElement = streams.current[key].videoElement;
-        videoElement.style.width = '50%';
-        videoElement.style.height = '100%';
-        videoElement.style.objectFit = 'cover';
-        videoElement.style.boxSizing = 'border-box';
-        videoElement.style.margin = '0px';
+        // remove all existing classes
+        while (videoElement.classList.length > 0) {
+          videoElement.classList.remove(
+            videoElement.classList.item(0) as string
+          );
+        }
         videoElement.classList.add('media-element');
+        videoElement.classList.add('upto-four-streams');
+        videoElement.classList.add('stream');
 
         if (gridContainer) {
           gridContainer.appendChild(videoElement);
         }
       });
     } else if (length === 3) {
-      // three streams, so make them all 33% width
-      Object.keys(streams.current).forEach((key) => {
-        const videoElement = streams.current[key].videoElement;
-        videoElement.style.width = '50%';
-        videoElement.style.height = '50%';
-        videoElement.style.objectFit = 'cover';
-        videoElement.classList.add('media-element');
-        videoElement.style.boxSizing = 'border-box';
-        videoElement.style.margin = '0px';
-
-        // for the 3rd stream, center it vertically
-        if (key === '2') {
-          videoElement.style.marginTop = '50%';
-          videoElement.style.transform = 'translateY(-50%)';
-        }
-
-        if (gridContainer) {
-          gridContainer.appendChild(videoElement);
-        }
-      });
-    } else if (length === 4) {
       // make 2 rows of 2 columns each
       const row1 = document.createElement('div');
       const row2 = document.createElement('div');
-      row1.style.width = '100%';
-      row1.style.height = '50%';
-      row2.style.width = '100%';
-      row2.style.height = '50%';
-      row1.style.display = 'flex';
-      row2.style.display = 'flex';
-      row1.style.flexDirection = 'row';
-      row2.style.flexDirection = 'row';
+
+      row1.classList.add('stream-row');
+      row2.classList.add('stream-row');
 
       let count = 0;
 
       Object.keys(streams.current).forEach((key) => {
         const videoElement = streams.current[key].videoElement;
-        videoElement.style.width = '50%';
-        videoElement.style.height = '100%';
-        videoElement.style.objectFit = 'cover';
+        // remove all existing classes
+        while (videoElement.classList.length > 0) {
+          videoElement.classList.remove(
+            videoElement.classList.item(0) as string
+          );
+        }
         videoElement.classList.add('media-element');
-        videoElement.style.boxSizing = 'border-box';
-        videoElement.style.margin = '0px';
+        videoElement.classList.add('upto-four-streams');
+        videoElement.classList.add('stream');
+
+        if (count < 2) {
+          if (row1) {
+            row1.appendChild(videoElement);
+          }
+        } else {
+          if (row2) {
+            row2.appendChild(videoElement);
+          }
+        }
+
+        if (gridContainer) {
+          gridContainer.appendChild(row1);
+          gridContainer.appendChild(row2);
+        }
+
+        count += 1;
+      });
+    } else if (length === 4) {
+      // make 2 rows of 2 columns each
+      const row1 = document.createElement('div');
+      const row2 = document.createElement('div');
+
+      row1.classList.add('stream-row');
+      row2.classList.add('stream-row');
+
+      let count = 0;
+
+      Object.keys(streams.current).forEach((key) => {
+        const videoElement = streams.current[key].videoElement;
+        // remove all existing classes
+        while (videoElement.classList.length > 0) {
+          videoElement.classList.remove(
+            videoElement.classList.item(0) as string
+          );
+        }
+        videoElement.classList.add('media-element');
+        videoElement.classList.add('upto-four-streams');
+        videoElement.classList.add('stream');
 
         if (count < 2) {
           if (row1) {
@@ -305,25 +324,23 @@ export function DisplayRoom(props: DisplayRoomProps) {
       // JUST SUPPORT 6 STREAMS FOR NOW
       const row1 = document.createElement('div');
       const row2 = document.createElement('div');
-      row1.style.width = '100%';
-      row1.style.height = '50%';
-      row2.style.width = '100%';
-      row2.style.height = '50%';
-      row1.style.display = 'flex';
-      row2.style.display = 'flex';
-      row1.style.flexDirection = 'row';
-      row2.style.flexDirection = 'row';
+
+      row1.classList.add('stream-row');
+      row2.classList.add('stream-row');
 
       let count = 0;
 
       Object.keys(streams.current).forEach((key) => {
         const videoElement = streams.current[key].videoElement;
-        videoElement.style.width = '25%';
-        videoElement.style.height = '100%';
-        videoElement.style.objectFit = 'cover';
+        // remove all existing classes
+        while (videoElement.classList.length > 0) {
+          videoElement.classList.remove(
+            videoElement.classList.item(0) as string
+          );
+        }
         videoElement.classList.add('media-element');
-        videoElement.style.boxSizing = 'border-box';
-        videoElement.style.margin = '0px';
+        videoElement.classList.add('upto-eight-streams');
+        videoElement.classList.add('stream');
 
         if (count < 4) {
           if (row1) {
@@ -356,24 +373,6 @@ export function DisplayRoom(props: DisplayRoomProps) {
     alert('Invitation link copied to clipboard!');
   };
 
-  const Header = styled('header')({
-    display: 'flex',
-    height: '10%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    // make background color grey transparent
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    color: 'white',
-    '& > div:first-of-type': {
-      marginRight: 'auto',
-    },
-    '& > div:last-child': {
-      position: 'absolute',
-      top: '2px',
-      right: '5px',
-    },
-  });
-
   useEffect(() => {
     displayRemoteStreams();
   }, [streams.current]);
@@ -382,95 +381,42 @@ export function DisplayRoom(props: DisplayRoomProps) {
     <div className="App">
       <div className="App-header">
         <div>{`Room: ${roomId}`}</div>
-        <Button
+        <button
+          className="headerBtn"
           id="bnt_pubcam"
-          variant="contained"
           onClick={() => generateInviteLink()}
         >
           Invititation Link
-        </Button>
+        </button>
       </div>
+
       <div
         id="local-stream"
         className={
           noRemoteStreams ? 'displayNoRemote' : 'localStreamBottomLeft'
         }
-        onMouseEnter={() => setShowControls(true)}
-        onMouseLeave={() => setShowControls(false)}
       >
-        <video
-          style={{
-            display: pubShow,
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-          }}
-          className={noRemoteStreams ? '' : ' media-element'}
-          controls
-          ref={pubVideo}
-        ></video>
-        <video
-          style={{
-            // get background color from localstorage
-            backgroundColor: localStorage.getItem('color') as string,
-            display: pubShow === 'none' ? '' : 'none',
-          }}
-          className={
-            noRemoteStreams ? 'avatarVideo' : 'avatarVideo media-element'
-          }
-          poster={placeholder}
-        ></video>
-        <div
-          style={{ display: showControls ? '' : 'none' }}
-          className={noRemoteStreams ? 'controlsLarge' : 'controls'}
-        >
-          <div
-            style={{
-              display: cameraOn ? 'none' : 'flex',
-              justifyContent: 'center',
-            }}
-          >
-            <VideocamOffSharpIcon
-              onClick={() => handleCameraToggle()}
-              className={noRemoteStreams ? 'iconLarge' : 'icon'}
-              style={{ color: 'red' }}
-            ></VideocamOffSharpIcon>
-          </div>
-          <div
-            style={{
-              display: cameraOn ? 'flex' : 'none',
-              justifyContent: 'center',
-            }}
-          >
-            <VideocamSharpIcon
-              onClick={() => handleCameraToggle()}
-              className={noRemoteStreams ? 'iconLarge' : 'icon'}
-            ></VideocamSharpIcon>
-          </div>
-          <div
-            style={{
-              display: screenOn ? 'flex' : 'none',
-              justifyContent: 'center',
-            }}
-          >
-            <ScreenShareSharpIcon
-              onClick={() => handleScreenToggle()}
-              className={noRemoteStreams ? 'iconLarge' : 'icon'}
-            ></ScreenShareSharpIcon>
-          </div>
-          <div
-            style={{
-              display: screenOn ? 'none' : 'flex',
-              justifyContent: 'center',
-            }}
-          >
-            <StopScreenShareSharpIcon
-              onClick={() => handleScreenToggle()}
-              className={noRemoteStreams ? 'iconLarge' : 'icon'}
-              style={{ color: 'red' }}
-            ></StopScreenShareSharpIcon>
-          </div>
-        </div>
+        <Card
+          name="Ankit"
+          width={100}
+          height={100}
+          handleCameraToggle={handleCameraToggle}
+          handleScreenToggle={handleScreenToggle}
+          display={pubShow === 'none' ? 'none' : ''}
+          refVideo={pubVideo}
+          isScreenStream={screenOn}
+        />
+
+        <Card
+          name="Ankit"
+          width={100}
+          height={100}
+          handleCameraToggle={handleCameraToggle}
+          handleScreenToggle={handleScreenToggle}
+          display={pubShow === 'none' ? '' : 'none'}
+          refVideo={null}
+          isScreenStream={false}
+        />
       </div>
       <div
         id="stream-container"

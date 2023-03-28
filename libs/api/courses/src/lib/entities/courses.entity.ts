@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  ManyToMany,
   OneToMany,
   PrimaryColumn,
   UpdateDateColumn,

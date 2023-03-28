@@ -1,13 +1,12 @@
 import React from 'react';
 import { ApiProvider } from '@unihub/webapp/api';
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { Sharedoc } from '@unihub/webapp/sharedoc';
 import { Route, Routes } from 'react-router-dom';
 import Forum from './forum/forum';
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { WebappTimetable } from '@unihub/webapp/timetable';
+import { WebappShareDocList } from '@unihub/webapp/share-doc-list';
 import { DisplayRoom, CreateRoom, JoinRoom } from '@unihub/webapp/webrtc';
 
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface WebappHomeProps {}
 
 export function Home(props: WebappHomeProps) {
@@ -15,8 +14,15 @@ export function Home(props: WebappHomeProps) {
     <ApiProvider>
       <Routes>
         <Route path="/" element={<Forum />} />
-        <Route path="/sharedDocument" element={<Sharedoc />} />
-        <Route path="/sharedDocument" element={<Sharedoc />} />
+        <Route path="/timetable" element={<WebappTimetable />} />
+        <Route
+          path="/sharedDocument/:courseCode/:sessionId/:lectureId/:documentId/:lectureNumber" ///sharedDocument/CSCC63/1/1/1
+          element={<Sharedoc />}
+        />
+        <Route
+          path="/sharedDocument/:courseCode/:sessionId/:lectureId/"
+          element={<WebappShareDocList />}
+        />
         <Route path="/room/create" element={<CreateRoom />} />
         <Route path="/room/join" element={<JoinRoom />} />
         <Route path="/room/:roomId" element={<DisplayRoom />} />
