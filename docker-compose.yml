@@ -5,19 +5,41 @@ networks:
     driver: bridge
 
 services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - ./certs:/etc/nginx/certs
+      - ./vhost:/etc/nginx/vhost.d
+      - ./html:/usr/share/nginx/html
+    environment:
+      - DEFAULT_HOST=www.unihub.one
+
+  nginx-proxy-acme:
+    image: nginxproxy/acme-companion
+    container_name: nginx-proxy-acme
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./certs:/etc/nginx/certs
+      - ./vhost:/etc/nginx/vhost.d
+      - ./html:/usr/share/nginx/html
+      - ./acme:/etc/acme.sh
+    environment:
+      - DEFAULT_EMAIL=unihubone@gmail.com
+
   api:
     container_name: api
-    build:
-      context: ./
-      cache_from:
-        - node:lts-alpine3.17
-      dockerfile: ./apps/api/Dockerfile
-    image: unihub/api:latest
+    image: ghcr.io/uoft-utsc-cs-sandbox/unihub/api:latest
     ports:
       - 3333:3333
       - 3030:3030
     environment:
-      PORT: 3333
+      - VIRTUAL_HOST=api.unihub.one
+      - LETSENCRYPT_HOST=api.unihub.one
     networks:
       - app
     restart: always
@@ -26,16 +48,12 @@ services:
 
   webapp:
     container_name: webapp
-    build:
-      context: .
-      cache_from:
-        - nginx:1.23.0-alpine
-      dockerfile: ./apps/webapp/Dockerfile
-    image: unihub/webapp:latest
+    image: ghcr.io/uoft-utsc-cs-sandbox/unihub/webapp:latest
     ports:
-      - 4200:80
+      - 80:80
     environment:
-      PORT: 4200
+      - VIRTUAL_HOST=unihub.one
+      - LETSENCRYPT_HOST=unihub.one
     networks:
       - app
     restart: always
@@ -62,6 +80,9 @@ services:
     networks:
       - app
     restart: always
+    environment:
+      - VIRTUAL_HOST=ion.unihub.one
+      - LETSENCRYPT_HOST=ion.unihub.one
 
 volumes:
   redisdata:

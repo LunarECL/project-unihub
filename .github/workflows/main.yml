@@ -2,10 +2,10 @@ name: CI
 
 on:
   push:
-    branches: ['main']
+    branches: ['feature/deployment-setup']
 
   pull_request:
-    branches: ['main']
+    branches: ['feature/deployment-setup']
 
   workflow_dispatch:
 

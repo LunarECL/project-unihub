@@ -20,9 +20,9 @@ import { ScheduleModule } from '@nestjs/schedule';
 
 @Module({
   imports: [
-    AuthModule,
-    SharedocModule,
-    CoursesModule,
+    // AuthModule,
+    // SharedocModule,
+    // CoursesModule,
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
@@ -56,17 +56,17 @@ import { ScheduleModule } from '@nestjs/schedule';
     //     credentials: true,
     //   },
     // }),
-    TypeOrmModule.forRoot({
-      type: 'mysql',
-      host: process.env.DB_HOST,
-      port: +process.env.DB_PORT,
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
-      entities: [User, Courses, Lecture, Section, ShareDoc],
-      synchronize: true,
-      logging: true,
-    }),
+    // TypeOrmModule.forRoot({
+    //   type: 'mysql',
+    //   host: process.env.DB_HOST,
+    //   port: +process.env.DB_PORT,
+    //   username: process.env.DB_USERNAME,
+    //   password: process.env.DB_PASSWORD,
+    //   database: process.env.DB_NAME,
+    //   entities: [User, Courses, Lecture, Section, ShareDoc],
+    //   synchronize: true,
+    //   logging: true,
+    // }),
     BullModule.forRootAsync({
       imports: [ConfigModule.forRoot({ envFilePath: `.env` })],
       useFactory: async (configService: ConfigService) => ({
