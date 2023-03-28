@@ -145,7 +145,7 @@ export function Sharedoc(props: SharedocProps) {
         <div id="doc-container">
           <Grid container spacing={0}>
             <Grid item xs={8}>
-              <Typography variant="h1" sx={{ fontSize: 24, mb: 2 }}>
+              <Typography variant="h1" id="DocTitle">
                 Collaborate to create notes for {courseCode}, {lectureNumber}
               </Typography>
             </Grid>
@@ -154,7 +154,7 @@ export function Sharedoc(props: SharedocProps) {
                 //navigate to the previous page
                 onClick={backButton}
                 variant="contained"
-                sx={{ position: 'absolute', right: 0 }}
+                id='BackButton'
               >
                 Back
               </Button>
@@ -163,7 +163,8 @@ export function Sharedoc(props: SharedocProps) {
               <Grid item xs={8}>
                 <Button
                   variant="text"
-                  sx={{ mb: 2, left: -5 }}
+                  // sx={{ mb: 2, left: -5 }}
+                  id='ShareButton'
                   onClick={handleClickOpenDialog}
                 >
                   Share with other users!
@@ -172,7 +173,7 @@ export function Sharedoc(props: SharedocProps) {
                 <Dialog
                   open={openDialog}
                   onClose={handleCloseDialog}
-                  sx={{ width: '100%', height: '100%' }}
+                  id="AddUserDialog"
                   maxWidth="lg"
                 >
                   <DialogTitle>Share with other users on UniHub!</DialogTitle>
@@ -182,7 +183,6 @@ export function Sharedoc(props: SharedocProps) {
                       label="User email"
                       type="user-email"
                       variant="standard"
-                      // onChange={handleFilter}
                       fullWidth
                     />
                   </DialogContent>
@@ -202,7 +202,7 @@ export function Sharedoc(props: SharedocProps) {
             <ReactQuill
               onChange={handleChange}
               ref={editorRef}
-              style={{ height: '100%' }}
+              id="QuillEditor"
             />
           )}
         </div>

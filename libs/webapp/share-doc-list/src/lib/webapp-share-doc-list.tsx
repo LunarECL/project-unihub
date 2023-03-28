@@ -17,6 +17,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { usePostUserDocument } from '@unihub/webapp/api';
+import styles from './webapp-share-doc-list.module.css';
 
 /* eslint-disable-next-line */
 export interface WebappShareDocListProps {}
@@ -76,10 +77,10 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
   }, [lectureId]);
 
   return (
-    <div style={{ marginLeft: '10%', marginRight: '10%', marginTop: '5%' }}>
+    <div className={styles.DocumentListDiv}>
       <Grid container spacing={0}>
         <Grid item xs={11}>
-          <Typography variant="h1" sx={{ fontSize: 35, mb: 2 }}>
+          <Typography variant="h1" className={styles.ListTitle}>
             {courseCode} lecture documents
           </Typography>
         </Grid>
@@ -95,7 +96,7 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
         <Grid item xs={12}>
           <Button
             variant="text"
-            sx={{ marginBottom: '4%', float: 'left' }}
+            className={styles.CreateDocButton}
             onClick={handleClickOpenDialog}
           >
             Create your own document!
@@ -104,7 +105,7 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
           <Dialog
             open={openDialog}
             onClose={handleCloseDialog}
-            sx={{ width: '100%', height: '100%' }}
+            className={styles.CreateDocDialog}
             maxWidth="lg"
           >
             <DialogTitle>Create a new document</DialogTitle>
@@ -114,7 +115,6 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
                 label="Name of your document"
                 type="name"
                 variant="standard"
-                // onChange={handleFilter}
                 fullWidth
               />
             </DialogContent>
@@ -130,7 +130,7 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
           <Grid
             item
             xs={12}
-            sx={{ display: 'flex', justifyContent: 'center', marginTop: '20%' }}
+            className={styles.Loading}
           >
             <CircularProgress />
           </Grid>
@@ -138,7 +138,8 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
           documents.map((doc) => (
             <Grid item xs={12} sm={6} md={4} lg={3} key={doc.id}>
               <Button
-                style={{ cursor: 'pointer', width: '100%' }}
+                // style={{ cursor: 'pointer', width: '100%' }}
+                className={styles.DocumentItem}
                 onClick={() =>
                   navigate(
                     `/home/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${
@@ -149,18 +150,14 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
               >
                 <Box
                   component="img"
-                  sx={{
-                    maxHeight: { xs: 233, md: 167 },
-                    maxWidth: { xs: 350, md: 250 },
-                    color: 'primary.main',
-                  }}
+                  className={styles.DocImage}
                   src="https://cdn.iconscout.com/icon/free/png-256/google-docs-1772228-1507812.png"
                 ></Box>
               </Button>
               <Typography
                 align="center"
                 variant="h1"
-                sx={{ fontSize: 24, mb: 2 }}
+                className={styles.DocTitle}
               >
                 {doc.lectureNumber === null ? doc.userTitle : doc.lectureNumber}
               </Typography>

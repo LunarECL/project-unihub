@@ -22,6 +22,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { usePostUserLecture } from '@unihub/webapp/api';
 import { useGetUserLectures } from '@unihub/webapp/api';
 import { useDeleteUserLecture } from '@unihub/webapp/api';
+import styles from './webapp-timetable.module.css';
 /* eslint-disable-next-line */
 export interface WebappTimetableProps {}
 
@@ -182,10 +183,7 @@ export function WebappTimetable(props: WebappTimetableProps) {
     };
 
   const handleDelete = (sectionId: string) => {
-    //Delete the section from the db
-    // useDeleteUserLecture(sectionId).then(() => {
-
-    // });
+    useDeleteUserLecture(sectionId);
 
     //Remove the course from the allCourses array
     allCourses = allCourses.filter((course: any) => course.id !== sectionId);
@@ -251,20 +249,13 @@ export function WebappTimetable(props: WebappTimetableProps) {
                 (cell as HTMLElement).style.borderColor = '';
               } else {
                 (cell as HTMLElement).style.backgroundColor = colours[colIndex];
-                (cell as HTMLElement).style.color = 'white';
-                (cell as HTMLElement).style.fontWeight = 'bold';
+                (cell as HTMLElement).classList.add(styles.ClassCell);
                 if (iteration === 0) {
                   (cell as HTMLElement).innerHTML = course.course.programCode;
                   //Add an x button
                   const xButton = document.createElement('button');
                   xButton.innerText = 'x';
-                  xButton.style.border = 'none';
-                  xButton.style.background = 'transparent';
-                  xButton.style.color = 'white';
-                  xButton.style.cursor = 'pointer';
-                  xButton.style.float = 'right';
-                  xButton.style.font = 'bold 20px Arial, sans-serif';
-                  xButton.style.marginTop = '-4px';
+                  xButton.classList.add(styles.xButton);
                   (cell as HTMLElement).appendChild(xButton);
 
                   //Add a click event listener to the x button
@@ -275,7 +266,6 @@ export function WebappTimetable(props: WebappTimetableProps) {
                 } //end if
                 (cell as HTMLElement).style.borderBottomColor =
                   colours[colIndex];
-                (cell as HTMLElement).style.cursor = 'pointer';
                 //Add an x button
                 (cell as HTMLElement).addEventListener('click', () => {
                   navigate(
@@ -375,45 +365,45 @@ export function WebappTimetable(props: WebappTimetableProps) {
       <Stack
         direction="row"
         spacing={10}
-        sx={{ marginLeft: '5%', marginRight: '5%', marginTop: '3%' }}
+        className={styles.Stack}
       >
         <TableContainer>
           <Table
-            sx={{ border: 1, borderColor: 'lightgrey' }}
+            className={styles.Table}
             aria-label="simple table"
           >
             <TableHead>
-              <TableRow sx={{ fontWeight: 'medium' }}>
+              <TableRow className={styles.TableRowHead}>
                 <TableCell>Time</TableCell>
-                <TableCell align="center">Monday</TableCell>
-                <TableCell align="center">Tuesday</TableCell>
-                <TableCell align="center">Wednesday</TableCell>
-                <TableCell align="center">Thursday</TableCell>
-                <TableCell align="center">Friday</TableCell>
+                <TableCell className={styles.centeredcell}>Monday</TableCell>
+                <TableCell className={styles.centeredcell}>Tuesday</TableCell>
+                <TableCell className={styles.centeredcell}>Wednesday</TableCell>
+                <TableCell className={styles.centeredcell}>Thursday</TableCell>
+                <TableCell className={styles.centeredcell}>Friday</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {rows.map((row) => (
                 <TableRow
                   key={row.time}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  className={styles.TableRow}
                 >
                   <TableCell component="th" scope="row">
                     {row.time}
                   </TableCell>
-                  <TableCell data-day={`monday-${row.time}`} align="center">
+                  <TableCell data-day={`monday-${row.time}`} className={styles.centeredcell}>
                     {row.monday}
                   </TableCell>
-                  <TableCell data-day={`tuesday-${row.time}`} align="center">
+                  <TableCell data-day={`tuesday-${row.time}`} className={styles.centeredcell}>
                     {row.tuesday}
                   </TableCell>
-                  <TableCell data-day={`wednesday-${row.time}`} align="center">
+                  <TableCell data-day={`wednesday-${row.time}`} className={styles.centeredcell}>
                     {row.wednesday}
                   </TableCell>
-                  <TableCell data-day={`thursday-${row.time}`} align="center">
+                  <TableCell data-day={`thursday-${row.time}`} className={styles.centeredcell}>
                     {row.thursday}
                   </TableCell>
-                  <TableCell data-day={`friday-${row.time}`} align="center">
+                  <TableCell data-day={`friday-${row.time}`} className={styles.centeredcell}>
                     {row.friday}
                   </TableCell>
                 </TableRow>
@@ -422,12 +412,11 @@ export function WebappTimetable(props: WebappTimetableProps) {
           </Table>
         </TableContainer>
         <IconButton
-          sx={{ maxHeight: 50, maxWidth: 50 }}
+          className={styles.AddButtonContainer}
           onClick={toggleDrawer(true)}
         >
-          <AddCircleOutlineIcon sx={{ fontSize: 45 }} />
+          <AddCircleOutlineIcon className={styles.AddButtonIcon} />
         </IconButton>
-        {/* Wanna fix so drawer doesn't just pop up */}
         <Drawer
           anchor="top"
           open={state['bottom']}
@@ -443,32 +432,22 @@ export function WebappTimetable(props: WebappTimetableProps) {
               <Grid
                 item
                 xs={12}
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  marginTop: '20%',
-                }}
+                className={styles.Loading}
               >
                 <CircularProgress />
               </Grid>
             ) : (
               <Box
                 role="presentation"
-                sx={{
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  height: '60vh',
-                  padding: '1rem',
-                }}
+                className={styles.Box}
               >
-                <TableContainer sx={{ width: '90%', margin: '0 auto' }}>
+                <TableContainer className={styles.CourseListContainer}> 
                   <Grid
                     container
-                    sx={{ marginTop: '2%', marginBottom: '2%' }}
+                    className={styles.DrawerGrid}
                     spacing={5}
                   >
-                    <Grid item sx={{ width: '75%' }}>
+                    <Grid item className={styles.GridItemSearchBar}>
                       <TextField
                         id="outlined-search"
                         label="Find your course"
@@ -499,13 +478,13 @@ export function WebappTimetable(props: WebappTimetableProps) {
                   </Grid>
                   <Table aria-label="simple table">
                     <TableHead>
-                      <TableRow sx={{ fontWeight: 'medium' }}>
-                        <TableCell align="center">Course Code</TableCell>
-                        <TableCell align="center">Course Title</TableCell>
-                        <TableCell align="center">Course Section</TableCell>
-                        <TableCell align="center">Instructor</TableCell>
-                        <TableCell align="center">Lecture/Tutorial</TableCell>
-                        <TableCell align="center">Delivery Mode</TableCell>
+                      <TableRow className={styles.TableRowHead}>
+                        <TableCell className={styles.centeredcell}>Course Code</TableCell>
+                        <TableCell className={styles.centeredcell}>Course Title</TableCell>
+                        <TableCell className={styles.centeredcell}>Course Section</TableCell>
+                        <TableCell className={styles.centeredcell}>Instructor</TableCell>
+                        <TableCell className={styles.centeredcell}>Lecture/Tutorial</TableCell>
+                        <TableCell className={styles.centeredcell}>Delivery Mode</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody id="coursesDisplay">
@@ -514,22 +493,19 @@ export function WebappTimetable(props: WebappTimetableProps) {
                         .map((row: any, index: number) => (
                           <TableRow
                             key={index}
-                            sx={{
-                              '&:last-child td, &:last-child th': { border: 0 },
-                              cursor: 'pointer',
-                            }}
+                            className={styles.TableRowList}
                             onClick={() => addCourseTime(index)}
                           >
-                            <TableCell align="center">
+                            <TableCell className={styles.centeredcell}>
                               {row.programCode}
                             </TableCell>
-                            <TableCell align="center">
+                            <TableCell className={styles.centeredcell}>
                               {row.courseTitle}
                             </TableCell>
-                            <TableCell align="center">{row.sec_cd}</TableCell>
-                            <TableCell align="center">{row.prof}</TableCell>
-                            <TableCell align="center">{row.section}</TableCell>
-                            <TableCell align="center">
+                            <TableCell className={styles.centeredcell}>{row.sec_cd}</TableCell>
+                            <TableCell className={styles.centeredcell}>{row.prof}</TableCell>
+                            <TableCell className={styles.centeredcell}>{row.section}</TableCell>
+                            <TableCell className={styles.centeredcell}>
                               {row.deliveryMode}
                             </TableCell>
                           </TableRow>
