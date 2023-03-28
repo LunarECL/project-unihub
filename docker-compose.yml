@@ -16,12 +16,15 @@ services:
       - ./certs:/etc/nginx/certs
       - ./vhost:/etc/nginx/vhost.d
       - ./html:/usr/share/nginx/html
+      - ./conf:/etc/nginx/conf.d
     environment:
       - DEFAULT_HOST=www.unihub.one
 
   nginx-proxy-acme:
     image: nginxproxy/acme-companion
     container_name: nginx-proxy-acme
+    depends_on:
+      - 'nginx-proxy'
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./certs:/etc/nginx/certs
@@ -50,12 +53,14 @@ services:
     container_name: webapp
     image: ghcr.io/uoft-utsc-cs-sandbox/unihub/webapp:latest
     ports:
-      - 80:80
+      - 4200:4200
     environment:
       - VIRTUAL_HOST=unihub.one
       - LETSENCRYPT_HOST=unihub.one
     networks:
       - app
+    volumes:
+      - ./html:/usr/share/nginx/html
     restart: always
     env_file:
       - .env
