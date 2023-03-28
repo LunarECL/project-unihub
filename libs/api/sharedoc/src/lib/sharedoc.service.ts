@@ -1,12 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { Courses, Lecture, Section } from '@unihub/api/courses';
 import { Connection, Equal, In, IsNull, Not, Repository } from 'typeorm';
 import { ShareDoc } from './entities/sharedoc.entity';
 import { Op } from './entities/ops.entity';
 import { Attribute } from './entities/attributes.entity';
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { User } from '@unihub/api/auth';
 // import { CoursesController } from '@unihub/api/courses';
 
@@ -156,7 +154,6 @@ export class DocumentService {
     return newRetDocument;
   } //end getAllDocuments
 
-  // eslint-disable-next-line @typescript-eslint/ban-types
   async getDocumentContent(documentId: number): Promise<Object[]> {
     //Get all the ops for this document
     const ops = await this.opsRepo.find({

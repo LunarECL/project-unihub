@@ -1,14 +1,12 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { AuthModule } from '@unihub/api/auth';
 import { User } from '@unihub/api/auth';
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { Attribute, ShareDoc } from '@unihub/api/sharedoc';
 import { Repository, Connection, In } from 'typeorm';
 import { Courses } from './entities/courses.entity';
 import { Lecture } from './entities/lecture.entity';
 import { Section } from './entities/section.entity';
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { Op } from '@unihub/api/sharedoc';
 import { FindOperator } from 'typeorm';
 // import dataSource from 'typeorm';
@@ -115,7 +113,7 @@ export class CoursesService {
       relations: ['section'],
     });
 
-    for (const lecture of lectures) {
+    for (let lecture of lectures) {
       const documents = await documentRepository.find({
         where: {
           lecture: {
@@ -129,13 +127,13 @@ export class CoursesService {
         relations: ['users'],
       });
 
-      const documentsToRemove: ShareDoc[] = [];
+      let documentsToRemove: ShareDoc[] = [];
 
       if (documents.length > 0) {
         //Find the ops with the document id
         const ops = await this.connection.getRepository(Op);
 
-        for (const document of documents) {
+        for (let document of documents) {
           if (document.users.length > 0) {
             document.users = document.users.filter(
               (u) => u.userId !== user.userId
@@ -151,7 +149,7 @@ export class CoursesService {
             });
 
             if (opsToDelete.length > 0) {
-              for (const op of opsToDelete) {
+              for (let op of opsToDelete) {
                 const attributes = this.connection.getRepository(Attribute);
 
                 const attributesToDelete = await attributes.find({

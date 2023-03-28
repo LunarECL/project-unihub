@@ -7,10 +7,8 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { Lecture } from '@unihub/api/courses';
 import { Op } from './ops.entity';
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { User } from '@unihub/api/auth';
 
 @Entity()
