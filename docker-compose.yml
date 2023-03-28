@@ -18,7 +18,7 @@ services:
       - ./html:/usr/share/nginx/html
       - ./conf:/etc/nginx/conf.d
     environment:
-      - DEFAULT_HOST=www.unihub.one
+      - DEFAULT_HOST=unihub.one
 
   nginx-proxy-acme:
     image: nginxproxy/acme-companion
@@ -59,8 +59,6 @@ services:
       - LETSENCRYPT_HOST=unihub.one
     networks:
       - app
-    volumes:
-      - ./html:/usr/share/nginx/html
     restart: always
     env_file:
       - .env

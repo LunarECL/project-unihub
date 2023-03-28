@@ -9,8 +9,9 @@ WORKDIR /app/builder
 COPY . /app/builder
 RUN npx nx run webapp:build:production
 
-FROM jwilder/nginx-proxy:latest
+FROM nginx:1.23.0-alpine
+
+WORKDIR /usr/share/nginx/html
 
 COPY --from=builder /app/builder/dist/apps/webapp /usr/share/nginx/html/
 
-COPY --from=builder /app/builder/apps/webapp/nginx.conf /etc/nginx/conf.d/default.conf
