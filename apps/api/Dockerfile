@@ -15,5 +15,8 @@ WORKDIR /app
 COPY --from=builder /app/builder /app/
 ENV NODE_ENV production
 
+EXPOSE 3000
+EXPOSE 3030
+
 
 CMD [ "node", "./dist/apps/api/main.js" ]

@@ -13,5 +13,7 @@ FROM nginx:1.23.0-alpine
 
 WORKDIR /usr/share/nginx/html
 
+EXPOSE 80
+
 COPY --from=builder /app/builder/dist/apps/webapp /usr/share/nginx/html/
 

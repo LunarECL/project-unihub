@@ -16,6 +16,7 @@ services:
       - ./certs:/etc/nginx/certs
       - ./vhost:/etc/nginx/vhost.d
       - ./html:/usr/share/nginx/html
+      - ./conf.d:/etc/nginx/conf.d
     environment:
       - DEFAULT_HOST=adballoon.me
 
@@ -30,6 +31,7 @@ services:
       - ./vhost:/etc/nginx/vhost.d
       - ./html:/usr/share/nginx/html
       - ./acme:/etc/acme.sh
+      - ./conf.d:/etc/nginx/conf.d
     environment:
       - DEFAULT_EMAIL=unihubone@gmail.com
       - NGINX_PROXY_CONTAINER=nginx-proxy # Add this line
@@ -37,9 +39,9 @@ services:
   api:
     container_name: api
     image: ghcr.io/uoft-utsc-cs-sandbox/unihub/api:latest
-    ports:
-      - 3333:3333
-      - 3030:3030
+    expose:
+      - 3000
+      - 3030
     environment:
       - VIRTUAL_HOST=api.adballoon.me
       - LETSENCRYPT_HOST=api.adballoon.me
@@ -53,8 +55,8 @@ services:
   webapp:
     container_name: webapp
     image: ghcr.io/uoft-utsc-cs-sandbox/unihub/webapp:latest
-    ports:
-      - 4200:4200
+    expose:
+      - 80
     environment:
       - VIRTUAL_HOST=adballoon.me
       - LETSENCRYPT_HOST=adballoon.me
