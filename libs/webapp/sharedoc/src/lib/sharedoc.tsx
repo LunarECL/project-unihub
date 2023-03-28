@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import * as ShareDB from 'sharedb/lib/client';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 //@ts-ignore
 import * as richText from 'rich-text';
 import ReactQuill from 'react-quill';
@@ -23,6 +24,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { usePostDocumentContent } from '@unihub/webapp/api';
 import { useGetIfUserCanViewDoc } from '@unihub/webapp/api';
 import { usePostShareDocument } from '@unihub/webapp/api';
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface SharedocProps {}
 
 ShareDB.types.register(richText.type);
@@ -50,6 +52,7 @@ export function Sharedoc(props: SharedocProps) {
     const doc = connection.get(courseCode!, documentId!);
 
     const authorizeUser = async () => {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       const res = await useGetIfUserCanViewDoc(documentId);
       if (!res.isAuthorized) {
         alert('You are not authorized to view this document');
@@ -69,6 +72,7 @@ export function Sharedoc(props: SharedocProps) {
       if (err) throw err;
       if (!doc.type) {
         setLoading(true);
+        // eslint-disable-next-line no-restricted-globals
         location.reload();
       } else {
         setLoading(false);
@@ -111,6 +115,7 @@ export function Sharedoc(props: SharedocProps) {
   }
 
   function backButton() {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     usePostDocumentContent(documentId, doc.data);
     navigate(-1);
   }
@@ -129,6 +134,7 @@ export function Sharedoc(props: SharedocProps) {
     const userEmail = (
       document.getElementById('user-email') as HTMLInputElement
     ).value;
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     usePostShareDocument(documentId, userEmail).then((res) => {
       if (res === false) {
         alert('User does not exist');

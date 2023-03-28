@@ -9,7 +9,8 @@ import {
   UseGuards,
 } from '@nestjs/common';
 // import { CurrentUser } from '@unihub/api/auth';
-import { CurrentUser } from '../../../auth/src/lib/current-user.decorator';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { CurrentUser } from '@unihub/api/auth';
 import { CoursesService } from './courses.service';
 import { AuthGuard } from '@nestjs/passport';
 

@@ -6,7 +6,6 @@ import { Section } from './entities/section.entity';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CoursesController } from './courses.controller';
 import { CoursesService } from './courses.service';
-import { AuthModule } from '@unihub/api/auth';
 
 @Module({
   imports: [

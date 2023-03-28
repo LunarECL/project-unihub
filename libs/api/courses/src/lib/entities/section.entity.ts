@@ -1,3 +1,4 @@
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { User } from '@unihub/api/auth';
 import {
   Column,

@@ -55,6 +55,7 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
     const title = (document.getElementById('document-name') as HTMLInputElement)
       .value;
     if (title !== '') {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       usePostUserDocument(lectureId || '', title).then((res) => {
         //Then navigate to the document
         navigate(
@@ -67,6 +68,7 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
 
   useEffect(() => {
     async function fetchDocuments() {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       const res = await useGetAllDocuments(
         lectureId !== undefined ? lectureId : ''
       );

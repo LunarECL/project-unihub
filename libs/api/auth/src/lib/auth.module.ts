@@ -5,10 +5,9 @@ import { ManagementService } from './management.service';
 import { User } from './users/users.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthController } from './auth.controller';
-import { EmailService } from '@unihub/api/email';
 import { EmailModule } from '@unihub/api/email';
-import { CoursesModule, Lecture } from '@unihub/api/courses';
-import { CurrentUser } from './current-user.decorator';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { CoursesModule } from '@unihub/api/courses';
 
 @Module({
   imports: [

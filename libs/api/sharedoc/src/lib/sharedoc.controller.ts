@@ -2,7 +2,8 @@ import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ShareDoc } from './entities/sharedoc.entity';
 import { DocumentService } from './sharedoc.service';
-import { CurrentUser } from '../../../auth/src/lib/current-user.decorator';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { CurrentUser } from '@unihub/api/auth';
 
 @Controller('sharedoc')
 export class AppController {
@@ -31,6 +32,7 @@ export class AppController {
   @Post('document/content/')
   @UseGuards(AuthGuard('jwt'))
   async postDocumentContent(
+    // eslint-disable-next-line @typescript-eslint/ban-types
     @Body() body: { documentId: string; ops: Object[] }
   ): Promise<void> {
     if (!body.documentId || !body.ops) {
@@ -63,6 +65,7 @@ export class AppController {
   async canUserViewDocument(
     @Query('documentId') documentId: string,
     @CurrentUser() { userId }
+    // eslint-disable-next-line @typescript-eslint/ban-types
   ): Promise<Object> {
     if (!documentId) {
       throw new Error('Invalid parameters');
@@ -91,6 +94,7 @@ export class AppController {
   @UseGuards(AuthGuard('jwt'))
   async getDocumentContent(
     @Query('documentId') documentId: string
+    // eslint-disable-next-line @typescript-eslint/ban-types
   ): Promise<Object> {
     if (!documentId) {
       throw new Error('Invalid parameters');

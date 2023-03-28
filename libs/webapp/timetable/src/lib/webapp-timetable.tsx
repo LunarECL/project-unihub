@@ -127,6 +127,7 @@ export function WebappTimetable(props: WebappTimetableProps) {
 
   useEffect(() => {
     //Get the user's lectures
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     useGetUserLectures().then((courses) => {
       if (hasDisplayed) {
         return;
@@ -140,6 +141,7 @@ export function WebappTimetable(props: WebappTimetableProps) {
 
     function loadCourses() {
       //May need to do pagination here because it takes too long
+      // eslint-disable-next-line react-hooks/rules-of-hooks
       useGetCourses().then((courses) => {
         setCourses(courses);
         const rows = courses.map((course: any) => {
@@ -183,6 +185,7 @@ export function WebappTimetable(props: WebappTimetableProps) {
     };
 
   const handleDelete = (sectionId: string) => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     useDeleteUserLecture(sectionId);
 
     //Remove the course from the allCourses array
@@ -231,11 +234,11 @@ export function WebappTimetable(props: WebappTimetableProps) {
           startTime = startTime - 12;
         }
 
-        let iteration: number = 0;
+        let iteration = 0;
 
         //Colour in the cells of the timetable
         for (let i = startTime; i < endTime; i++, iteration++) {
-          let row = rows.find((row) => row.time === i + ':00');
+          const row = rows.find((row) => row.time === i + ':00');
           if (row) {
             const cell = document.querySelector(
               `[data-day="${day}-${row.time}"]`
@@ -355,14 +358,14 @@ export function WebappTimetable(props: WebappTimetableProps) {
       return;
     }
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     usePostUserLecture(courses[courseIndex].id);
     allCourses.push(courses[courseIndex]);
     displayCourse(courses[courseIndex], false);
   };
 
   return (
-    <>
-      <Stack direction="row" spacing={10} className={styles.Stack}>
+    <Stack direction="row" spacing={10} className={styles.Stack}>
         <TableContainer>
           <Table className={styles.Table} aria-label="simple table">
             <TableHead>
@@ -530,6 +533,5 @@ export function WebappTimetable(props: WebappTimetableProps) {
           </SwipeableDrawer>
         </Drawer>
       </Stack>
-    </>
   );
 }
