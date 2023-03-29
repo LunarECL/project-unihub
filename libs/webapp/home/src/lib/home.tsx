@@ -9,7 +9,7 @@ import { DisplayRoom, CreateRoom, JoinRoom } from '@unihub/webapp/webrtc';
 import NavBar from './components/NavBar';
 import Credits from './components/Credits';
 import { Button } from '@mui/material';
-import './home.css'
+import './home.css';
 
 export interface WebappHomeProps {}
 

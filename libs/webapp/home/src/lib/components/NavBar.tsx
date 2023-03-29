@@ -13,7 +13,11 @@ export function NavBar(props: NavBarProps) {
   const theme = useTheme();
 
   return (
-    <AppBar component="nav" className="NavBar" sx={{background: theme.palette.primary.main}}>
+    <AppBar
+      component="nav"
+      className="NavBar"
+      sx={{ background: theme.palette.primary.main }}
+    >
       <Toolbar>
         <Typography
           variant="h6"

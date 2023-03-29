@@ -71,7 +71,7 @@ export function Credits(props: CreditsProps) {
           4. Bull/Redis for queueing: https://github.com/OptimalBits/bull
           {/* <br />
           <Tab sx={{ minWidth: 0, mr: 1 }} />
-          5. Email sending:  */} 
+          5. Email sending:  */}
           {/* Not too sure what this should be */}
         </Typography>
       </Grid>

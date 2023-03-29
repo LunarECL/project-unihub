@@ -66,7 +66,10 @@ export function Card(props: CardProps) {
         autoPlay={true}
         muted={true}
         poster={props.refVideo != null ? undefined : placeholder}
-        style={{ objectFit: props.refVideo != null ? 'cover' : 'scale-down', background: theme.palette.primary.main}}
+        style={{
+          objectFit: props.refVideo != null ? 'cover' : 'scale-down',
+          background: theme.palette.primary.main,
+        }}
         ref={props.refVideo}
       />
       <div className="name">{props.name}</div>

@@ -361,9 +361,16 @@ export function WebappTimetable(props: WebappTimetableProps) {
     <>
       <Stack direction="row" spacing={10} className={styles.Stack}>
         <TableContainer>
-          <Table className={styles.Table} sx={{borderColor: theme.palette.secondary.main}} aria-label="simple table">
+          <Table
+            className={styles.Table}
+            sx={{ borderColor: theme.palette.secondary.main }}
+            aria-label="simple table"
+          >
             <TableHead>
-              <TableRow className={styles.TableRowHead} sx={{backgroundColor: theme.palette.secondary.main}}>
+              <TableRow
+                className={styles.TableRowHead}
+                sx={{ backgroundColor: theme.palette.secondary.main }}
+              >
                 <TableCell className={styles.noncenteredcell}>Time</TableCell>
                 <TableCell className={styles.centeredcell}>Monday</TableCell>
                 <TableCell className={styles.centeredcell}>Tuesday</TableCell>
@@ -379,7 +386,7 @@ export function WebappTimetable(props: WebappTimetableProps) {
                     component="th"
                     scope="row"
                     className={styles.TableTime}
-                    sx={{color: theme.palette.secondary.main}}
+                    sx={{ color: theme.palette.secondary.main }}
                   >
                     {row.time}
                   </TableCell>
@@ -422,7 +429,10 @@ export function WebappTimetable(props: WebappTimetableProps) {
           className={styles.AddButtonContainer}
           onClick={toggleDrawer(true)}
         >
-          <AddCircleOutlineIcon className={styles.AddButtonIcon} sx={{color: theme.palette.primary.main}} />
+          <AddCircleOutlineIcon
+            className={styles.AddButtonIcon}
+            sx={{ color: theme.palette.primary.main }}
+          />
         </IconButton>
         <Drawer
           anchor="top"
@@ -475,22 +485,40 @@ export function WebappTimetable(props: WebappTimetableProps) {
                   <Table aria-label="simple table">
                     <TableHead>
                       <TableRow className={styles.TableRowHead}>
-                        <TableCell className={styles.DrawerTableText} sx={{color: theme.palette.primary.main}}>
+                        <TableCell
+                          className={styles.DrawerTableText}
+                          sx={{ color: theme.palette.primary.main }}
+                        >
                           Course Code
                         </TableCell>
-                        <TableCell className={styles.DrawerTableText} sx={{color: theme.palette.primary.main}}>
+                        <TableCell
+                          className={styles.DrawerTableText}
+                          sx={{ color: theme.palette.primary.main }}
+                        >
                           Course Title
                         </TableCell>
-                        <TableCell className={styles.DrawerTableText} sx={{color: theme.palette.primary.main}}>
+                        <TableCell
+                          className={styles.DrawerTableText}
+                          sx={{ color: theme.palette.primary.main }}
+                        >
                           Course Section
                         </TableCell>
-                        <TableCell className={styles.DrawerTableText} sx={{color: theme.palette.primary.main}}>
+                        <TableCell
+                          className={styles.DrawerTableText}
+                          sx={{ color: theme.palette.primary.main }}
+                        >
                           Instructor
                         </TableCell>
-                        <TableCell className={styles.DrawerTableText} sx={{color: theme.palette.primary.main}}>
+                        <TableCell
+                          className={styles.DrawerTableText}
+                          sx={{ color: theme.palette.primary.main }}
+                        >
                           Lecture/Tutorial
                         </TableCell>
-                        <TableCell className={styles.DrawerTableText} sx={{color: theme.palette.primary.main}}>
+                        <TableCell
+                          className={styles.DrawerTableText}
+                          sx={{ color: theme.palette.primary.main }}
+                        >
                           Delivery Mode
                         </TableCell>
                       </TableRow>
@@ -504,22 +532,40 @@ export function WebappTimetable(props: WebappTimetableProps) {
                             className={styles.TableRowList}
                             onClick={() => addCourseTime(index)}
                           >
-                            <TableCell className={styles.DrawerTableText} sx={{color: theme.palette.primary.main}}>
+                            <TableCell
+                              className={styles.DrawerTableText}
+                              sx={{ color: theme.palette.primary.main }}
+                            >
                               {row.programCode}
                             </TableCell>
-                            <TableCell className={styles.DrawerTableText} sx={{color: theme.palette.primary.main}}>
+                            <TableCell
+                              className={styles.DrawerTableText}
+                              sx={{ color: theme.palette.primary.main }}
+                            >
                               {row.courseTitle}
                             </TableCell>
-                            <TableCell className={styles.DrawerTableText} sx={{color: theme.palette.primary.main}}>
+                            <TableCell
+                              className={styles.DrawerTableText}
+                              sx={{ color: theme.palette.primary.main }}
+                            >
                               {row.sec_cd}
                             </TableCell>
-                            <TableCell className={styles.DrawerTableText} sx={{color: theme.palette.primary.main}}>
+                            <TableCell
+                              className={styles.DrawerTableText}
+                              sx={{ color: theme.palette.primary.main }}
+                            >
                               {row.prof}
                             </TableCell>
-                            <TableCell className={styles.DrawerTableText} sx={{color: theme.palette.primary.main}}>
+                            <TableCell
+                              className={styles.DrawerTableText}
+                              sx={{ color: theme.palette.primary.main }}
+                            >
                               {row.section}
                             </TableCell>
-                            <TableCell className={styles.DrawerTableText} sx={{color: theme.palette.primary.main}}>
+                            <TableCell
+                              className={styles.DrawerTableText}
+                              sx={{ color: theme.palette.primary.main }}
+                            >
                               {row.deliveryMode}
                             </TableCell>
                           </TableRow>

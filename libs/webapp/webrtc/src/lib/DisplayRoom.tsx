@@ -381,7 +381,7 @@ export function DisplayRoom(props: DisplayRoomProps) {
   return (
     <div className="App">
       <div className="App-header">
-        <Typography color='primary'>{`Room: ${roomId}`}</Typography>
+        <Typography color="primary">{`Room: ${roomId}`}</Typography>
         <Button id="bnt_pubcam" onClick={() => generateInviteLink()}>
           Invititation Link
         </Button>
