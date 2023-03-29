@@ -1,0 +1,38 @@
+.NavBar {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  margin-bottom: 10% !important;
+}
+
+.AppBarUnIHub {
+  flex-grow: 1;
+  display: none; /* for xs screens */
+
+  font-weight: 200 !important;
+  font-size: 30px !important;
+
+  color: #49274a;
+  cursor: pointer;
+}
+
+@media (min-width: 600px) {
+  .AppBarUnIHub {
+    /* Show the element for screens wider than or equal to 600px */
+    display: block;
+  }
+}
+
+.AppBarItems {
+  background-color: transparent !important;
+  box-shadow: none !important;
+
+  font-size: 18px !important;
+  text-transform: none !important;
+
+  color: #49274a !important;
+}
+
+.AppBarItems:active {
+  outline: none !important;
+  box-shadow: transparent !important;
+}

@@ -6,14 +6,16 @@ import Forum from './forum/forum';
 import { WebappTimetable } from '@unihub/webapp/timetable';
 import { WebappShareDocList } from '@unihub/webapp/share-doc-list';
 import { DisplayRoom, CreateRoom, JoinRoom } from '@unihub/webapp/webrtc';
+import NavBar from './components/NavBar';
 
 export interface WebappHomeProps {}
 
 export function Home(props: WebappHomeProps) {
   return (
     <ApiProvider>
+      <NavBar />
       <Routes>
-        <Route path="/" element={<Forum />} />
+        {/* <Route path="/" element={<Forum />} /> */}
         <Route path="/timetable" element={<WebappTimetable />} />
         <Route
           path="/sharedDocument/:courseCode/:sessionId/:lectureId/:documentId/:lectureNumber" ///sharedDocument/CSCC63/1/1/1
