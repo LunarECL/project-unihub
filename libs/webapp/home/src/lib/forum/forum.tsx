@@ -25,7 +25,7 @@ export function Forum(props: DashboardProps) {
           Timetable
         </Button>
         <Button
-          onClick={() => navigate('/home/room/create')}
+          onClick={() => navigate('/home/rooms/join')}
           variant="contained"
           sx={{ ml: 2 }}
         >

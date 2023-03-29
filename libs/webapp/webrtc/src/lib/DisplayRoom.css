@@ -51,7 +51,6 @@
 
 .localStreamBottomLeft {
   position: absolute;
-  background-color: bisque;
   width: 20%;
   height: 25%;
   left: 0;
@@ -60,14 +59,32 @@
   margin: 1rem 1rem;
 }
 
+.videoEl {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.nameEl {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 0.5rem;
+  box-sizing: border-box;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: #ffffff;
+  font-size: 0.8rem;
+  z-index: 2;
+}
+
 .remoteGridContainer {
   position: absolute;
-  right: 0 !important;
-  bottom: 0 !important;
+  right: 0;
+  bottom: 0;
   height: 90%;
   width: 77%;
   display: inline-block;
-  background-color: aquamarine;
   margin: 1rem 1rem;
 }
 
@@ -75,7 +92,6 @@
   border-radius: 8px;
   border: 2px solid #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-  object-fit: cover;
 }
 
 .stream-row {
@@ -88,6 +104,7 @@
 .stream {
   box-sizing: border-box;
   margin: 0px;
+  position: relative;
 }
 
 .one-stream {
@@ -97,16 +114,21 @@
   height: 100%;
 }
 
-.upto-four-streams {
+.multiple-streams {
   max-width: 50%;
   max-height: 100%;
-  width: 50% !important;
+  width: 50%;
   height: 100%;
 }
 
-.upto-eight-streams {
-  max-width: 25%;
-  max-height: 50%;
-  width: 25%;
-  height: 50%;
+.scrollable {
+  overflow: auto;
+}
+
+.flipped {
+  transform: scale(-1, 1);
+}
+
+.flipped::-webkit-media-controls-panel {
+  transform: scale(-1, 1);
 }
