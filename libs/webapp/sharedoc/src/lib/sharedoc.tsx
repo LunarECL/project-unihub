@@ -163,7 +163,6 @@ export function Sharedoc(props: SharedocProps) {
               <Grid item xs={8}>
                 <Button
                   variant="text"
-                  // sx={{ mb: 2, left: -5 }}
                   id="ShareButton"
                   onClick={handleClickOpenDialog}
                 >
@@ -175,12 +174,13 @@ export function Sharedoc(props: SharedocProps) {
                   onClose={handleCloseDialog}
                   id="AddUserDialog"
                   maxWidth="lg"
+                  PaperProps={{ style: { width: '50%', maxHeight: '90%' } }}
                 >
-                  <DialogTitle>Share with other users on UniHub!</DialogTitle>
+                  <DialogTitle>Share with other users on UnIHub!</DialogTitle>
                   <DialogContent>
                     <TextField
                       id="user-email"
-                      label="User email"
+                      label="Enter the user's email"
                       type="user-email"
                       variant="standard"
                       fullWidth

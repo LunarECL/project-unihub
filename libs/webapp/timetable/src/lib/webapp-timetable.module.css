@@ -2,16 +2,17 @@
 .Stack {
   margin-left: 5%;
   margin-right: 5%;
-  margin-top: 3%;
+  margin-top: 6%;
 }
 
 /* CSS for TableContainer component */
 .Table {
-  border: 1px solid lightgrey;
+  border: 2px solid #94618e;
 }
 
 .TableRowHead {
   font-weight: medium;
+  background-color: #94618e;
 }
 
 /* CSS for TableRow component */
@@ -27,6 +28,7 @@
 
 .AddButtonIcon {
   font-size: 45px !important;
+  color: #49274a !important;
 }
 
 .Loading {
@@ -69,20 +71,38 @@
 
 .centeredcell {
   text-align: center !important;
+  color: white !important;
+  font-weight: 600 !important;
+}
+
+.noncenteredcell {
+  text-align: left !important;
+  color: white !important;
+  font-weight: 600 !important;
 }
 
 .xButton {
   border: none;
   background: transparent;
-  color: white;
   cursor: pointer;
   float: right;
   font: bold 20px Arial, sans-serif;
   margin-top: -4px;
+  color: white;
 }
 
 .ClassCell {
   color: white;
-  font-weight: bold !important;
+  font-weight: 700 !important;
   cursor: pointer;
+}
+
+.TableTime {
+  color: #49274a !important;
+  font-weight: 600 !important;
+}
+
+.DrawerTableText {
+  color: #49274a !important;
+  font-weight: 600 !important;
 }

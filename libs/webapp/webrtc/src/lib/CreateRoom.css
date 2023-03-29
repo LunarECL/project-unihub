@@ -1,0 +1,24 @@
+.CreateRoomBox {
+  margin-top: 15%;
+}
+
+.Image {
+  width: 80%;
+  height: 80%;
+  margin-top: 5% !important;
+  margin: 0 auto;
+  display: block;
+}
+
+.GeneralBox {
+  margin-top: 5%;
+}
+
+.CreateRoomStyle {
+  color: #49274a;
+  font-weight: 300 !important;
+}
+
+.CreateButton {
+  background-color: #49274a !important;
+}

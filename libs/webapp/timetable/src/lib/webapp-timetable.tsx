@@ -87,10 +87,7 @@ const searchOpt = [
 ];
 
 let allCourses: any[] = [];
-
 let colIndex = 0;
-
-let hasDisplayed = false;
 
 export function WebappTimetable(props: WebappTimetableProps) {
   const [coursesRows, setCoursesRows] = useState<any>([]);
@@ -98,6 +95,8 @@ export function WebappTimetable(props: WebappTimetableProps) {
   const [allCoursesRows, setAllCoursesRows] = useState<any>([]);
   const [search, setSearch] = useState('Code');
   const [loading, setLoading] = useState(true);
+
+  let hasDisplayed = false;
 
   const navigate = useNavigate();
 
@@ -183,20 +182,19 @@ export function WebappTimetable(props: WebappTimetableProps) {
     };
 
   const handleDelete = (sectionId: string) => {
-    useDeleteUserLecture(sectionId);
+    colIndex = (colIndex - 1) % colours.length;
+    useDeleteUserLecture(sectionId).then(() => {
+      //Remove the course from the allCourses array
+      allCourses = allCourses.filter((course: any) => course.id !== sectionId);
 
-    //Remove the course from the allCourses array
-    allCourses = allCourses.filter((course: any) => course.id !== sectionId);
-
-    //Remove the course from the timetable
-    const course = courses.find((course: any) => course.id === sectionId);
-    if (course) {
-      displayCourse(course, true);
-    }
+      //Remove the course from the timetable
+      const course = courses.find((course: any) => course.id === sectionId);
+      if (course) {
+        displayCourse(course, true);
+      }
+    });
   };
 
-  //Need to deal with conflicts but that'll be when we store the courses in an array or smthn
-  //So using the db
   const displayCourse = (course: any, isRemove: boolean) => {
     //Check if the course has lectures
     if (course.lectures) {
@@ -274,9 +272,6 @@ export function WebappTimetable(props: WebappTimetableProps) {
 
                   //Set the hasDisplayed back to false
                   hasDisplayed = false;
-
-                  //Set the colour index back to 0
-                  colIndex = 0;
                 });
               }
             }
@@ -367,7 +362,7 @@ export function WebappTimetable(props: WebappTimetableProps) {
           <Table className={styles.Table} aria-label="simple table">
             <TableHead>
               <TableRow className={styles.TableRowHead}>
-                <TableCell>Time</TableCell>
+                <TableCell className={styles.noncenteredcell}>Time</TableCell>
                 <TableCell className={styles.centeredcell}>Monday</TableCell>
                 <TableCell className={styles.centeredcell}>Tuesday</TableCell>
                 <TableCell className={styles.centeredcell}>Wednesday</TableCell>
@@ -378,7 +373,11 @@ export function WebappTimetable(props: WebappTimetableProps) {
             <TableBody>
               {rows.map((row) => (
                 <TableRow key={row.time} className={styles.TableRow}>
-                  <TableCell component="th" scope="row">
+                  <TableCell
+                    component="th"
+                    scope="row"
+                    className={styles.TableTime}
+                  >
                     {row.time}
                   </TableCell>
                   <TableCell
@@ -502,22 +501,22 @@ export function WebappTimetable(props: WebappTimetableProps) {
                             className={styles.TableRowList}
                             onClick={() => addCourseTime(index)}
                           >
-                            <TableCell className={styles.centeredcell}>
+                            <TableCell className={styles.DrawerTableText}>
                               {row.programCode}
                             </TableCell>
-                            <TableCell className={styles.centeredcell}>
+                            <TableCell className={styles.DrawerTableText}>
                               {row.courseTitle}
                             </TableCell>
-                            <TableCell className={styles.centeredcell}>
+                            <TableCell className={styles.DrawerTableText}>
                               {row.sec_cd}
                             </TableCell>
-                            <TableCell className={styles.centeredcell}>
+                            <TableCell className={styles.DrawerTableText}>
                               {row.prof}
                             </TableCell>
-                            <TableCell className={styles.centeredcell}>
+                            <TableCell className={styles.DrawerTableText}>
                               {row.section}
                             </TableCell>
-                            <TableCell className={styles.centeredcell}>
+                            <TableCell className={styles.DrawerTableText}>
                               {row.deliveryMode}
                             </TableCell>
                           </TableRow>

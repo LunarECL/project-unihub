@@ -84,7 +84,7 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
             {courseCode} lecture documents
           </Typography>
         </Grid>
-        <Grid item xs={1}>
+        {/* <Grid item xs={1}>
           <Button
             //navigate to the previous page
             onClick={() => navigate(-1)}
@@ -92,7 +92,7 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
           >
             Back
           </Button>
-        </Grid>
+        </Grid> */}
         <Grid item xs={12}>
           <Button
             variant="text"
@@ -107,6 +107,7 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
             onClose={handleCloseDialog}
             className={styles.CreateDocDialog}
             maxWidth="lg"
+            PaperProps={{ style: { width: '50%', maxHeight: '90%' } }}
           >
             <DialogTitle>Create a new document</DialogTitle>
             <DialogContent>
@@ -155,7 +156,16 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
                 variant="h1"
                 className={styles.DocTitle}
               >
-                {doc.lectureNumber === null ? doc.userTitle : doc.lectureNumber}
+                {doc.lectureNumber === null
+                  ? doc.userTitle
+                  : doc.lectureNumber
+                  ? 'Lecture ' +
+                    parseInt(
+                      doc.lectureNumber.substring(
+                        doc.lectureNumber.lastIndexOf('e') + 1
+                      )
+                    )
+                  : doc.userTitle}
               </Typography>
             </Grid>
           ))

@@ -5,7 +5,7 @@ import MicOffIcon from '@mui/icons-material/MicOff';
 import { useState } from 'react';
 
 import './Card.css';
-import placeholder from '../assets/placeholder.png';
+import placeholder from '../assets/placeholder4.png';
 
 interface CardProps {
   name: string;

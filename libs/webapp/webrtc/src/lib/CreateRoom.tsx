@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Box, Button, Container, TextField, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import './CreateRoom.css';
 
 /* eslint-disable-next-line */
 export interface CreateRoomProps {}
@@ -22,9 +23,16 @@ export function CreateRoom(props: CreateRoomProps) {
 
   return (
     <Container maxWidth="sm">
-      <Box sx={{ mt: 8 }}>
-        <Typography variant="h4">Create Room</Typography>
-        <Box sx={{ mt: 3 }}>
+      <Box className="CreateRoomBox">
+        <Typography className="CreateRoomStyle" variant="h4">
+          Create Room
+        </Typography>
+        <img
+          className="Image"
+          src="https://static.wixstatic.com/media/9addde_ba3a606012644feea0a9c807f639026d~mv2.png/v1/fill/w_566,h_568,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/Black%20Men%20Office%20Video%20Chat.png"
+          alt="image"
+        />
+        <Box className="GeneralBox">
           <TextField
             fullWidth
             label="Room Name"
@@ -32,8 +40,12 @@ export function CreateRoom(props: CreateRoomProps) {
             onChange={handleRoomNameChange}
           />
         </Box>
-        <Box sx={{ mt: 3 }}>
-          <Button variant="contained" onClick={handleCreateRoom}>
+        <Box className="GeneralBox">
+          <Button
+            variant="contained"
+            className="CreateButton"
+            onClick={handleCreateRoom}
+          >
             Create
           </Button>
         </Box>

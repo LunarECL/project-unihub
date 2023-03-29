@@ -3,8 +3,8 @@ import { useQuery } from 'react-query';
 
 const query = async (documentId: string) => {
   const res = await axios.get(
-    '/api/shareDoc/document/user/canView',
-    // 'http://localhost:3333/api/shareDoc/document/user/canView',
+    // '/api/shareDoc/document/user/canView',
+    'http://localhost:3333/api/shareDoc/document/user/canView',
     {
       params: {
         documentId: documentId,

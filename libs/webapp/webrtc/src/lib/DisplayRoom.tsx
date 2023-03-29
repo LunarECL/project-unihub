@@ -7,6 +7,7 @@ import { useParams } from 'react-router-dom';
 
 import './DisplayRoom.css';
 import { Card } from '../components/Card';
+import { Button, Typography } from '@mui/material';
 
 /* eslint-disable-next-line */
 export interface DisplayRoomProps {}
@@ -380,14 +381,10 @@ export function DisplayRoom(props: DisplayRoomProps) {
   return (
     <div className="App">
       <div className="App-header">
-        <div>{`Room: ${roomId}`}</div>
-        <button
-          className="headerBtn"
-          id="bnt_pubcam"
-          onClick={() => generateInviteLink()}
-        >
+        <Typography className="roomTitle">{`Room: ${roomId}`}</Typography>
+        <Button id="bnt_pubcam" onClick={() => generateInviteLink()}>
           Invititation Link
-        </button>
+        </Button>
       </div>
 
       <div
@@ -397,7 +394,7 @@ export function DisplayRoom(props: DisplayRoomProps) {
         }
       >
         <Card
-          name="Ankit"
+          name="You"
           width={100}
           height={100}
           handleCameraToggle={handleCameraToggle}
@@ -408,7 +405,7 @@ export function DisplayRoom(props: DisplayRoomProps) {
         />
 
         <Card
-          name="Ankit"
+          name="You"
           width={100}
           height={100}
           handleCameraToggle={handleCameraToggle}

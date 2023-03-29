@@ -27,7 +27,7 @@ export function UnIHubPage(props: UnIHubPageProps) {
       </Grid>
       <Grid container direction="row" spacing={2} className="CardsContainer">
         <Grid item xs={3} className="CardsItems">
-          <Grid direction="column" className="InsideCardItem">
+          <Grid container direction="row" className="InsideCardItem">
             <Grid item xs={12}>
               <div className="CardVideoChatImage"></div>
             </Grid>
@@ -40,7 +40,7 @@ export function UnIHubPage(props: UnIHubPageProps) {
           </Grid>
         </Grid>
         <Grid item xs={3} className="CardsItems">
-          <Grid direction="column" className="InsideCardItem">
+          <Grid container direction="row" className="InsideCardItem">
             <Grid item xs={12}>
               <div className="CardNoteTakingImage"></div>
             </Grid>
@@ -54,7 +54,7 @@ export function UnIHubPage(props: UnIHubPageProps) {
           </Grid>
         </Grid>
         <Grid item xs={3} className="CardsItems">
-          <Grid direction="column" className="InsideCardItem">
+          <Grid container direction="row" className="InsideCardItem">
             <Grid item xs={12}>
               <div className="CardMapImage"></div>
             </Grid>

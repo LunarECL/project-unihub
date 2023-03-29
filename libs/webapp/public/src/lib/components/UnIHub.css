@@ -67,35 +67,36 @@
   color: #ffffff;
   text-align: center;
   margin: 0 auto;
-  padding-right: 10px;
-  margin-top: 5% !important;
 }
 
 .CardVideoChatImage {
   background: url('https://www.pngplay.com/wp-content/uploads/5/Video-Chat-Design-Logo-PNG.png');
-  width: 332px;
+  width: 100% !important;
   height: 217px;
   background-size: contain;
   background-repeat: no-repeat;
   margin: 0 auto;
+  background-position: center;
 }
 
 .CardNoteTakingImage {
   background: url('https://cdni.iconscout.com/illustration/premium/thumb/man-learning-online-5595986-4660064.png?f=webp');
-  width: 242.08px;
+  width: 100% !important;
   height: 217px;
   background-size: contain;
   background-repeat: no-repeat;
   margin: 0 auto;
+  background-position: center;
 }
 
 .CardMapImage {
   background: url('https://www.aimms.com/wp-content/uploads/Aimms_New.png');
-  width: 332.15px;
+  width: 100% !important;
   height: 217px;
   background-size: contain;
   background-repeat: no-repeat;
   margin: 0 auto;
+  background-position: center;
 }
 
 .InsideCardItem {

@@ -1,12 +1,13 @@
 .DocumentListDiv {
   margin-left: 10%;
   margin-right: 10%;
-  margin-top: 5%;
+  margin-top: 6%;
 }
 
 .ListTitle {
   font-size: 35px !important;
   margin-bottom: 2px !important;
+  color: #49274a !important;
 }
 
 .CreateDocButton {
@@ -39,7 +40,7 @@
   .DocImage {
     max-height: 233px;
     max-width: 350px;
-    color: #1976d2; /* replace with your primary color */
+    color: #1976d2;
   }
 }
 
@@ -47,11 +48,12 @@
   .DocImage {
     max-height: 167px;
     max-width: 250px;
-    color: #1976d2; /* replace with your primary color */
+    color: #1976d2;
   }
 }
 
 .DocTitle {
   font-size: 20px !important;
   margin-bottom: 2px !important;
+  color: #49274a !important;
 }
