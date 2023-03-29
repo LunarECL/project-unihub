@@ -68,7 +68,7 @@ export function DisplayRoom(props: DisplayRoomProps) {
   };
 
   useEffect(() => {
-    signal ||= new IonSFUJSONRPCSignal('wss://ion.adballoon.me/ws');
+    signal ||= new IonSFUJSONRPCSignal('wss://adballoon.me/ws');
     client ||= new Client(signal, config);
     signal.onopen = () => {
       client.join(roomId, uid);
