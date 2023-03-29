@@ -14,6 +14,7 @@ import {
 import React, { useEffect } from 'react';
 import './landing.css';
 import UnIHubPage from './components/UnIHubPage';
+import { useTheme } from '@mui/material/styles';
 
 /* eslint-disable-next-line */
 export interface LandingProps {}
@@ -30,6 +31,8 @@ export function Landing(props: LandingProps) {
     });
   };
 
+  const theme = useTheme();
+
   return (
     <div>
       <Grid>
@@ -40,7 +43,7 @@ export function Landing(props: LandingProps) {
             <>
               {isAuthenticated ? (
                 <>
-                  <AppBar component="nav" className="AppBar">
+                  <AppBar component="nav" className="AppBar" sx={{background: theme.palette.primary.main}}>
                     <Toolbar>
                       <Typography
                         variant="h6"
@@ -54,13 +57,22 @@ export function Landing(props: LandingProps) {
                           // Should prob make the map the inital page
                           onClick={() => navigate('/home/timetable')}
                           variant="contained"
-                          className="AppBarItems"
+                          sx={{
+                            textTransform: 'none',
+                            boxShadow: 'none',
+                            fontSize: '18px',
+                            background: 'transparent',
+                          }}
                         >
                           Home
                         </Button>
                         <Button
-                          className="AppBarItems"
-                          sx={{ textTransform: 'none' }}
+                          sx={{
+                            textTransform: 'none',
+                            boxShadow: 'none',
+                            fontSize: '18px',
+                            background: 'transparent',
+                          }}
                           onClick={() => {
                             logout({ returnTo: window.location.origin } as Omit<
                               LogoutOptions,
@@ -87,12 +99,15 @@ export function Landing(props: LandingProps) {
                         spacing={1}
                       >
                         <Grid item xs={12}>
-                          <Typography className="UnIHub-header">
+                          <Typography color="primary" className="UnIHub-header">
                             UnIHub
                           </Typography>
                         </Grid>
                         <Grid item xs={12}>
-                          <Typography className="UnIHub-subheader">
+                          <Typography
+                            color="secondary"
+                            className="UnIHub-subheader"
+                          >
                             Welcome to UnIHub, the ultimate platform for UTSC
                             students! Connect with fellow students via video
                             chat, collaborate on live note-taking during
@@ -106,6 +121,7 @@ export function Landing(props: LandingProps) {
                             onClick={login}
                             variant="contained"
                             className="GetStartedButton"
+                            color="secondary"
                           >
                             Get Started
                           </Button>

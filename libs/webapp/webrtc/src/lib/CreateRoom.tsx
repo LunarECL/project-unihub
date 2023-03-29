@@ -24,7 +24,7 @@ export function CreateRoom(props: CreateRoomProps) {
   return (
     <Container maxWidth="sm">
       <Box className="CreateRoomBox">
-        <Typography className="CreateRoomStyle" variant="h4">
+        <Typography className="CreateRoomStyle" variant="h4" color='primary'>
           Create Room
         </Typography>
         <img
@@ -43,7 +43,6 @@ export function CreateRoom(props: CreateRoomProps) {
         <Box className="GeneralBox">
           <Button
             variant="contained"
-            className="CreateButton"
             onClick={handleCreateRoom}
           >
             Create

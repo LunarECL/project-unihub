@@ -9,12 +9,26 @@ type ThemeProviderWrapperProps = {
 const themeLight = createTheme({
   palette: {
     mode: 'light',
+
+    primary: {
+      main: '#48274A', //dark purple
+    },
+    secondary: {
+      main: '#94618E', //light purple
+    },
   },
 });
 
 const themeDark = createTheme({
   palette: {
     mode: 'dark',
+
+    primary: {
+      main: '#0040C0',
+    },
+    secondary: {
+      main: '#80C0FF',
+    },
   },
 });
 

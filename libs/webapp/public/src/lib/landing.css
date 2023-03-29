@@ -3,8 +3,6 @@
   font-style: normal;
   font-weight: 400 !important;
   font-size: 400% !important;
-
-  color: #49274a;
 }
 
 .UnIHub-subheader {
@@ -13,7 +11,7 @@
   font-weight: 400;
   font-size: 100%;
 
-  color: #94618e;
+  /* color: #94618e; */
 }
 
 .GridContainer {
@@ -38,17 +36,13 @@
 }
 
 .GetStartedButton {
-  background: #94618e !important;
   border-radius: 30px !important;
   font-weight: 700 !important;
 
   margin-top: 10% !important;
-
-  color: #ffffff;
 }
 
 .AppBar {
-  background-color: transparent !important;
   box-shadow: none !important;
 }
 
@@ -58,9 +52,8 @@
 
   font-weight: 400 !important;
   font-size: 30px !important;
-
-  color: #49274a;
   cursor: pointer;
+  color: #FFFF !important;
 }
 
 @media (min-width: 600px) {
@@ -71,11 +64,8 @@
 }
 
 .AppBarItems {
-  background-color: transparent !important;
   box-shadow: none !important;
 
   font-size: 18px !important;
-  text-transform: none !important;
-
-  color: #49274a !important;
+  /* color: #FFFF !important; */
 }

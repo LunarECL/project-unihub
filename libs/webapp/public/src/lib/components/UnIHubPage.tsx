@@ -1,10 +1,12 @@
 import { Grid, Typography } from '@mui/material';
 import './UnIHub.css';
+import { useTheme } from '@mui/material/styles';
 
 /* eslint-disable-next-line */
 export interface UnIHubPageProps {}
 
 export function UnIHubPage(props: UnIHubPageProps) {
+  const theme = useTheme();
   return (
     <>
       <Grid container direction="row" className="UnIHubContainer" spacing={10}>
@@ -14,10 +16,12 @@ export function UnIHubPage(props: UnIHubPageProps) {
         <Grid item xs={8}>
           <Grid container direction="column" className="AboutContainer">
             <Grid item xs={12}>
-              <Typography className="UnIHubAbout">About</Typography>
+              <Typography className="UnIHubAbout" color="primary">
+                About
+              </Typography>
             </Grid>
             <Grid item xs={12}>
-              <Typography className="UnIHubAboutPara">
+              <Typography className="UnIHubAboutPara" color="primary">
                 UnIHub is your one-stop-shop that caters to all the tools and
                 resources you need to excel in your academic journey!
               </Typography>
@@ -26,7 +30,7 @@ export function UnIHubPage(props: UnIHubPageProps) {
         </Grid>
       </Grid>
       <Grid container direction="row" spacing={2} className="CardsContainer">
-        <Grid item xs={3} className="CardsItems">
+        <Grid item xs={3} className="CardsItems" sx={{background: theme.palette.secondary.main}}>
           <Grid container direction="row" className="InsideCardItem">
             <Grid item xs={12}>
               <div className="CardVideoChatImage"></div>
@@ -39,7 +43,7 @@ export function UnIHubPage(props: UnIHubPageProps) {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={3} className="CardsItems">
+        <Grid item xs={3} className="CardsItems" sx={{background: theme.palette.secondary.main}}>
           <Grid container direction="row" className="InsideCardItem">
             <Grid item xs={12}>
               <div className="CardNoteTakingImage"></div>
@@ -53,7 +57,7 @@ export function UnIHubPage(props: UnIHubPageProps) {
             </Grid>
           </Grid>
         </Grid>
-        <Grid item xs={3} className="CardsItems">
+        <Grid item xs={3} className="CardsItems" sx={{background: theme.palette.secondary.main}}>
           <Grid container direction="row" className="InsideCardItem">
             <Grid item xs={12}>
               <div className="CardMapImage"></div>

@@ -16,15 +16,11 @@
   font-weight: 400;
   font-size: 20px;
   line-height: 24px;
-
-  color: #49274a !important;
 }
 
 .UnIHubAboutPara {
   font-size: 35px !important;
   width: 60% !important;
-
-  color: #49274a;
 }
 
 .AboutContainer {
@@ -51,7 +47,7 @@
 }
 
 .CardsItems {
-  background: #94618e;
+  /* background: #94618e; */
   margin-right: 4% !important;
   margin-left: 4% !important;
   width: 100%;

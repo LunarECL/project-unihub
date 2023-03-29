@@ -18,6 +18,7 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { usePostUserDocument } from '@unihub/webapp/api';
 import styles from './webapp-share-doc-list.module.css';
+import { useTheme } from '@mui/material/styles';
 
 /* eslint-disable-next-line */
 export interface WebappShareDocListProps {}
@@ -30,6 +31,7 @@ interface Document {
 }
 
 export function WebappShareDocList(props: WebappShareDocListProps) {
+  const theme = useTheme();
   //Get the courseCode, sessionId, lectureId from the url
   const { courseCode, sessionId, lectureId } = useParams();
   const navigate = useNavigate();
@@ -80,19 +82,14 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
     <div className={styles.DocumentListDiv}>
       <Grid container spacing={0}>
         <Grid item xs={11}>
-          <Typography variant="h1" className={styles.ListTitle}>
+          <Typography
+            variant="h1"
+            className={styles.ListTitle}
+            sx={{ color: theme.palette.primary.main }}
+          >
             {courseCode} lecture documents
           </Typography>
         </Grid>
-        {/* <Grid item xs={1}>
-          <Button
-            //navigate to the previous page
-            onClick={() => navigate(-1)}
-            variant="contained"
-          >
-            Back
-          </Button>
-        </Grid> */}
         <Grid item xs={12}>
           <Button
             variant="text"
@@ -155,6 +152,7 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
                 align="center"
                 variant="h1"
                 className={styles.DocTitle}
+                sx={{ color: theme.palette.secondary.main }}
               >
                 {doc.lectureNumber === null
                   ? doc.userTitle

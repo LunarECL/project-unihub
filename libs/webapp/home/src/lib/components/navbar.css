@@ -1,5 +1,5 @@
 .NavBar {
-  background-color: transparent !important;
+  /* background-color: transparent !important; */
   box-shadow: none !important;
   margin-bottom: 10% !important;
 }
@@ -11,13 +11,11 @@
   font-weight: 200 !important;
   font-size: 30px !important;
 
-  color: #49274a;
   cursor: pointer !important;
 }
 
 @media (min-width: 600px) {
   .AppBarUnIHub {
-    /* Show the element for screens wider than or equal to 600px */
     display: block;
   }
 }
@@ -28,8 +26,7 @@
 
   font-size: 18px !important;
   text-transform: none !important;
-
-  color: #49274a !important;
+  color: white !important;
 }
 
 .AppBarItems:active {
