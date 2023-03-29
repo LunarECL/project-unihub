@@ -15,7 +15,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: adballoon.me
+    - host: unihub.today
       http:
         paths:
           - path: /
