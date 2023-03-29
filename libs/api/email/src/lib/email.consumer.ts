@@ -12,7 +12,7 @@ export class EmailConsumer {
     await this.mailService
       .sendMail({
         to: job?.data.email,
-        from: 'info@unihub.one',
+        from: 'info@unihub.today',
         subject: 'Welcome to UniHub - Your One Stop for Academic Success!',
         html: `
     <p>Dear ${job.data.name},</p>
@@ -35,7 +35,7 @@ export class EmailConsumer {
     await this.mailService
       .sendMail({
         to: job?.data.owner,
-        from: 'info@unihub.one',
+        from: 'info@unihub.today',
         subject: `You're invited to join a study group on UniHub!`,
         html: `
     <p>Hello ${job.data.owner},</p>
