@@ -43,7 +43,11 @@ export function Landing(props: LandingProps) {
             <>
               {isAuthenticated ? (
                 <>
-                  <AppBar component="nav" className="AppBar" sx={{background: theme.palette.primary.main}}>
+                  <AppBar
+                    component="nav"
+                    className="AppBar"
+                    sx={{ background: theme.palette.primary.main }}
+                  >
                     <Toolbar>
                       <Typography
                         variant="h6"
@@ -138,6 +142,9 @@ export function Landing(props: LandingProps) {
           )}
         </Grid>
       </Grid>
+      <Button className="Credit" onClick={() => navigate('/home/credits')}>
+        Credits page
+      </Button>
     </div>
   );
 }
