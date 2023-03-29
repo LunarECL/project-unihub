@@ -6,7 +6,9 @@ import Forum from './forum/forum';
 import { WebappTimetable } from '@unihub/webapp/timetable';
 import { WebappShareDocList } from '@unihub/webapp/share-doc-list';
 import { DisplayRoom, CreateRoom, JoinRoom } from '@unihub/webapp/webrtc';
+import { DisplayMap } from '@unihub/webapp/map';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface WebappHomeProps {}
 
 export function Home(props: WebappHomeProps) {
@@ -26,6 +28,7 @@ export function Home(props: WebappHomeProps) {
         <Route path="/rooms/create" element={<CreateRoom />} />
         <Route path="/rooms/join" element={<JoinRoom />} />
         <Route path="/rooms/:roomId" element={<DisplayRoom />} />
+        <Route path="/map" element={<DisplayMap />} />
       </Routes>
     </ApiProvider>
   );

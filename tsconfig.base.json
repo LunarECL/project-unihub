@@ -23,6 +23,7 @@
       "@unihub/webapp/api": ["libs/webapp/api/src/index.ts"],
       "@unihub/webapp/create-doc": ["libs/webapp/create-doc/src/index.ts"],
       "@unihub/webapp/home": ["libs/webapp/home/src/index.ts"],
+      "@unihub/webapp/map": ["libs/webapp/map/src/index.ts"],
       "@unihub/webapp/public": ["libs/webapp/public/src/index.ts"],
       "@unihub/webapp/share-doc-list": [
         "libs/webapp/share-doc-list/src/index.ts"

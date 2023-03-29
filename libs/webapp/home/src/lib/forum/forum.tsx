@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useGetEmail } from '@unihub/webapp/api';
 import { WebappShareDocList } from '@unihub/webapp/share-doc-list';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface DashboardProps {}
 
 export function Forum(props: DashboardProps) {
@@ -30,6 +31,13 @@ export function Forum(props: DashboardProps) {
           sx={{ ml: 2 }}
         >
           WebRTC App
+        </Button>
+        <Button
+          onClick={() => navigate('/home/map')}
+          variant="contained"
+          sx={{ ml: 2 }}
+        >
+          Map
         </Button>
       </Grid>
     </Grid>
