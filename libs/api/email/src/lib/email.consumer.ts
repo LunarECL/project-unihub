@@ -32,9 +32,10 @@ export class EmailConsumer {
 
   @Process('send-invite')
   async addContributor(job: Job) {
+    console.log('sendInviteEmail ' + job?.data.email + ' ' + job?.data.owner);
     await this.mailService
       .sendMail({
-        to: job?.data.owner,
+        to: job?.data.email,
         from: process.env.EMAIL_SNEDER,
         subject: `You're invited to join a study group on UniHub!`,
         html: `
