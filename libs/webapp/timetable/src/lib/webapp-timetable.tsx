@@ -16,7 +16,7 @@ import {
   CircularProgress,
 } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useGetCourses } from '@unihub/webapp/api';
 import { useNavigate, useParams } from 'react-router-dom';
 import { usePostUserLecture } from '@unihub/webapp/api';
@@ -168,7 +168,7 @@ export function WebappTimetable(props: WebappTimetableProps) {
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
       if (
-        event.type === 'keydown' &&
+        event?.type === 'keydown' &&
         ((event as React.KeyboardEvent).key === 'Tab' ||
           (event as React.KeyboardEvent).key === 'Shift')
       ) {
@@ -181,6 +181,8 @@ export function WebappTimetable(props: WebappTimetableProps) {
           '';
         setCoursesRows(allCoursesRows);
       }
+
+      console.log(open); // add this line
     };
 
   const handleDelete = (sectionId: string) => {
@@ -355,6 +357,7 @@ export function WebappTimetable(props: WebappTimetableProps) {
     usePostUserLecture(courses[courseIndex].id);
     allCourses.push(courses[courseIndex]);
     displayCourse(courses[courseIndex], false);
+    toggleDrawer(false)();
   };
 
   return (
@@ -444,6 +447,7 @@ export function WebappTimetable(props: WebappTimetableProps) {
             open={state['bottom']}
             onClose={toggleDrawer(false)}
             onOpen={toggleDrawer(true)}
+            id="drawer"
           >
             {loading ? (
               <Grid item xs={12} className={styles.Loading}>
@@ -530,7 +534,9 @@ export function WebappTimetable(props: WebappTimetableProps) {
                           <TableRow
                             key={index}
                             className={styles.TableRowList}
-                            onClick={() => addCourseTime(index)}
+                            onClick={() => {
+                              addCourseTime(index);
+                            }}
                           >
                             <TableCell
                               className={styles.DrawerTableText}

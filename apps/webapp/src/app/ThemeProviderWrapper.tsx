@@ -24,10 +24,13 @@ const themeDark = createTheme({
     mode: 'dark',
 
     primary: {
-      main: '#0040C0',
+      main: '#5B9632',
     },
     secondary: {
-      main: '#80C0FF',
+      main: '#6F9462',
+    },
+    background: {
+      default: '#1E1E1E',
     },
   },
 });

@@ -91,6 +91,12 @@ export function Landing(props: LandingProps) {
                     </Toolbar>
                   </AppBar>
                   <UnIHubPage />
+                  <Button
+                    className="Credit"
+                    onClick={() => navigate('/home/credits')}
+                  >
+                    Credits page
+                  </Button>
                 </>
               ) : (
                 <>
@@ -142,9 +148,6 @@ export function Landing(props: LandingProps) {
           )}
         </Grid>
       </Grid>
-      <Button className="Credit" onClick={() => navigate('/home/credits')}>
-        Credits page
-      </Button>
     </div>
   );
 }
