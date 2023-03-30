@@ -29,9 +29,9 @@ export function Home(props: WebappHomeProps) {
           path="/sharedDocument/:courseCode/:sessionId/:lectureId/"
           element={<WebappShareDocList />}
         />
-        <Route path="/room/create" element={<CreateRoom />} />
-        <Route path="/room/join" element={<JoinRoom />} />
-        <Route path="/room/:roomId" element={<DisplayRoom />} />
+        <Route path="/rooms/create" element={<CreateRoom />} />
+        <Route path="/rooms/join" element={<JoinRoom />} />
+        <Route path="/rooms/:roomId" element={<DisplayRoom />} />
         <Route path="/credits" element={<Credits />} />
       </Routes>
       <Button className="Credit" onClick={() => navigate('/home/credits')}>

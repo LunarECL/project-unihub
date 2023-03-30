@@ -36,7 +36,7 @@ export function NavBar(props: NavBarProps) {
           </Button>
           <Button
             className="AppBarItems"
-            onClick={() => navigate('/home/room/create')}
+            onClick={() => navigate('/home/rooms/join')}
           >
             Video Chat
           </Button>
