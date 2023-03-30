@@ -78,7 +78,7 @@ export function Landing(props: LandingProps) {
                             background: 'transparent',
                           }}
                           onClick={() => {
-                            logout({ returnTo: window.location.origin } as Omit<
+                            logout({ returnTo: '/' } as Omit<
                               LogoutOptions,
                               'onRedirect'
                             >);
