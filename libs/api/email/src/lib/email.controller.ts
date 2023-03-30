@@ -1,6 +1,6 @@
 import { Body, Controller, Post } from '@nestjs/common';
 import { EmailService } from '@unihub/api/email';
-import { CurrentUser } from '@unihub/api/auth';
+import { CurrentUser } from '../../../auth/src/lib/current-user.decorator';
 import { ManagementService } from '@unihub/api/auth';
 
 @Controller('email')

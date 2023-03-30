@@ -108,13 +108,14 @@ export function DisplayRoom(props: DisplayRoomProps) {
   };
 
   useEffect(() => {
-    signal ||= new IonSFUJSONRPCSignal('wss://unihub.today/ws');
+    signal ||= new IonSFUJSONRPCSignal('ws://localhost:8000/ws');
     client ||= new Client(signal, config);
     signal.onopen = () => {
       client.join(roomId, uid);
     };
 
     client.ontrack = (track: MediaStreamTrack, stream: MediaStream) => {
+      console.log('ontrack', track, stream);
       if (!streams.current[stream.id]) {
         setNoRemoteStreams(false);
         // create a video element
