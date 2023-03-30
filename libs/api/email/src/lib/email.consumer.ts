@@ -39,8 +39,8 @@ export class EmailConsumer {
         from: process.env.EMAIL_SNEDER,
         subject: `You're invited to join a study group on UniHub!`,
         html: `
-    <p>Hello ${job.data.owner},</p>
-    <p>Great news! You have been invited to join the "<strong>${job.data.groupName}</strong>" study group on UniHub.</p>
+    <p>Hello ${job?.data.email},</p>
+    <p>Great news! You have been invited to join the "<strong>${job.data.groupName}</strong>" study group from "<strong>${job.data.owner}</strong>" on UniHub.</p>
     <p>To accept the invitation and join the group, simply click on the following link: <a href="https://unihub.today/home/rooms/${job.data.groupId}">${job.data.groupName}</a></p>
     <p>Happy studying!</p>
     <p>The UniHub Team</p>
