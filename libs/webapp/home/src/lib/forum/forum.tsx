@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useGetEmail } from '@unihub/webapp/api';
 import { WebappShareDocList } from '@unihub/webapp/share-doc-list';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface DashboardProps {}
 
 export function Forum(props: DashboardProps) {
@@ -25,7 +26,7 @@ export function Forum(props: DashboardProps) {
           Timetable
         </Button>
         <Button
-          onClick={() => navigate('/home/room/create')}
+          onClick={() => navigate('/home/rooms/join')}
           variant="contained"
           sx={{ ml: 2 }}
         >

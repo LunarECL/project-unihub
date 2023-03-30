@@ -44,7 +44,7 @@ export function Sharedoc(props: SharedocProps) {
   } = useParams();
 
   useEffect(() => {
-    const url = `ws://localhost:3030/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${documentId}/${lectureNumber}`;
+    const url = `wss://unihub.today/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${documentId}/${lectureNumber}`;
     const socket = new ReconnectingWebSocket(url);
     const connection = new ShareDB.Connection(socket as any);
     const doc = connection.get(courseCode!, documentId!);

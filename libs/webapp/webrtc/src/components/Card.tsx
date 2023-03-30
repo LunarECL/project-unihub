@@ -15,19 +15,14 @@ interface CardProps {
   handleCameraToggle: () => void | undefined;
   handleScreenToggle: () => void | undefined;
   display: string;
-  refVideo: any;
+  refVideo: React.RefObject<HTMLVideoElement> | null;
   isScreenStream: boolean;
+  disabled: boolean;
 }
-
-/* 
-Card Component:
-Video takes up entire card space
-Name displays at bottom of card
-Share Screen icon and Video icon display at top-right of card
-*/
 
 export function Card(props: CardProps) {
   const theme = useTheme();
+  console.log(props.refVideo?.current?.srcObject);
   const [showControls, setShowControls] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
 
@@ -38,15 +33,15 @@ export function Card(props: CardProps) {
   }
 
   const handleMute = () => {
-    setIsMuted(!isMuted);
+    if (!props.disabled) setIsMuted(!isMuted);
   };
 
   const handleScreenStream = () => {
-    props.handleScreenToggle();
+    if (!props.disabled) props.handleScreenToggle();
   };
 
   const handleVideoStream = () => {
-    props.handleCameraToggle();
+    if (!props.disabled) props.handleCameraToggle();
   };
 
   return (

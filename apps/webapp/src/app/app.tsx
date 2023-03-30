@@ -1,9 +1,8 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { Landing } from '@unihub/webapp/public';
-import { Sharedoc } from '@unihub/webapp/sharedoc';
 import { ThemeProviderWrapper } from './ThemeProviderWrapper';
-import ProtectedRoute from '../../../../libs/webapp/ui/src/lib/protected-route/protected-route';
+import { ProtectedRoute } from '@unihub/webapp/ui';
 import { Home } from '@unihub/webapp/home';
 
 export function App() {

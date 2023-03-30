@@ -41,6 +41,7 @@ export function ApiProvider({ children }: ApiProviderProps) {
               const accessToken = await getAccessTokenSilently({});
 
               if (accessToken) {
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore
                 config.headers = {
                   ...config.headers,

@@ -1,4 +1,4 @@
-FROM my-base-image:nx-base AS builder
+FROM ghcr.io/uoft-utsc-cs-sandbox/unihub/base:latest AS builder
 
 # Production Build
 WORKDIR /app/builder

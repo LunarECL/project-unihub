@@ -3,6 +3,7 @@ import axios from 'axios';
 
 @Injectable()
 export class ManagementService {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor() {}
 
   /**
