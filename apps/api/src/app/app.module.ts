@@ -19,6 +19,7 @@ import { ShareDoc } from '@unihub/api/sharedoc';
 import { ScheduleModule } from '@nestjs/schedule';
 import { Op } from '@unihub/api/sharedoc';
 import { Attribute } from '@unihub/api/sharedoc';
+import { WebrtcModule } from '@unihub/api/webrtc';
 
 @Module({
   imports: [
@@ -77,6 +78,7 @@ import { Attribute } from '@unihub/api/sharedoc';
       inject: [ConfigService],
     }),
     EmailModule,
+    WebrtcModule,
     ScheduleModule.forRoot(),
   ],
   controllers: [AppController],

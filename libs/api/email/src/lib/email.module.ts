@@ -4,7 +4,7 @@ import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
 import { EmailService } from './email.service';
 import { EmailConsumer } from './email.consumer';
-import { EmailController } from './email.controller';
+import { AuthModule } from '@unihub/api/auth';
 
 @Module({
   imports: [
@@ -24,7 +24,6 @@ import { EmailController } from './email.controller';
       },
     }),
   ],
-  controllers: [EmailController],
   providers: [EmailService, EmailConsumer],
   exports: [EmailService],
 })
