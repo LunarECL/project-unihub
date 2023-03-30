@@ -78,7 +78,7 @@ export function Landing(props: LandingProps) {
                             background: 'transparent',
                           }}
                           onClick={() => {
-                            logout({ returnTo: '/' } as Omit<
+                            logout({ returnTo: 'unihub.today' } as Omit<
                               LogoutOptions,
                               'onRedirect'
                             >);
