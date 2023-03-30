@@ -40,7 +40,7 @@ export class EmailConsumer {
         html: `
     <p>Hello ${job.data.owner},</p>
     <p>Great news! You have been invited to join the "<strong>${job.data.groupName}</strong>" study group on UniHub.</p>
-    <p>To accept the invitation and join the group, simply click on the following link: <a href="${job.data.groupId}">${job.data.groupName}</a></p>
+    <p>To accept the invitation and join the group, simply click on the following link: <a href="https://unihub.today/home/room/${job.data.groupId}">${job.data.groupName}</a></p>
     <p>Happy studying!</p>
     <p>The UniHub Team</p>
   `,
