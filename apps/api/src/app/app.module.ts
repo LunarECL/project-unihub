@@ -21,6 +21,8 @@ import { Op } from '@unihub/api/sharedoc';
 import { Attribute } from '@unihub/api/sharedoc';
 import { MapModule } from '@unihub/api/map';
 import { Location } from '@unihub/api/map';
+import { Friends } from '@unihub/api/friends';
+import { FriendsModule } from '@unihub/api/friends';
 
 @Module({
   imports: [
@@ -28,6 +30,7 @@ import { Location } from '@unihub/api/map';
     SharedocModule,
     CoursesModule,
     MapModule,
+    FriendsModule,
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
@@ -77,6 +80,7 @@ import { Location } from '@unihub/api/map';
         Op,
         Attribute,
         Location,
+        Friends,
       ],
       synchronize: true,
       logging: true,
