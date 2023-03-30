@@ -33,7 +33,7 @@ export class CronService implements OnModuleInit {
   async task() {
     const url = process.env.COURSE_SCHEDULE_URL as string;
     const body2 = 'coursecode=&instructor=&courseTitle=';
-    let body: string = '';
+    let body = '';
     for (let i = 1; i < 56; i++) {
       body += `departments%5B%5D=${i}&`;
     }
@@ -53,7 +53,7 @@ export class CronService implements OnModuleInit {
 
     console.log('scheduleCourse:  Data start');
 
-    for (let key in data) {
+    for (const key in data) {
       // Course part
       const course = data[key];
       const programCode = course.course_cd.substring(0, 3);
@@ -78,9 +78,9 @@ export class CronService implements OnModuleInit {
         .orUpdate(['programCode', 'title', 'sec_cd', 'session'])
         .execute();
 
-      const sections = new Array();
+      const sections = [];
 
-      for (let i in course.sections) {
+      for (const i in course.sections) {
         const rawSection = course.sections[i];
         const sectionData = {
           sectionType: rawSection.method,
@@ -92,8 +92,8 @@ export class CronService implements OnModuleInit {
           course: courses,
         };
 
-        var check: boolean = false;
-        for (let j in sections) {
+        let check = false;
+        for (const j in sections) {
           if (
             sections[j].sectionNumber === sectionData.sectionNumber &&
             sections[j].sectionType === sectionData.sectionType

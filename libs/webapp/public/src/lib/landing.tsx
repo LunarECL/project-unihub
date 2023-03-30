@@ -52,11 +52,9 @@ export function Landing(props: LandingProps) {
                 </Button>
               </>
             ) : (
-              <>
-                <Button onClick={login} variant="contained">
-                  Login
-                </Button>
-              </>
+              <Button onClick={login} variant="contained">
+                Login
+              </Button>
             )}
           </>
         )}
