@@ -2,10 +2,12 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Client, LocalStream } from 'ion-sdk-js';
 import { IonSFUJSONRPCSignal } from 'ion-sdk-js/lib/signal/json-rpc-impl';
 import { Configuration } from 'ion-sdk-js/lib/client';
-import { styled } from '@mui/material/styles';
 import { useParams } from 'react-router-dom';
 import './DisplayRoom.css';
 import { Card } from '../components/Card';
+import { Modal, Box, Typography, TextField, Button } from '@mui/material';
+import { usePostInvitationEmail } from '@unihub/webapp/api';
+import AddLinkIcon from '@mui/icons-material/AddLink';
 
 /* eslint-disable-next-line */
 export interface DisplayRoomProps {}
@@ -56,6 +58,8 @@ export function DisplayRoom(props: DisplayRoomProps) {
   const [pubShow, setPubShow] = useState<string>('none');
   const [noRemoteStreams, setNoRemoteStreams] = useState<boolean>(true);
   const [disabled, setDisabled] = useState<boolean>(false);
+  const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [email, setEmail] = useState<string>('');
 
   const backgroundColors = [
     '#FFC107', // Amber
@@ -349,21 +353,44 @@ export function DisplayRoom(props: DisplayRoomProps) {
     }
   };
 
-  const generateInviteLink = async () => {
-    // want to invite to this rooom
+  const copyLinkToClipboard = () => {
+    console.log('copying link to clipboard');
+
     const link = window.location.origin + `/home/rooms/${roomId}`;
+    navigator.clipboard.writeText(link).then(() => {
+      alert('Copied link to clipboard!');
+    });
 
-    // copy to clipboard
-    await navigator.clipboard.writeText(link);
+    setModalOpen(false);
+  };
 
-    // display a message to the user that the link has been copied
-    alert('Invitation link copied to clipboard!');
+  const handleSendLinkEmail = () => {
+    usePostInvitationEmail(email, roomId, roomId);
+    setModalOpen(false);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
   };
 
   useEffect(() => {
     displayRemoteStreams();
     enableAudio();
   }, [streams.current]);
+
+  const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 400,
+    bgcolor: 'background.paper',
+    border: '2px solid #000',
+    boxShadow: 24,
+    p: 4,
+    display: 'flex',
+    flexDirection: 'column',
+  };
 
   return (
     <div className="App">
@@ -372,10 +399,46 @@ export function DisplayRoom(props: DisplayRoomProps) {
         <button
           className="headerBtn"
           id="bnt_pubcam"
-          onClick={() => generateInviteLink()}
+          onClick={() => setModalOpen(true)}
         >
           Invititation Link
         </button>
+        <Modal
+          open={modalOpen}
+          onClose={handleModalClose}
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+        >
+          <Box sx={style}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Share Room Link
+            </Typography>
+            <TextField
+              label="Email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              sx={{ mt: 2 }}
+            />
+            <Button
+              variant="contained"
+              onClick={handleSendLinkEmail}
+              sx={{ mt: 2 }}
+              fullWidth={true}
+            >
+              Send Link via Email
+            </Button>
+
+            <Button
+              variant="contained"
+              onClick={copyLinkToClipboard}
+              sx={{ mt: 2 }}
+              fullWidth={true}
+            >
+              <AddLinkIcon className="addLink" />
+              Copy Link
+            </Button>
+          </Box>
+        </Modal>
       </div>
 
       <div

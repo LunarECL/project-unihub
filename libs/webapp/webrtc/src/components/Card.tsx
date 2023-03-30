@@ -108,34 +108,3 @@ export function Card(props: CardProps) {
     </div>
   );
 }
-
-// create a video element
-// const videoElement = document.createElement('video');
-// videoElement.autoplay = true;
-// videoElement.controls = true;
-// videoElement.muted = true;
-// videoElement.style.backgroundColor = 'black';
-// videoElement.srcObject = stream;
-// videoElement.setAttribute('playsinline', 'true');
-// videoElement.setAttribute('controls', 'true');
-// videoElement.setAttribute('muted', 'true');
-
-// // add video element to the map
-// streams.current[stream.id] = {
-//   stream,
-//   videoElement: videoRef,
-// };
-
-// stream.onremovetrack = () => {
-//   if (streams.current[stream.id]) {
-//     streams.current[stream.id].videoElement.remove();
-//     delete streams.current[stream.id];
-//     // displayRemoteStreams();
-//   }
-
-//   if (Object.keys(streams.current).length === 0) {
-//     setNoRemoteStreams(true);
-//   }
-// };
-
-// displayRemoteStreams();
