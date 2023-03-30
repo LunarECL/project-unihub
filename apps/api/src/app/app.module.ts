@@ -19,12 +19,15 @@ import { ShareDoc } from '@unihub/api/sharedoc';
 import { ScheduleModule } from '@nestjs/schedule';
 import { Op } from '@unihub/api/sharedoc';
 import { Attribute } from '@unihub/api/sharedoc';
+import { MapModule } from '@unihub/api/map';
+import { Location } from '@unihub/api/map';
 
 @Module({
   imports: [
     AuthModule,
     SharedocModule,
     CoursesModule,
+    MapModule,
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
@@ -65,7 +68,16 @@ import { Attribute } from '@unihub/api/sharedoc';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [User, Courses, Lecture, Section, ShareDoc, Op, Attribute],
+      entities: [
+        User,
+        Courses,
+        Lecture,
+        Section,
+        ShareDoc,
+        Op,
+        Attribute,
+        Location,
+      ],
       synchronize: true,
       logging: true,
     }),

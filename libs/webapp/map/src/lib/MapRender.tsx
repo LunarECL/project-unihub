@@ -83,6 +83,8 @@ function MapRender() {
         );
       });
 
+      console.log('positionFeature', positionFeature);
+
       new VectorLayer({
         map: mapRef.current,
         source: new VectorSource({
