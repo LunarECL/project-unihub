@@ -11,3 +11,5 @@ export * from './lib/hooks/usePostUserLecture';
 export * from './lib/hooks/usePostUserDocument';
 export * from './lib/hooks/useGetIfUserCanViewDoc';
 export * from './lib/hooks/usePostShareDocument';
+export * from './lib/hooks/useGetUserLocation';
+export * from './lib/hooks/usePostUserLocation';

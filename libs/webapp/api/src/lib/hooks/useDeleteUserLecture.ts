@@ -7,7 +7,7 @@ const query = async (sectionId: string) => {
 
   const res = await axios.delete(url);
 
-  return res.data;
+  return res.data;  
 };
 
 export function useDeleteUserLecture(sectionId: string) {

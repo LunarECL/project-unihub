@@ -9,13 +9,12 @@ export class MapController {
   constructor(private mapService: MapService) {}
 
   @Get('/user/location')
-  async getUserCourses(@CurrentUser() { userId }): Promise<any> {
+  async getUserLocation(@CurrentUser() { userId }): Promise<any> {
     return await this.mapService.getUserLocation(userId);
   }
 
-  // @CurrentUser() { userId }
   @Post('/user/location')
-  async addUserLecture(@CurrentUser() { userId }, @Body() body): Promise<any> {
+  async addUserLocation(@CurrentUser() { userId }, @Body() body): Promise<any> {
     //Check the body
     if (!body.latitude || !body.longitude) {
       return { error: 'Missing latitude or longitude' };

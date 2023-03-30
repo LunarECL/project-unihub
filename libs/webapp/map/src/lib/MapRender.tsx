@@ -12,6 +12,7 @@ import { Circle as CircleStyle } from 'ol/style';
 import Geolocation from 'ol/Geolocation';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
+import { usePostUserLocation } from '@unihub/webapp/api';
 
 function MapRender() {
   // our context
@@ -46,12 +47,6 @@ function MapRender() {
         projection: context.view.getProjection(),
       });
 
-      geolocation.on('change:position', () => {
-        const coordinates = geolocation.getPosition();
-        context.view.setCenter(coordinates);
-        context.view.setZoom(18);
-      });
-
       const accuracyFeature = new Feature();
       geolocation.on('change:accuracyGeometry', function () {
         accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
@@ -77,13 +72,25 @@ function MapRender() {
       );
 
       geolocation.on('change:position', function () {
+        // this function runs when the position changes
         const coordinates = geolocation.getPosition();
+        context.view.setCenter(coordinates);
+        context.view.setZoom(18);
         positionFeature.setGeometry(
           coordinates ? new Point(coordinates) : null
         );
-      });
 
-      console.log('positionFeature', positionFeature);
+        // store these coordinates in the database
+        const longitude = coordinates[0].toString();
+        const latitute = coordinates[1].toString();
+
+        usePostUserLocation(longitude, latitute);
+
+        // set a timeout for 5 seconds just in case position is constantly changing (user is moving)
+        setTimeout(() => {
+          console.log('user moving');
+        }, 5000);
+      });
 
       new VectorLayer({
         map: mapRef.current,

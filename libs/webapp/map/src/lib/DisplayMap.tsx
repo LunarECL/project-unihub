@@ -16,10 +16,10 @@ export function DisplayMap(props: DisplayMapProps) {
     zoom: 17,
 
     // the constraints for the map
-    // extent: boundingExtent([
-    //   fromLonLat([-79.1951, 43.78]),
-    //   fromLonLat([-79.1751, 43.7944]),
-    // ]),
+    extent: boundingExtent([
+      fromLonLat([-79.1951, 43.78]),
+      fromLonLat([-79.1751, 43.7944]),
+    ]),
   });
 
   // the context that will be passed to the map
