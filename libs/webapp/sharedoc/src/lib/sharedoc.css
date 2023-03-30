@@ -1,9 +1,9 @@
 #doc-container {
   position: absolute;
-  top: 24px;
-  right: 24px;
+  top: 10%;
+  right: 10%;
   bottom: 24px;
-  left: 24px;
+  left: 10%;
 }
 
 #header {
@@ -17,7 +17,6 @@
 
 #DocTitle {
   font-size: 24px;
-  margin-bottom: 2% !important;
 }
 
 #BackButton {
@@ -26,7 +25,6 @@
 }
 
 #ShareButton {
-  margin-bottom: 2% !important;
   left: -5px;
 }
 
@@ -37,4 +35,6 @@
 
 #QuillEditor {
   height: 100%;
+  border: 100px !important;
+  margin-top: 2%;
 }

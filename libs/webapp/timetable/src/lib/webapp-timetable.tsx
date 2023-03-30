@@ -16,13 +16,14 @@ import {
   CircularProgress,
 } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useGetCourses } from '@unihub/webapp/api';
 import { useNavigate, useParams } from 'react-router-dom';
 import { usePostUserLecture } from '@unihub/webapp/api';
 import { useGetUserLectures } from '@unihub/webapp/api';
 import { useDeleteUserLecture } from '@unihub/webapp/api';
 import styles from './webapp-timetable.module.css';
+import { useTheme } from '@mui/material/styles';
 /* eslint-disable-next-line */
 export interface WebappTimetableProps {}
 
@@ -87,17 +88,17 @@ const searchOpt = [
 ];
 
 let allCourses: any[] = [];
-
 let colIndex = 0;
 
-let hasDisplayed = false;
-
 export function WebappTimetable(props: WebappTimetableProps) {
+  const theme = useTheme();
   const [coursesRows, setCoursesRows] = useState<any>([]);
   const [courses, setCourses] = useState<any>([]);
   const [allCoursesRows, setAllCoursesRows] = useState<any>([]);
   const [search, setSearch] = useState('Code');
   const [loading, setLoading] = useState(true);
+
+  let hasDisplayed = false;
 
   const navigate = useNavigate();
 
@@ -167,7 +168,7 @@ export function WebappTimetable(props: WebappTimetableProps) {
   const toggleDrawer =
     (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
       if (
-        event.type === 'keydown' &&
+        event?.type === 'keydown' &&
         ((event as React.KeyboardEvent).key === 'Tab' ||
           (event as React.KeyboardEvent).key === 'Shift')
       ) {
@@ -180,23 +181,24 @@ export function WebappTimetable(props: WebappTimetableProps) {
           '';
         setCoursesRows(allCoursesRows);
       }
+
+      console.log(open); // add this line
     };
 
   const handleDelete = (sectionId: string) => {
-    useDeleteUserLecture(sectionId);
+    colIndex = (colIndex - 1) % colours.length;
+    useDeleteUserLecture(sectionId).then(() => {
+      //Remove the course from the allCourses array
+      allCourses = allCourses.filter((course: any) => course.id !== sectionId);
 
-    //Remove the course from the allCourses array
-    allCourses = allCourses.filter((course: any) => course.id !== sectionId);
-
-    //Remove the course from the timetable
-    const course = courses.find((course: any) => course.id === sectionId);
-    if (course) {
-      displayCourse(course, true);
-    }
+      //Remove the course from the timetable
+      const course = courses.find((course: any) => course.id === sectionId);
+      if (course) {
+        displayCourse(course, true);
+      }
+    });
   };
 
-  //Need to deal with conflicts but that'll be when we store the courses in an array or smthn
-  //So using the db
   const displayCourse = (course: any, isRemove: boolean) => {
     //Check if the course has lectures
     if (course.lectures) {
@@ -274,9 +276,6 @@ export function WebappTimetable(props: WebappTimetableProps) {
 
                   //Set the hasDisplayed back to false
                   hasDisplayed = false;
-
-                  //Set the colour index back to 0
-                  colIndex = 0;
                 });
               }
             }
@@ -358,16 +357,24 @@ export function WebappTimetable(props: WebappTimetableProps) {
     usePostUserLecture(courses[courseIndex].id);
     allCourses.push(courses[courseIndex]);
     displayCourse(courses[courseIndex], false);
+    toggleDrawer(false)();
   };
 
   return (
     <>
       <Stack direction="row" spacing={10} className={styles.Stack}>
         <TableContainer>
-          <Table className={styles.Table} aria-label="simple table">
+          <Table
+            className={styles.Table}
+            sx={{ borderColor: theme.palette.secondary.main }}
+            aria-label="simple table"
+          >
             <TableHead>
-              <TableRow className={styles.TableRowHead}>
-                <TableCell>Time</TableCell>
+              <TableRow
+                className={styles.TableRowHead}
+                sx={{ backgroundColor: theme.palette.secondary.main }}
+              >
+                <TableCell className={styles.noncenteredcell}>Time</TableCell>
                 <TableCell className={styles.centeredcell}>Monday</TableCell>
                 <TableCell className={styles.centeredcell}>Tuesday</TableCell>
                 <TableCell className={styles.centeredcell}>Wednesday</TableCell>
@@ -378,7 +385,12 @@ export function WebappTimetable(props: WebappTimetableProps) {
             <TableBody>
               {rows.map((row) => (
                 <TableRow key={row.time} className={styles.TableRow}>
-                  <TableCell component="th" scope="row">
+                  <TableCell
+                    component="th"
+                    scope="row"
+                    className={styles.TableTime}
+                    sx={{ color: theme.palette.secondary.main }}
+                  >
                     {row.time}
                   </TableCell>
                   <TableCell
@@ -420,7 +432,10 @@ export function WebappTimetable(props: WebappTimetableProps) {
           className={styles.AddButtonContainer}
           onClick={toggleDrawer(true)}
         >
-          <AddCircleOutlineIcon className={styles.AddButtonIcon} />
+          <AddCircleOutlineIcon
+            className={styles.AddButtonIcon}
+            sx={{ color: theme.palette.primary.main }}
+          />
         </IconButton>
         <Drawer
           anchor="top"
@@ -432,6 +447,7 @@ export function WebappTimetable(props: WebappTimetableProps) {
             open={state['bottom']}
             onClose={toggleDrawer(false)}
             onOpen={toggleDrawer(true)}
+            id="drawer"
           >
             {loading ? (
               <Grid item xs={12} className={styles.Loading}>
@@ -473,22 +489,40 @@ export function WebappTimetable(props: WebappTimetableProps) {
                   <Table aria-label="simple table">
                     <TableHead>
                       <TableRow className={styles.TableRowHead}>
-                        <TableCell className={styles.centeredcell}>
+                        <TableCell
+                          className={styles.DrawerTableText}
+                          sx={{ color: theme.palette.primary.main }}
+                        >
                           Course Code
                         </TableCell>
-                        <TableCell className={styles.centeredcell}>
+                        <TableCell
+                          className={styles.DrawerTableText}
+                          sx={{ color: theme.palette.primary.main }}
+                        >
                           Course Title
                         </TableCell>
-                        <TableCell className={styles.centeredcell}>
+                        <TableCell
+                          className={styles.DrawerTableText}
+                          sx={{ color: theme.palette.primary.main }}
+                        >
                           Course Section
                         </TableCell>
-                        <TableCell className={styles.centeredcell}>
+                        <TableCell
+                          className={styles.DrawerTableText}
+                          sx={{ color: theme.palette.primary.main }}
+                        >
                           Instructor
                         </TableCell>
-                        <TableCell className={styles.centeredcell}>
+                        <TableCell
+                          className={styles.DrawerTableText}
+                          sx={{ color: theme.palette.primary.main }}
+                        >
                           Lecture/Tutorial
                         </TableCell>
-                        <TableCell className={styles.centeredcell}>
+                        <TableCell
+                          className={styles.DrawerTableText}
+                          sx={{ color: theme.palette.primary.main }}
+                        >
                           Delivery Mode
                         </TableCell>
                       </TableRow>
@@ -500,24 +534,44 @@ export function WebappTimetable(props: WebappTimetableProps) {
                           <TableRow
                             key={index}
                             className={styles.TableRowList}
-                            onClick={() => addCourseTime(index)}
+                            onClick={() => {
+                              addCourseTime(index);
+                            }}
                           >
-                            <TableCell className={styles.centeredcell}>
+                            <TableCell
+                              className={styles.DrawerTableText}
+                              sx={{ color: theme.palette.primary.main }}
+                            >
                               {row.programCode}
                             </TableCell>
-                            <TableCell className={styles.centeredcell}>
+                            <TableCell
+                              className={styles.DrawerTableText}
+                              sx={{ color: theme.palette.primary.main }}
+                            >
                               {row.courseTitle}
                             </TableCell>
-                            <TableCell className={styles.centeredcell}>
+                            <TableCell
+                              className={styles.DrawerTableText}
+                              sx={{ color: theme.palette.primary.main }}
+                            >
                               {row.sec_cd}
                             </TableCell>
-                            <TableCell className={styles.centeredcell}>
+                            <TableCell
+                              className={styles.DrawerTableText}
+                              sx={{ color: theme.palette.primary.main }}
+                            >
                               {row.prof}
                             </TableCell>
-                            <TableCell className={styles.centeredcell}>
+                            <TableCell
+                              className={styles.DrawerTableText}
+                              sx={{ color: theme.palette.primary.main }}
+                            >
                               {row.section}
                             </TableCell>
-                            <TableCell className={styles.centeredcell}>
+                            <TableCell
+                              className={styles.DrawerTableText}
+                              sx={{ color: theme.palette.primary.main }}
+                            >
                               {row.deliveryMode}
                             </TableCell>
                           </TableRow>

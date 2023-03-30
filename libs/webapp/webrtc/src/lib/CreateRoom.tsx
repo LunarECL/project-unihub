@@ -3,6 +3,7 @@ import { Box, Button, Container, TextField, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import './CreateRoom.css';
 import placeholder from '../assets/person-icon.webp';
+import { useTheme } from '@mui/material/styles';
 
 /* eslint-disable-next-line */
 export interface CreateRoomProps {}
@@ -14,6 +15,7 @@ export function CreateRoom(props: CreateRoomProps) {
   const pubVideo = useRef<HTMLVideoElement>(null);
   const [micOn, setMicOn] = useState(false);
   const [username, setUsername] = useState('');
+  const theme = useTheme();
 
   function generateCode() {
     let code = '';
@@ -106,12 +108,23 @@ export function CreateRoom(props: CreateRoomProps) {
         ></video>
       </div>
       <div className="camera-mic-container">
-        <button className="mic-btn" onClick={handleMicClick}>
+        {/* <button className="mic-btn" onClick={handleMicClick}>
           Microphone
-        </button>
-        <button className="camera-btn" onClick={handleCameraClick}>
+        </button> */}
+        <Button
+          className="mic-btn"
+          sx={{ backgroundColor: theme.palette.primary.main, color: 'white' }}
+          onClick={handleMicClick}
+        >
+          Microphone
+        </Button>
+        <Button
+          className="camera-btn"
+          sx={{ backgroundColor: theme.palette.primary.main, color: 'white' }}
+          onClick={handleCameraClick}
+        >
           Camera
-        </button>
+        </Button>
       </div>
       <div className="name-input-container">
         <input
@@ -120,12 +133,18 @@ export function CreateRoom(props: CreateRoomProps) {
           placeholder="Username (Annyonymous to others)"
           onChange={(e) => setUsername(e.target.value)}
           value={username}
+          style={{ backgroundColor: theme.palette.secondary.main }}
+          className="user-name-input"
         />
       </div>
       <div className="join-room-container">
-        <button className="join-room-btn" onClick={handleCreateRoom}>
+        <Button
+          className="join-room-btn"
+          sx={{ backgroundColor: theme.palette.primary.main, color: 'white' }}
+          onClick={handleCreateRoom}
+        >
           Join Room
-        </button>
+        </Button>
       </div>
     </div>
   );

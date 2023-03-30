@@ -36,7 +36,7 @@
 .camera-btn,
 .mic-btn {
   padding: 8px 16px;
-  background-color: #1e1e1e;
+  /* background-color: #1e1e1e; */
   color: #ffffff;
   border: none;
   border-radius: 7px;
@@ -52,7 +52,7 @@
 
 .camera-btn:hover,
 .mic-btn:hover {
-  background-color: #454444;
+  background-color: #2a9df4 !important;
 }
 
 .name-input-container {
@@ -97,5 +97,14 @@
 }
 
 .join-room-btn:hover {
-  background-color: #2a9df4;
+  background-color: #2a9df4 !important;
+}
+
+.user-name-input {
+  color: white !important;
+  border: transparent !important;
+}
+
+.user-name-input::placeholder {
+  color: white !important;
 }
