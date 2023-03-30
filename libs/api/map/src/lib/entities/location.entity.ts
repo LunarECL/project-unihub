@@ -9,7 +9,7 @@ import {
     PrimaryGeneratedColumn,
     UpdateDateColumn,
   } from 'typeorm';
-  import {User} from '@unihub/api/auth';
+
   
   @Entity()
   export class Location {
