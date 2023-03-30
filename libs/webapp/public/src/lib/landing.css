@@ -1,0 +1,71 @@
+.UnIHub-header {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 !important;
+  font-size: 400% !important;
+}
+
+.UnIHub-subheader {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-size: 100%;
+
+  /* color: #94618e; */
+}
+
+.GridContainer {
+  margin-left: 20% !important;
+}
+
+.InnerGetStarted {
+  margin-top: 50% !important;
+}
+
+.LandingImageContainer {
+  margin-top: 12% !important;
+}
+
+.LandingImage {
+  background: url('https://wp-content.solidprofessor.com/uploads/2022/08/solidprofessor-illustration-people-communicating-at-work.png');
+  width: 493px;
+  height: 445px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin-left: 5%;
+}
+
+.GetStartedButton {
+  border-radius: 30px !important;
+  font-weight: 700 !important;
+
+  margin-top: 10% !important;
+}
+
+.AppBar {
+  box-shadow: none !important;
+}
+
+.AppBarUnIHub {
+  flex-grow: 1;
+  display: none; /* for xs screens */
+
+  font-weight: 400 !important;
+  font-size: 30px !important;
+  cursor: pointer;
+  color: #ffff !important;
+}
+
+@media (min-width: 600px) {
+  .AppBarUnIHub {
+    /* Show the element for screens wider than or equal to 600px */
+    display: block;
+  }
+}
+
+.AppBarItems {
+  box-shadow: none !important;
+
+  font-size: 18px !important;
+  /* color: #FFFF !important; */
+}

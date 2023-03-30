@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import Joi from 'joi';
 import { AppService } from './app.service';
 import { AppController } from './app.controller';
@@ -8,13 +8,24 @@ import { AuthModule } from '@unihub/api/auth';
 import { SharedocModule } from '@unihub/api/sharedoc';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { BullModule } from '@nestjs/bull';
+import { EmailModule } from '@unihub/api/email';
+import { User } from '@unihub/api/auth';
+import { Courses } from '@unihub/api/courses';
+import { Lecture } from '@unihub/api/courses';
+import { Section } from '@unihub/api/courses';
+import { CoursesModule } from '@unihub/api/courses';
+import { ShareDoc } from '@unihub/api/sharedoc';
+import { ScheduleModule } from '@nestjs/schedule';
+import { Op } from '@unihub/api/sharedoc';
+import { Attribute } from '@unihub/api/sharedoc';
 import { WebrtcModule } from '@unihub/api/webrtc';
 
 @Module({
   imports: [
     AuthModule,
     SharedocModule,
-    WebrtcModule,
+    CoursesModule,
     ConfigModule.forRoot({
       isGlobal: true,
       validationSchema: Joi.object({
@@ -30,6 +41,12 @@ import { WebrtcModule } from '@unihub/api/webrtc';
         AUTH0_MANAGEMENT_CLIENT_SECRET: Joi.string().required(),
         AUTH0_ISSUER_URL: Joi.string().required(),
         AUTH0_AUDIENCE: Joi.string().required(),
+
+        EMAIL_SERVER: Joi.string().required(),
+        EMAIL_USERNAME: Joi.string().required(),
+        EMAIL_PASSWORD: Joi.string().required(),
+
+        REDIS_URL: Joi.string().required(),
       }),
       // TODO: modify later to module to block the empty value
     }),
@@ -49,10 +66,20 @@ import { WebrtcModule } from '@unihub/api/webrtc';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [],
+      entities: [User, Courses, Lecture, Section, ShareDoc, Op, Attribute],
       synchronize: true,
       logging: true,
     }),
+    BullModule.forRootAsync({
+      imports: [ConfigModule.forRoot({ envFilePath: `.env` })],
+      useFactory: async (configService: ConfigService) => ({
+        url: configService.get<string>('REDIS_URL'),
+      }),
+      inject: [ConfigService],
+    }),
+    EmailModule,
+    WebrtcModule,
+    ScheduleModule.forRoot(),
   ],
   controllers: [AppController],
   providers: [AppService],

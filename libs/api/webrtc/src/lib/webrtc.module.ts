@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
-import { MediasoupController } from './webrtc.gateway';
+import { WebrtcController } from './webrtc.controller';
+import { EmailModule } from '@unihub/api/email';
+import { AuthModule } from '@unihub/api/auth';
 
 @Module({
-  controllers: [],
+  imports: [EmailModule, AuthModule],
+  controllers: [WebrtcController],
   providers: [],
   exports: [],
 })

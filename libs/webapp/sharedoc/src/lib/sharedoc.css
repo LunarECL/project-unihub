@@ -1,9 +1,9 @@
 #doc-container {
   position: absolute;
-  top: 24px;
-  right: 24px;
+  top: 10%;
+  right: 10%;
   bottom: 24px;
-  left: 24px;
+  left: 10%;
 }
 
 #header {
@@ -13,4 +13,28 @@
   display: inline-block;
   padding-bottom: 1%;
   padding-top: 2%;
+}
+
+#DocTitle {
+  font-size: 24px;
+}
+
+#BackButton {
+  position: absolute;
+  right: 0px;
+}
+
+#ShareButton {
+  left: -5px;
+}
+
+#AddUserDialog {
+  width: 100%;
+  height: 100%;
+}
+
+#QuillEditor {
+  height: 100%;
+  border: 100px !important;
+  margin-top: 2%;
 }

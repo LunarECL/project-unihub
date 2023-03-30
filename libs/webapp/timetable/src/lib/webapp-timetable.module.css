@@ -1,0 +1,105 @@
+/* CSS for Stack component */
+.Stack {
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-top: 8%;
+  margin-bottom: 8%;
+}
+
+/* CSS for TableContainer component */
+.Table {
+  border: 2px solid;
+}
+
+.TableRowHead {
+  font-weight: medium;
+}
+
+/* CSS for TableRow component */
+.TableRow:last-child td,
+.TableRow:last-child th {
+  border: none;
+}
+
+.AddButtonContainer {
+  max-height: 50px;
+  max-width: 50px;
+}
+
+.AddButtonIcon {
+  font-size: 45px !important;
+}
+
+.Loading {
+  display: flex;
+  justify-content: center;
+  margin-top: 20%;
+}
+
+.Box {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60vh;
+  padding: 1rem;
+}
+
+.CourseListContainer {
+  width: 90% !important;
+  margin: 0 auto !important;
+}
+
+.DrawerGrid {
+  margin-top: 2% !important;
+  margin-bottom: 2% !important;
+}
+
+.GridItemSearchBar {
+  width: 75%;
+}
+
+.TableRowList {
+  cursor: pointer;
+}
+
+/* CSS for TableRowList component */
+.TableRowList:last-child td,
+.TableRowList:last-child th {
+  border: none;
+}
+
+.centeredcell {
+  text-align: center !important;
+  color: white !important;
+  font-weight: 600 !important;
+}
+
+.noncenteredcell {
+  text-align: left !important;
+  color: white !important;
+  font-weight: 600 !important;
+}
+
+.xButton {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  float: right;
+  font: bold 20px Arial, sans-serif;
+  margin-top: -4px;
+  color: white;
+}
+
+.ClassCell {
+  color: white;
+  font-weight: 700 !important;
+  cursor: pointer;
+}
+
+.TableTime {
+  font-weight: 600 !important;
+}
+
+.DrawerTableText {
+  font-weight: 600 !important;
+}

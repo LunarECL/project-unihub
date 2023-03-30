@@ -1,0 +1,76 @@
+version: '3.8'
+
+networks:
+  app:
+    driver: bridge
+
+services:
+  ion-sfu:
+    container_name: ion-sfu
+    image: pionwebrtc/ion-sfu:latest-jsonrpc
+    ports:
+      - 8000:7000
+      - 5000-5200:5000-5200/udp
+    networks:
+      - app
+    restart: always
+
+  letsencrypt-cloudflare:
+    image: certbot/dns-cloudflare
+    command: >-
+      certonly --dns-cloudflare
+      --dns-cloudflare-credentials /root/cloudflare.ini
+      --dns-cloudflare-propagation-seconds 15
+      --email unihubone@gmail.com
+      --agree-tos --no-eff-email
+      --force-renewal
+      -d unihub.today
+    volumes:
+      - ./certbot/letsencrypt:/etc/letsencrypt
+      - ./certbot/lib:/var/lib/letsencrypt
+      - ./cloudflare.ini:/root/cloudflare.ini
+    depends_on:
+      - api
+      - webapp
+    networks:
+      - app
+
+  api:
+    container_name: api
+    image: ghcr.io/uoft-utsc-cs-sandbox/unihub/api:latest
+    networks:
+      - app
+    restart: always
+    env_file:
+      - .env
+
+  webapp:
+    container_name: webapp
+    image: ghcr.io/uoft-utsc-cs-sandbox/unihub/webapp:latest
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./certbot/letsencrypt:/etc/letsencrypt
+      - ./certbot/lib:/var/lib/letsencrypt
+    networks:
+      - app
+    depends_on:
+      - api
+    restart: always
+    env_file:
+      - .env
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    volumes:
+      - redisdata:/var/lib/redis
+    ports:
+      - 6379:6379
+    networks:
+      - app
+    restart: always
+
+volumes:
+  redisdata:

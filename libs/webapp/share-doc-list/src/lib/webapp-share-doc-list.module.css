@@ -1,0 +1,57 @@
+.DocumentListDiv {
+  margin-left: 10%;
+  margin-right: 10%;
+  margin-top: 6%;
+}
+
+.ListTitle {
+  font-size: 35px !important;
+  margin-bottom: 2px !important;
+}
+
+.CreateDocButton {
+  margin-bottom: 4% !important;
+  float: left;
+}
+
+.CreateDocDialog {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.Loading {
+  display: flex;
+  justify-content: center;
+  margin-top: 20% !important;
+}
+
+.DocumentItem {
+  width: 100% !important;
+  cursor: pointer;
+}
+
+.DocumentImage {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+@media (max-width: 959.95px) {
+  .DocImage {
+    max-height: 233px;
+    max-width: 350px;
+    color: #1976d2;
+  }
+}
+
+@media (min-width: 960px) {
+  .DocImage {
+    max-height: 167px;
+    max-width: 250px;
+    color: #1976d2;
+  }
+}
+
+.DocTitle {
+  font-size: 20px !important;
+  margin-bottom: 2px !important;
+}

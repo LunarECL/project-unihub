@@ -1,0 +1,103 @@
+.UnIHubImage {
+  background: url('https://static.wixstatic.com/media/b7d007_4b71ec79bc3142cf8de78dcf90b7a3d7~mv2.png/v1/fill/w_488,h_416,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/students.png');
+  width: 493px;
+  height: 445px;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.UnIHubContainer {
+  margin-left: 10% !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+}
+
+.UnIHubAbout {
+  font-weight: 400;
+  font-size: 20px;
+  line-height: 24px;
+}
+
+.UnIHubAboutPara {
+  font-size: 35px !important;
+  width: 60% !important;
+}
+
+.AboutContainer {
+  margin-top: 30% !important;
+  flex: 1 1 50%;
+  display: flex;
+}
+
+.UnIHubImageContainer {
+  margin-top: 12% !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.CardsContainer {
+  margin-top: 10% !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin-bottom: 5%;
+  flex-wrap: wrap;
+}
+
+.CardsItems {
+  /* background: #94618e; */
+  margin-right: 4% !important;
+  margin-left: 4% !important;
+  width: 100%;
+  height: 400px;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.CardText {
+  font-weight: 700 !important;
+  color: #ffffff;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.CardVideoChatImage {
+  background: url('https://www.pngplay.com/wp-content/uploads/5/Video-Chat-Design-Logo-PNG.png');
+  width: 100% !important;
+  height: 217px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin: 0 auto;
+  background-position: center;
+}
+
+.CardNoteTakingImage {
+  background: url('https://cdni.iconscout.com/illustration/premium/thumb/man-learning-online-5595986-4660064.png?f=webp');
+  width: 100% !important;
+  height: 217px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin: 0 auto;
+  background-position: center;
+}
+
+.CardMapImage {
+  background: url('https://www.aimms.com/wp-content/uploads/Aimms_New.png');
+  width: 100% !important;
+  height: 217px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin: 0 auto;
+  background-position: center;
+}
+
+.InsideCardItem {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+}
