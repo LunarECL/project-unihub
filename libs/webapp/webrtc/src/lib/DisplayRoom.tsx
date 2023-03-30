@@ -397,13 +397,13 @@ export function DisplayRoom(props: DisplayRoomProps) {
     <div className="App">
       <div className="App-header">
         <div>{`Room: ${roomId}`}</div>
-        <button
+        <Button
           className="headerBtn"
           id="bnt_pubcam"
           onClick={() => setModalOpen(true)}
         >
           Invititation Link
-        </button>
+        </Button>
         <Modal
           open={modalOpen}
           onClose={handleModalClose}

@@ -5,7 +5,8 @@ import MicOffIcon from '@mui/icons-material/MicOff';
 import { useState } from 'react';
 
 import './Card.css';
-import placeholder from '../assets/placeholder.png';
+import placeholder from '../assets/placeholder4.png';
+import { useTheme } from '@mui/material/styles';
 
 interface CardProps {
   name: string;
@@ -20,8 +21,8 @@ interface CardProps {
 }
 
 export function Card(props: CardProps) {
+  const theme = useTheme();
   console.log(props.refVideo?.current?.srcObject);
-
   const [showControls, setShowControls] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
 
@@ -60,7 +61,10 @@ export function Card(props: CardProps) {
         autoPlay={true}
         muted={true}
         poster={props.refVideo != null ? undefined : placeholder}
-        style={{ objectFit: props.refVideo != null ? 'cover' : 'scale-down' }}
+        style={{
+          objectFit: props.refVideo != null ? 'cover' : 'scale-down',
+          background: theme.palette.primary.main,
+        }}
         ref={props.refVideo}
       />
       <div className="name">{props.name}</div>
