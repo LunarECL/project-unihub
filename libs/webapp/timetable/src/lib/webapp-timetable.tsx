@@ -188,14 +188,14 @@ export function WebappTimetable(props: WebappTimetableProps) {
   const handleDelete = (sectionId: string) => {
     colIndex = (colIndex - 1) % colours.length;
     useDeleteUserLecture(sectionId).then(() => {
-      //Remove the course from the allCourses array
-      allCourses = allCourses.filter((course: any) => course.id !== sectionId);
-
       //Remove the course from the timetable
-      const course = courses.find((course: any) => course.id === sectionId);
+      const course = allCourses.find((course: any) => course.id === sectionId);
       if (course) {
         displayCourse(course, true);
       }
+
+      //Remove the course from the allCourses array
+      allCourses = allCourses.filter((course: any) => course.id !== sectionId);
     });
   };
 
