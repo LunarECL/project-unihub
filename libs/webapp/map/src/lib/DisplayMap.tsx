@@ -24,7 +24,7 @@ export function DisplayMap(props: DisplayMapProps) {
   const [latitute, setLatitute] = useState('0');
   const [longitude, setLongitude] = useState('0');
   const [friendLocations, setFriendLocations] = useState<FriendLocation[]>([]);
-  const [sideBarOpen, setSideBarOpen] = useState(true);
+  const [sideBarOpen, setSideBarOpen] = useState(false);
   const [showingContent, setShowingContent] = useState('course');
 
   const defaultView = new View({

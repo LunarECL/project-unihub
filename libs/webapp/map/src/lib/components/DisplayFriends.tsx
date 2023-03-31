@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import placeholder from '../assets/friendProfile.png';
 
 /* eslint-disable-next-line */
-export interface DisplayRestaurantsProps {}
+export interface DisplayFriendsProps {}
 
 export interface FriendLocation {
   latitute: string;
@@ -14,7 +14,7 @@ export interface FriendLocation {
   time: string;
 }
 
-export function DisplayRestaurants(props: DisplayRestaurantsProps) {
+export function DisplayFriends(props: DisplayFriendsProps) {
   const [friends, setFriends] = useState<FriendLocation[]>([]);
 
   useEffect(() => {
@@ -45,4 +45,4 @@ export function DisplayRestaurants(props: DisplayRestaurantsProps) {
   }
 }
 
-export default DisplayRestaurants;
+export default DisplayFriends;

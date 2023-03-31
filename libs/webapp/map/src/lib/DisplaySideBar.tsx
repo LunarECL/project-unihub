@@ -2,12 +2,13 @@ import { useState } from 'react';
 import './DisplaySideBar.css';
 import DisplayRestaurants from './components/DisplayRestaurants';
 import DisplayFriends from './components/DisplayFriends';
+import DisplayCourses from './components/DisplayCourses';
 
 /* eslint-disable-next-line */
 export interface DisplaySideBarProps {}
 
 export function DisplaySideBar(props: DisplaySideBarProps) {
-  const [showingContent, setShowingContent] = useState('restaurant');
+  const [showingContent, setShowingContent] = useState('course');
 
   return (
     <div>
@@ -20,15 +21,15 @@ export function DisplaySideBar(props: DisplaySideBarProps) {
           onChange={(e) => setShowingContent(e.target.value)}
         >
           <option value="course">Courses</option>
-          <option value="restaurant">Restaurants</option>
           <option value="friend">Friends</option>
+          <option value="restaurant">Restaurants</option>
         </select>
       </div>
       <div className="side-bar-body">
         {showingContent === 'restaurant' ? (
           <DisplayRestaurants />
         ) : showingContent === 'course' ? (
-          <div>Course</div>
+          <DisplayCourses />
         ) : (
           <DisplayFriends />
         )}
