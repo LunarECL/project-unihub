@@ -13,7 +13,7 @@ const query = async (documentId: string, userEmail: string) => {
   return res.data;
 };
 
-export function usePostShareDocument(documentId: string, userEmail: string) {
+export function usePostShareDocument(documentId: string, userEmail: string){
   return query(documentId, userEmail);
 }
 
