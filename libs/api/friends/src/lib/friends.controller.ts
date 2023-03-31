@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  UseGuards,
+  Delete,
+  Param,
+} from '@nestjs/common';
 import { CurrentUser } from '../../../auth/src/lib/current-user.decorator';
 import { AuthGuard } from '@nestjs/passport';
 import { FriendService } from './friends.service';
@@ -25,5 +33,13 @@ export class FriendController {
   @Get('/location')
   async getFriendsLocation(@CurrentUser() { userId }): Promise<any> {
     return await this.friendService.getFriendsLocation(userId);
+  }
+
+  @Delete('/:friendId')
+  async deleteFriend(
+    @CurrentUser() { userId },
+    @Param('friendId') friendId: string
+  ): Promise<any> {
+    return await this.friendService.deleteFriend(userId, friendId);
   }
 } //end CoursesController

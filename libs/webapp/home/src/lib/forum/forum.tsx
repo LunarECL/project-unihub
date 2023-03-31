@@ -39,6 +39,13 @@ export function Forum(props: DashboardProps) {
         >
           Map
         </Button>
+        <Button
+          onClick={() => navigate('/home/friends')}
+          variant="contained"
+          sx={{ ml: 2 }}
+        >
+          Friends
+        </Button>
       </Grid>
     </Grid>
   );

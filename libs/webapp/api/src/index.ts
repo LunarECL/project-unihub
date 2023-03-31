@@ -13,3 +13,6 @@ export * from './lib/hooks/useGetIfUserCanViewDoc';
 export * from './lib/hooks/usePostShareDocument';
 export * from './lib/hooks/useGetUserLocation';
 export * from './lib/hooks/usePostUserLocation';
+export * from './lib/hooks/useGetFriends';
+export * from './lib/hooks/usePostFriend';
+export * from './lib/hooks/useDeleteFriend';

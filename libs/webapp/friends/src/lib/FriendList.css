@@ -1,0 +1,21 @@
+.delete-friend {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  right: 0;
+  position: absolute;
+  padding-right: 10px;
+}
+
+.delete-friend:hover {
+  color: red;
+}
+
+.friend-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #ccc;
+  padding: 10px;
+  max-width: 50%;
+}
