@@ -1,5 +1,5 @@
 import { Map } from 'ol';
-import { useContext, useEffect, useRef } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import OSM from 'ol/source/OSM';
 import TileLayer from 'ol/layer/Tile';
 import { MapContext } from './MapContext';
@@ -12,12 +12,15 @@ import { Circle as CircleStyle } from 'ol/style';
 import Geolocation from 'ol/Geolocation';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
+import { FriendLocation } from './DisplayMap';
+import { fromLonLat } from 'ol/proj';
 
 export interface MapRenderProps {
   setLatitute: React.Dispatch<React.SetStateAction<string>>;
   setLongitude: React.Dispatch<React.SetStateAction<string>>;
 
   // an array of coordinates to display friends on the map
+  friendLocations: FriendLocation[];
 }
 
 export function MapRender(props: MapRenderProps) {
@@ -111,6 +114,58 @@ export function MapRender(props: MapRenderProps) {
       });
     }
   }, [ref, mapRef, context.view]);
+
+  useEffect(() => {
+    if (mapRef.current !== null) {
+      if (props.friendLocations) {
+        const friends = new Array<Feature>();
+
+        for (let i = 0; i < props.friendLocations.length; i++) {
+          const coordinates = fromLonLat([
+            parseFloat(props.friendLocations[i].longitude),
+            parseFloat(props.friendLocations[i].latitute),
+          ]);
+
+          const friend = new Feature({
+            geometry: new Point(coordinates),
+          });
+
+          friend.setStyle(
+            new Style({
+              image: new CircleStyle({
+                radius: 15,
+                fill: new Fill({
+                  color: 'black',
+                }),
+                stroke: new Stroke({
+                  color: '#fff',
+                  width: 2,
+                }),
+              }),
+            })
+          );
+
+          friends.push(friend);
+        }
+
+        const vectorSource = new VectorSource({
+          features: friends,
+        });
+
+        const vectorLayer = new VectorLayer({
+          source: vectorSource,
+          style: new Style({
+            stroke: new Stroke({ color: '#343177', width: 3 }),
+            fill: new Fill({
+              color: 'rgba(52,49,119, 0.3)',
+            }),
+          }),
+        });
+
+        mapRef.current.addLayer(vectorLayer);
+      }
+    }
+  }, [props.friendLocations]);
 
   useEffect(() => {
     if (

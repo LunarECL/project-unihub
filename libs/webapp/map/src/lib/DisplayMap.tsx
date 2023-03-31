@@ -11,6 +11,13 @@ import { usePostUserLocation } from '@unihub/webapp/api';
 /* eslint-disable-next-line */
 export interface DisplayMapProps {}
 
+export interface FriendLocation {
+  latitute: string;
+  longitude: string;
+  name: string;
+  time: string;
+}
+
 export function DisplayMap(props: DisplayMapProps) {
   const [latitute, setLatitute] = useState('0');
   const [longitude, setLongitude] = useState('0');
@@ -37,11 +44,37 @@ export function DisplayMap(props: DisplayMapProps) {
     usePostUserLocation(latitute, longitude);
   }, [latitute, longitude]);
 
+  // make 3 sets of FriendLocation close to lat: 5432538.122139835, lon: -8814578.24438671, named "Friend 1", "Friend 2", "Friend 3"
+  const friendLocations: FriendLocation[] = [
+    {
+      latitute: ' 43.786841460411296',
+      longitude: '-79.18970352907695',
+      name: 'Friend 1',
+      time: '2021-04-20T20:00:00.000Z',
+    },
+    {
+      latitute: '43.784731388083195',
+      longitude: '-79.18610616855035',
+      name: 'Friend 2',
+      time: '2021-04-20T20:00:00.000Z',
+    },
+    {
+      latitute: '43.7844441599168',
+      longitude: '-79.18737030473145',
+      name: 'Friend 3',
+      time: '2021-04-20T20:00:00.000Z',
+    },
+  ];
+
   return (
     <MapContext.Provider value={{ view: context, geoJSON: geoJSON }}>
       <div>
         <div className="mapContainer" style={{ width: '100%' }}>
-          <MapRender setLatitute={setLatitute} setLongitude={setLongitude} />
+          <MapRender
+            setLatitute={setLatitute}
+            setLongitude={setLongitude}
+            friendLocations={friendLocations}
+          />
         </div>
       </div>
     </MapContext.Provider>
