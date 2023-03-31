@@ -21,6 +21,8 @@ export interface MapRenderProps {
 
   // an array of coordinates to display friends on the map
   friendLocations: FriendLocation[];
+
+  setDisplayMap: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export function MapRender(props: MapRenderProps) {
@@ -28,22 +30,12 @@ export function MapRender(props: MapRenderProps) {
   const ref = useRef<HTMLDivElement>(null);
   const mapRef = useRef<Map | null>(null);
 
-  const [locationAdded, setLocationAdded] = useState(false);
+  const [userLocationFound, setUserLocationFound] = useState(false);
+  const [coordinates, setCoordinates] = useState('');
 
   useEffect(() => {
     // create a new map
     if (ref.current && !mapRef.current) {
-      mapRef.current = new Map({
-        layers: [
-          new TileLayer({
-            preload: 4,
-            source: new OSM(),
-          }),
-        ],
-        view: context.view,
-        target: ref.current,
-      });
-
       // geolocation
       const geolocation = new Geolocation({
         trackingOptions: {
@@ -59,6 +51,8 @@ export function MapRender(props: MapRenderProps) {
 
       // start geolocation
       geolocation.setTracking(true);
+
+      console.log(geolocation.getPosition());
 
       const positionFeature = new Feature();
       positionFeature.setStyle(
@@ -79,13 +73,16 @@ export function MapRender(props: MapRenderProps) {
       geolocation.on('change:position', function () {
         // this function runs when the position changes
         const coordinates = geolocation.getPosition();
+        if (coordinates) {
+          setUserLocationFound(true);
+          props.setDisplayMap(true);
+          setCoordinates(coordinates.toString());
+        }
         context.view?.setCenter(coordinates);
         context.view?.setZoom(18);
         positionFeature.setGeometry(
           coordinates ? new Point(coordinates) : (null as any)
         );
-
-        // store these coordinates in the database
 
         if (coordinates) {
           const longitude = coordinates[0].toString();
@@ -100,6 +97,18 @@ export function MapRender(props: MapRenderProps) {
         setTimeout(() => {
           console.log('user moving');
         }, 5000);
+      });
+
+      // wait for geolocation to get the user's location
+      mapRef.current = new Map({
+        layers: [
+          new TileLayer({
+            preload: 4,
+            source: new OSM(),
+          }),
+        ],
+        view: context.view,
+        target: ref.current,
       });
 
       new VectorLayer({
@@ -207,5 +216,50 @@ export function MapRender(props: MapRenderProps) {
     }
   }, [context.geoJSON, mapRef]);
 
-  return <div ref={ref} style={{ width: '100%', height: '100%' }} />;
+  // useEffect(() => {
+  //   console.log('coordinates', coordinates);
+  //   if (coordinates !== '') {
+  //     setUserLocationFound(true);
+  //     props.setDisplayMap(true);
+  //   }
+  // }, [coordinates]);
+
+  return (
+    <div
+      style={{
+        position: 'relative',
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'black',
+      }}
+    >
+      <div
+        style={{
+          position: 'absolute',
+          top: '50%',
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          textAlign: 'center',
+          display: userLocationFound ? 'none' : 'block',
+          // make it transparent so that the map can be seen
+          backgroundColor: 'black',
+        }}
+      >
+        <h1 style={{ fontSize: '2rem', margin: '0' }}>
+          Getting your location...
+        </h1>
+
+        {/* // insert gif here */}
+        <img src="https://cdn.dribbble.com/users/2433051/screenshots/4872252/spinning-globe-white.gif"></img>
+      </div>
+      <div
+        ref={ref}
+        style={{
+          width: '100%',
+          height: '100%',
+          display: userLocationFound ? 'block' : 'none',
+        }}
+      ></div>
+    </div>
+  );
 }

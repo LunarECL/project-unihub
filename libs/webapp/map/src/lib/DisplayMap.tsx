@@ -54,6 +54,7 @@ export function DisplayMap(props: DisplayMapProps) {
   const [longitude, setLongitude] = useState('0');
   const [friendLocations, setFriendLocations] = useState<FriendLocation[]>([]);
   const [sideBarOpen, setSideBarOpen] = useState(false);
+  const [displayMap, setDisplayMap] = useState(false);
 
   const defaultPosition = fromLonLat([-79.18725541486484, 43.78422061706888]);
 
@@ -225,12 +226,13 @@ export function DisplayMap(props: DisplayMapProps) {
           }
         >
           <MapRender
+            setDisplayMap={setDisplayMap}
             setLatitute={setLatitute}
             setLongitude={setLongitude}
             friendLocations={friendLocations}
           />
           <button
-            className="filterBtn"
+            className={displayMap ? 'filterBtn' : 'noFilterBtn'}
             onClick={() => setSideBarOpen(!sideBarOpen)}
           >
             {sideBarOpen ? 'Close' : 'Filter'}

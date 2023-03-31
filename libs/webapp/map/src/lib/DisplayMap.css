@@ -12,6 +12,10 @@
   width: 100%;
 }
 
+.noFilterBtn {
+  display: none;
+}
+
 .sideBarContent {
   width: 25%;
   display: block;
