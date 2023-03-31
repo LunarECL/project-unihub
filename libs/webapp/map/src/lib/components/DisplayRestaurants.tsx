@@ -1,4 +1,4 @@
-import './components.css';
+import './Components.css';
 import { List, ListItem } from '@mui/material';
 import { restaurantList } from '../assets/Restaurants';
 
