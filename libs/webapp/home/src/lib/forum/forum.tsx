@@ -32,6 +32,20 @@ export function Forum(props: DashboardProps) {
         >
           WebRTC App
         </Button>
+        <Button
+          onClick={() => navigate('/home/map')}
+          variant="contained"
+          sx={{ ml: 2 }}
+        >
+          Map
+        </Button>
+        <Button
+          onClick={() => navigate('/home/friends')}
+          variant="contained"
+          sx={{ ml: 2 }}
+        >
+          Friends
+        </Button>
       </Grid>
     </Grid>
   );

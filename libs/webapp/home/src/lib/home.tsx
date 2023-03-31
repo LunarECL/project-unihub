@@ -10,7 +10,10 @@ import NavBar from './components/NavBar';
 import Credits from './components/Credits';
 import { Button } from '@mui/material';
 import './home.css';
+import { DisplayMap } from '@unihub/webapp/map';
+import { Friends } from '@unihub/webapp/friends';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface WebappHomeProps {}
 
 export function Home(props: WebappHomeProps) {
@@ -33,6 +36,8 @@ export function Home(props: WebappHomeProps) {
         <Route path="/rooms/join" element={<JoinRoom />} />
         <Route path="/rooms/:roomId" element={<DisplayRoom />} />
         <Route path="/credits" element={<Credits />} />
+        <Route path="/map" element={<DisplayMap />} />
+        <Route path="/friends" element={<Friends />} />
       </Routes>
       <Button className="Credit" onClick={() => navigate('/home/credits')}>
         Credits page

@@ -19,11 +19,15 @@
       "@unihub/api/auth": ["libs/api/auth/src/index.ts"],
       "@unihub/api/courses": ["libs/api/courses/src/index.ts"],
       "@unihub/api/email": ["libs/api/email/src/index.ts"],
+      "@unihub/api/friends": ["libs/api/friends/src/index.ts"],
+      "@unihub/api/map": ["libs/api/map/src/index.ts"],
       "@unihub/api/sharedoc": ["libs/api/sharedoc/src/index.ts"],
       "@unihub/api/webrtc": ["libs/api/webrtc/src/index.ts"],
       "@unihub/webapp/api": ["libs/webapp/api/src/index.ts"],
       "@unihub/webapp/create-doc": ["libs/webapp/create-doc/src/index.ts"],
+      "@unihub/webapp/friends": ["libs/webapp/friends/src/index.ts"],
       "@unihub/webapp/home": ["libs/webapp/home/src/index.ts"],
+      "@unihub/webapp/map": ["libs/webapp/map/src/index.ts"],
       "@unihub/webapp/public": ["libs/webapp/public/src/index.ts"],
       "@unihub/webapp/share-doc-list": [
         "libs/webapp/share-doc-list/src/index.ts"
