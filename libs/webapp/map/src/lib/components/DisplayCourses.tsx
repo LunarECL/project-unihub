@@ -4,8 +4,13 @@ import { useGetUserLectures } from '@unihub/webapp/api';
 import { useEffect, useState } from 'react';
 import placeholder from '../assets/unihat.png';
 
-/* eslint-disable-next-line */
-export interface DisplayCoursesProps {}
+export interface DisplayCoursesProps {
+  changeMapFocus: (
+    location: string,
+    latitute?: string,
+    longitude?: string
+  ) => void;
+}
 
 export function DisplayCourses(props: DisplayCoursesProps) {
   const [courses, setCourses] = useState<any[]>([]);
@@ -21,7 +26,11 @@ export function DisplayCourses(props: DisplayCoursesProps) {
     return <div>No friends found</div>;
   } else {
     const courselist = courses.map((course) => (
-      <ListItem key={course.course.programCode} className="panel">
+      <ListItem
+        key={course.course.programCode}
+        className="panel"
+        onClick={() => props.changeMapFocus(course.lectures[0].building)}
+      >
         <div id={'id' + course.course.programCode} className="logoDiv">
           <img src={placeholder} alt="logo" className="logo" />
         </div>

@@ -4,8 +4,13 @@ import DisplayRestaurants from './components/DisplayRestaurants';
 import DisplayFriends from './components/DisplayFriends';
 import DisplayCourses from './components/DisplayCourses';
 
-/* eslint-disable-next-line */
-export interface DisplaySideBarProps {}
+export interface DisplaySideBarProps {
+  changeMapFocus: (
+    location: string,
+    latitute?: string,
+    longitude?: string
+  ) => void;
+}
 
 export function DisplaySideBar(props: DisplaySideBarProps) {
   const [showingContent, setShowingContent] = useState('course');
@@ -27,11 +32,11 @@ export function DisplaySideBar(props: DisplaySideBarProps) {
       </div>
       <div className="side-bar-body">
         {showingContent === 'restaurant' ? (
-          <DisplayRestaurants />
+          <DisplayRestaurants changeMapFocus={props.changeMapFocus} />
         ) : showingContent === 'course' ? (
-          <DisplayCourses />
+          <DisplayCourses changeMapFocus={props.changeMapFocus} />
         ) : (
-          <DisplayFriends />
+          <DisplayFriends changeMapFocus={props.changeMapFocus} />
         )}
       </div>
     </div>

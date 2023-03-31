@@ -9,6 +9,35 @@ import { boundingExtent } from 'ol/extent';
 import './DisplayMap.css';
 import { usePostUserLocation, useGetFriendsLocation } from '@unihub/webapp/api';
 import { toLonLat } from 'ol/proj';
+import {
+  geoJSON_IC,
+  geoJSON_AA,
+  geoJSON_AC,
+  geoJSON_BV,
+  geoJSON_EV,
+  geoJSON_HL,
+  geoJSON_HW,
+  geoJSON_MW,
+  geoJSON_SW,
+  geoJSON_SC,
+} from './assets/GeoJSON_files';
+
+import {
+  building_EV,
+  building_IC,
+  building_HL,
+  building_AA,
+  building_SW,
+  building_HW,
+  building_BV,
+  building_AC,
+  building_MW,
+  restaurtant_Starbucks,
+  restaurant_MarketPlaceTims,
+  restaurant_Subway,
+  restaurant_HeroBurger,
+  restaurant_KFC,
+} from './assets/BuildingCoordinates';
 
 /* eslint-disable-next-line */
 export interface DisplayMapProps {}
@@ -25,10 +54,11 @@ export function DisplayMap(props: DisplayMapProps) {
   const [longitude, setLongitude] = useState('0');
   const [friendLocations, setFriendLocations] = useState<FriendLocation[]>([]);
   const [sideBarOpen, setSideBarOpen] = useState(false);
-  const [showingContent, setShowingContent] = useState('course');
+
+  const defaultPosition = fromLonLat([-79.18725541486484, 43.78422061706888]);
 
   const defaultView = new View({
-    center: fromLonLat([-79.18725541486484, 43.78422061706888]),
+    center: defaultPosition,
     zoom: 17,
 
     // the constraints for the map
@@ -65,35 +95,134 @@ export function DisplayMap(props: DisplayMapProps) {
     });
   }, [latitute, longitude]);
 
-  function displaySideBar() {
-    // if showingContent is "courses", display the user courses
-    // if showingContent is "restaurants", display the restaurants
-    let showCourses = true;
-    if (showingContent === 'restaurant') {
-      showCourses = false;
+  // function taken from offical OpenLayers website
+  // https://openlayers.org/en/latest/examples/animation.html
+  function flyTo(location: any, done: any, type: string) {
+    const duration = 2000;
+    let zoom = context.getZoom();
+    zoom = 19;
+
+    if (type === 'restaurant') {
+      zoom = 20;
     }
 
-    return (
-      // display the select buttons side by side
-      <div className="displayList" style={{ marginTop: '50px' }}>
-        {/* {showCourses ? displayMapCourse() : displayRestaurants()} */}
-      </div>
+    // if (type === 'default') {
+    //   zoom = 17;
+    // }
+
+    let parts = 2;
+    let called = false;
+
+    function callback(complete: any) {
+      --parts;
+      if (called) {
+        return;
+      }
+      if (parts === 0 || !complete) {
+        called = true;
+        done(complete);
+      }
+    }
+    context.animate(
+      {
+        center: location,
+        duration: duration,
+      },
+      callback
+    );
+    context.animate(
+      {
+        zoom: zoom - 1,
+        duration: duration / 2,
+      },
+      {
+        zoom: zoom,
+        duration: duration / 2,
+      },
+      callback
     );
   }
 
-  function onChangeShowingContent(content: string) {
-    // change the showingContent to "courses" or "restaurants"
-    setShowingContent(content);
-    // reload the displaySideBar function
-    displaySideBar();
+  function changeMapFocus(
+    location: string,
+    latitude?: string,
+    longitude?: string
+  ) {
+    // change the map focus to the location (include animations)
+    if (location.includes('IC')) {
+      // animate the map to the location
+      flyTo(building_IC, function () {}, 'building');
+      // we also want to draw over the building on the map
+      setGeoJSON(geoJSON_IC as any);
+    } else if (location.includes('SW')) {
+      flyTo(building_SW, function () {}, 'building');
+      setGeoJSON(geoJSON_SW as any);
+    } else if (location.includes('HW')) {
+      flyTo(building_HW, function () {}, 'building');
+      setGeoJSON(geoJSON_HW as any);
+    } else if (location.includes('BV')) {
+      flyTo(building_BV, function () {}, 'building');
+      setGeoJSON(geoJSON_BV as any);
+    } else if (location.includes('HL')) {
+      flyTo(building_HL, function () {}, 'building');
+      setGeoJSON(geoJSON_HL as any);
+    } else if (location.includes('AA')) {
+      flyTo(building_AA, function () {}, 'building');
+      setGeoJSON(geoJSON_AA as any);
+    } else if (location.includes('EV')) {
+      flyTo(building_EV, function () {}, 'building');
+      setGeoJSON(geoJSON_EV as any);
+    } else if (location.includes('AC')) {
+      flyTo(building_AC, function () {}, 'building');
+      setGeoJSON(geoJSON_AC as any);
+    } else if (location.includes('MW')) {
+      flyTo(building_MW, function () {}, 'building');
+      setGeoJSON(geoJSON_MW as any);
+    } else if (location.includes('Starbucks')) {
+      flyTo(restaurtant_Starbucks, function () {}, 'restaurant');
+      setGeoJSON(geoJSON_SW as any);
+    } else if (location.includes('Subway')) {
+      flyTo(restaurant_Subway, function () {}, 'restaurant');
+      setGeoJSON(geoJSON_SC as any);
+    } else if (location.includes('Tim Hortons')) {
+      flyTo(restaurant_MarketPlaceTims, function () {}, 'restaurant');
+      setGeoJSON(geoJSON_HW as any);
+    } else if (location.includes('Hero Burger')) {
+      flyTo(restaurant_HeroBurger, function () {}, 'restaurant');
+      setGeoJSON(geoJSON_SC as any);
+    } else if (location.includes('KFC')) {
+      flyTo(restaurant_KFC, function () {}, 'restaurant');
+      setGeoJSON(geoJSON_SC as any);
+    } else if (location.includes('friend')) {
+      if (
+        latitude !== '360' &&
+        latitude !== '-360' &&
+        longitude !== '360' &&
+        longitude !== '-360'
+      ) {
+        flyTo(
+          fromLonLat([parseFloat(longitude!), parseFloat(latitude!)]),
+          function () {},
+          'friend'
+        );
+        // don't draw over the map
+        setGeoJSON(undefined);
+      } else {
+        alert('Friend has not set their location');
+        // flyTo(defaultPosition, function () {}, 'default');
+      }
+    }
   }
 
   return (
     <MapContext.Provider value={{ view: context, geoJSON: geoJSON }}>
       <div>
         <div
-          className="mapContainer"
-          style={{ width: sideBarOpen ? '75%' : '100%' }}
+          className={
+            sideBarOpen
+              ? 'mapContainer mapSideBar'
+              : 'mapContainer mapNoSideBar'
+          }
         >
           <MapRender
             setLatitute={setLatitute}
@@ -103,21 +232,13 @@ export function DisplayMap(props: DisplayMapProps) {
           <button
             className="filterBtn"
             onClick={() => setSideBarOpen(!sideBarOpen)}
-            // butotn should be displayed on top of the map (z-index) on the top right corner
-            style={{ position: 'absolute', top: 0, right: 0, zIndex: 1 }}
           >
             {sideBarOpen ? 'Close' : 'Filter'}
           </button>
         </div>
 
-        <div
-          className="sideBarContent"
-          style={{
-            width: sideBarOpen ? '25%' : '0%',
-            display: sideBarOpen ? 'block' : 'none',
-          }}
-        >
-          <DisplaySideBar />
+        <div className={sideBarOpen ? 'sideBarContent' : 'noSideBarContent'}>
+          <DisplaySideBar changeMapFocus={changeMapFocus} />
         </div>
       </div>
     </MapContext.Provider>

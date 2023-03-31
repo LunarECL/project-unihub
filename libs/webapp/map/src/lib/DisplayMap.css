@@ -4,6 +4,24 @@
   left: 0;
 }
 
+.mapSideBar {
+  width: 75%;
+}
+
+.mapNoSideBar {
+  width: 100%;
+}
+
+.sideBarContent {
+  width: 25%;
+  display: block;
+}
+
+.noSideBarContent {
+  width: 0%;
+  display: none;
+}
+
 .filterBtn {
   color: #1e1e1e;
   background-color: #5b9532;
@@ -17,6 +35,10 @@
   border: 1.5px solid;
   box-shadow: 0 3px #999;
   cursor: pointer;
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
 }
 
 .filterBtn:hover {

@@ -28,6 +28,8 @@ export function MapRender(props: MapRenderProps) {
   const ref = useRef<HTMLDivElement>(null);
   const mapRef = useRef<Map | null>(null);
 
+  const [locationAdded, setLocationAdded] = useState(false);
+
   useEffect(() => {
     // create a new map
     if (ref.current && !mapRef.current) {
@@ -155,8 +157,12 @@ export function MapRender(props: MapRenderProps) {
             }),
           }),
         });
-
-        mapRef.current.addLayer(vectorLayer);
+        // always add this layer to the bottom of layers
+        if (mapRef.current.getLayers().getLength() > 1) {
+          mapRef.current.getLayers().removeAt(1);
+        }
+        mapRef.current.getLayers().insertAt(1, vectorLayer);
+        console.log(mapRef.current.getLayers().getLength());
       }
     }
   }, [props.friendLocations]);
@@ -179,17 +185,24 @@ export function MapRender(props: MapRenderProps) {
         const vectorLayer = new VectorLayer({
           source: vectorSource,
           style: new Style({
-            stroke: new Stroke({ color: '#343177', width: 3 }),
+            stroke: new Stroke({ color: '#5b9532', width: 3 }),
             fill: new Fill({
-              color: 'rgba(52,49,119, 0.3)',
+              color: 'rgb(111, 148, 98, 0.3)',
             }),
           }),
         });
-        // remove previous layer if it exists
-        if (mapRef.current.getLayers().getLength() > 1) {
-          mapRef.current.getLayers().removeAt(1);
+
+        // if more than 2 layers, remove the top layer
+        if (mapRef.current.getLayers().getLength() > 2) {
+          mapRef.current.getLayers().removeAt(2);
         }
-        mapRef.current.addLayer(vectorLayer);
+        mapRef.current.getLayers().insertAt(2, vectorLayer);
+      }
+    }
+
+    if (context.geoJSON === undefined && mapRef.current !== null) {
+      if (mapRef.current.getLayers().getLength() > 2) {
+        mapRef.current.getLayers().removeAt(2);
       }
     }
   }, [context.geoJSON, mapRef]);

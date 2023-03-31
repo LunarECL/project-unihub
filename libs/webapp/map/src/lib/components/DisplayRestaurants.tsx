@@ -2,12 +2,21 @@ import './components.css';
 import { List, ListItem } from '@mui/material';
 import { restaurantList } from '../assets/Restaurants';
 
-/* eslint-disable-next-line */
-export interface DisplayRestaurantsProps {}
+export interface DisplayRestaurantsProps {
+  changeMapFocus: (
+    location: string,
+    latitute?: string,
+    longitude?: string
+  ) => void;
+}
 
 export function DisplayRestaurants(props: DisplayRestaurantsProps) {
   const restaurants = restaurantList.map((restaurant) => (
-    <ListItem key={restaurant.name} className="panel">
+    <ListItem
+      key={restaurant.name}
+      className="panel"
+      onClick={() => props.changeMapFocus(restaurant.name)}
+    >
       <div id={'id' + restaurant.name} className="logoDiv">
         <img src={restaurant.logo} alt="logo" className="logo" />
       </div>
