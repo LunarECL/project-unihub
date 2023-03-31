@@ -24,17 +24,11 @@ export interface MapRenderProps {
 }
 
 export function MapRender(props: MapRenderProps) {
-  // our context
   const context = useContext(MapContext);
-
-  // current ref
   const ref = useRef<HTMLDivElement>(null);
-
-  // map ref
   const mapRef = useRef<Map | null>(null);
 
   useEffect(() => {
-    // if ref.current is not null and mapRef.current is null
     // create a new map
     if (ref.current && !mapRef.current) {
       mapRef.current = new Map({

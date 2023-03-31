@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { fromLonLat } from 'ol/proj';
 import 'ol/ol.css';
 import { MapRender } from './MapRender';
+import { DisplaySideBar } from './DisplaySideBar';
 import { View } from 'ol';
 import { MapContext } from './MapContext';
 import { boundingExtent } from 'ol/extent';
@@ -23,6 +24,9 @@ export function DisplayMap(props: DisplayMapProps) {
   const [latitute, setLatitute] = useState('0');
   const [longitude, setLongitude] = useState('0');
   const [friendLocations, setFriendLocations] = useState<FriendLocation[]>([]);
+  const [sideBarOpen, setSideBarOpen] = useState(true);
+  const [showingContent, setShowingContent] = useState('course');
+
   const defaultView = new View({
     center: fromLonLat([-79.18725541486484, 43.78422061706888]),
     zoom: 17,
@@ -61,15 +65,59 @@ export function DisplayMap(props: DisplayMapProps) {
     });
   }, [latitute, longitude]);
 
+  function displaySideBar() {
+    // if showingContent is "courses", display the user courses
+    // if showingContent is "restaurants", display the restaurants
+    let showCourses = true;
+    if (showingContent === 'restaurant') {
+      showCourses = false;
+    }
+
+    return (
+      // display the select buttons side by side
+      <div className="displayList" style={{ marginTop: '50px' }}>
+        {/* {showCourses ? displayMapCourse() : displayRestaurants()} */}
+      </div>
+    );
+  }
+
+  function onChangeShowingContent(content: string) {
+    // change the showingContent to "courses" or "restaurants"
+    setShowingContent(content);
+    // reload the displaySideBar function
+    displaySideBar();
+  }
+
   return (
     <MapContext.Provider value={{ view: context, geoJSON: geoJSON }}>
       <div>
-        <div className="mapContainer" style={{ width: '100%' }}>
+        <div
+          className="mapContainer"
+          style={{ width: sideBarOpen ? '75%' : '100%' }}
+        >
           <MapRender
             setLatitute={setLatitute}
             setLongitude={setLongitude}
             friendLocations={friendLocations}
           />
+          <button
+            className="filterBtn"
+            onClick={() => setSideBarOpen(!sideBarOpen)}
+            // butotn should be displayed on top of the map (z-index) on the top right corner
+            style={{ position: 'absolute', top: 0, right: 0, zIndex: 1 }}
+          >
+            {sideBarOpen ? 'Close' : 'Filter'}
+          </button>
+        </div>
+
+        <div
+          className="sideBarContent"
+          style={{
+            width: sideBarOpen ? '25%' : '0%',
+            display: sideBarOpen ? 'block' : 'none',
+          }}
+        >
+          <DisplaySideBar />
         </div>
       </div>
     </MapContext.Provider>
