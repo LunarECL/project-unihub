@@ -24,16 +24,44 @@ export function DisplayFriends(props: DisplayFriendsProps) {
 
   useEffect(() => {
     useGetFriendsLocation().then((res) => {
+      res.map((friend: any) => {
+        if (friend.time === '0') {
+          friend.time = 'Out of range';
+        } else if (friend.time === '-1') {
+          friend.time = 'Never seen';
+        } else {
+          const currentTime = new Date().getTime();
+          const friendLastUpdate = friend.time;
+
+          const timestamp = Date.parse(friendLastUpdate);
+          const friendLastUpdateDate = new Date(timestamp).getTime();
+
+          const timeAgo = currentTime - friendLastUpdateDate;
+
+          if (timeAgo < 60000) {
+            friend.time = 'last seen a few seconds ago';
+          } else if (timeAgo < 3600000) {
+            friend.time =
+              'last seen ' + Math.floor(timeAgo / 60000) + ' minutes ago';
+          } else if (timeAgo < 86400000) {
+            friend.time =
+              'last seen ' + Math.floor(timeAgo / 3600000) + ' hours ago';
+          } else if (timeAgo < 604800000) {
+            friend.time =
+              'last seen ' + Math.floor(timeAgo / 86400000) + ' days ago';
+          } else {
+            friend.time = 'last seen a long time ago';
+          }
+        }
+      });
+
       setFriends(res);
     });
   }, []);
 
   if (friends.length === 0) {
-    // return "No friends found"
     return <div>No friends found</div>;
   } else {
-    console.log(friends);
-
     const friendsList = friends.map((friend) => (
       <ListItem
         key={friend.name}
@@ -46,7 +74,10 @@ export function DisplayFriends(props: DisplayFriendsProps) {
           <img src={placeholder} alt="logo" className="logo" />
         </div>
 
-        <div className="info">{friend.name}</div>
+        <div className="infoDiv">
+          <div className="info">{friend.name}</div>
+          <div className="info info-small">{friend.time}</div>
+        </div>
       </ListItem>
     ));
 

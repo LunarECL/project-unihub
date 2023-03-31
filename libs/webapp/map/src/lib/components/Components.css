@@ -28,6 +28,19 @@
   padding: 10px;
   color: #5c9532;
 }
+
+.info-small {
+  font-size: 0.8em;
+}
+
+.infoDiv {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  height: 100%;
+}
+
 .logoDiv {
   width: 20%;
 }

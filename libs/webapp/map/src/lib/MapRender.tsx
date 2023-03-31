@@ -4,7 +4,7 @@ import OSM from 'ol/source/OSM';
 import TileLayer from 'ol/layer/Tile';
 import { MapContext } from './MapContext';
 import GeoJSON from 'ol/format/GeoJSON';
-import { Fill, Stroke, Style } from 'ol/style';
+import { Fill, Stroke, Style, Text } from 'ol/style';
 import { Vector as VectorSource } from 'ol/source';
 import { Vector as VectorLayer } from 'ol/layer';
 import React from 'react';
@@ -14,6 +14,8 @@ import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import { FriendLocation } from './DisplayMap';
 import { fromLonLat } from 'ol/proj';
+
+import './MapRender.css';
 
 export interface MapRenderProps {
   setLatitute: React.Dispatch<React.SetStateAction<string>>;
@@ -33,6 +35,7 @@ export function MapRender(props: MapRenderProps) {
   const [userLocationFound, setUserLocationFound] = useState(false);
   const [coordinates, setCoordinates] = useState('');
 
+  // user location
   useEffect(() => {
     // create a new map
     if (ref.current && !mapRef.current) {
@@ -51,8 +54,6 @@ export function MapRender(props: MapRenderProps) {
 
       // start geolocation
       geolocation.setTracking(true);
-
-      console.log(geolocation.getPosition());
 
       const positionFeature = new Feature();
       positionFeature.setStyle(
@@ -94,9 +95,7 @@ export function MapRender(props: MapRenderProps) {
         }
 
         // set a timeout for 5 seconds just in case position is constantly changing (user is moving)
-        setTimeout(() => {
-          console.log('user moving');
-        }, 5000);
+        setTimeout(() => {}, 5000);
       });
 
       // wait for geolocation to get the user's location
@@ -120,6 +119,7 @@ export function MapRender(props: MapRenderProps) {
     }
   }, [ref, mapRef, context.view]);
 
+  // friends location
   useEffect(() => {
     if (mapRef.current !== null) {
       if (props.friendLocations) {
@@ -138,12 +138,22 @@ export function MapRender(props: MapRenderProps) {
           friend.setStyle(
             new Style({
               image: new CircleStyle({
-                radius: 15,
+                radius: 13,
                 fill: new Fill({
                   color: 'black',
                 }),
                 stroke: new Stroke({
                   color: '#fff',
+                  width: 2,
+                }),
+              }),
+              text: new Text({
+                text: props.friendLocations[i].name,
+                fill: new Fill({
+                  color: 'white',
+                }),
+                stroke: new Stroke({
+                  color: 'black',
                   width: 2,
                 }),
               }),
@@ -171,11 +181,11 @@ export function MapRender(props: MapRenderProps) {
           mapRef.current.getLayers().removeAt(1);
         }
         mapRef.current.getLayers().insertAt(1, vectorLayer);
-        console.log(mapRef.current.getLayers().getLength());
       }
     }
   }, [props.friendLocations]);
 
+  // geoJSON layers
   useEffect(() => {
     if (
       context.geoJSON !== null &&
@@ -225,31 +235,16 @@ export function MapRender(props: MapRenderProps) {
   // }, [coordinates]);
 
   return (
-    <div
-      style={{
-        position: 'relative',
-        width: '100%',
-        height: '100%',
-        backgroundColor: 'black',
-      }}
-    >
+    <div className="map-render-container">
       <div
-        style={{
-          position: 'absolute',
-          top: '50%',
-          left: '50%',
-          transform: 'translate(-50%, -50%)',
-          textAlign: 'center',
-          display: userLocationFound ? 'none' : 'block',
-          // make it transparent so that the map can be seen
-          backgroundColor: 'black',
-        }}
+        className={
+          userLocationFound
+            ? 'map-render-display map-display-off'
+            : 'map-render-display map-display-on'
+        }
       >
-        <h1 style={{ fontSize: '2rem', margin: '0' }}>
-          Getting your location...
-        </h1>
+        <h1 className="loading-info">Getting your location...</h1>
 
-        {/* // insert gif here */}
         <img src="https://cdn.dribbble.com/users/2433051/screenshots/4872252/spinning-globe-white.gif"></img>
       </div>
       <div
@@ -259,6 +254,9 @@ export function MapRender(props: MapRenderProps) {
           height: '100%',
           display: userLocationFound ? 'block' : 'none',
         }}
+        className={
+          userLocationFound ? 'loading-display-off' : 'loading-display-on'
+        }
       ></div>
     </div>
   );

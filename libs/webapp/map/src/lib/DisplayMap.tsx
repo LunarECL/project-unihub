@@ -209,7 +209,7 @@ export function DisplayMap(props: DisplayMapProps) {
         // don't draw over the map
         setGeoJSON(undefined);
       } else {
-        alert('Friend has not set their location');
+        alert('Invalid Location');
         // flyTo(defaultPosition, function () {}, 'default');
       }
     }

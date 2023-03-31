@@ -152,7 +152,7 @@ export class FriendService {
         // 360 for out of range, -360 for no location
         lat = '-360';
         long = '-360';
-        time = '0';
+        time = '-1';
       } else {
         // if the location is not in the range of the university, set the lat and long to 360
         if (
