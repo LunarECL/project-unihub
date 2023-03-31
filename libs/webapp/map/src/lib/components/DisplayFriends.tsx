@@ -3,6 +3,7 @@ import { List, ListItem } from '@mui/material';
 import { useGetFriendsLocation } from '@unihub/webapp/api';
 import { useEffect, useState } from 'react';
 import placeholder from '../assets/friendProfile.png';
+import { useTheme } from '@mui/material/styles';
 
 export interface DisplayFriendsProps {
   changeMapFocus: (
@@ -21,6 +22,7 @@ export interface FriendLocation {
 
 export function DisplayFriends(props: DisplayFriendsProps) {
   const [friends, setFriends] = useState<FriendLocation[]>([]);
+  const theme = useTheme();
 
   useEffect(() => {
     useGetFriendsLocation().then((res) => {
@@ -66,6 +68,7 @@ export function DisplayFriends(props: DisplayFriendsProps) {
       <ListItem
         key={friend.name}
         className="panel"
+        style={{borderBottomColor: theme.palette.secondary.main}}
         onClick={() =>
           props.changeMapFocus('friend', friend.latitute, friend.longitude)
         }
@@ -75,8 +78,8 @@ export function DisplayFriends(props: DisplayFriendsProps) {
         </div>
 
         <div className="infoDiv">
-          <div className="info">{friend.name}</div>
-          <div className="info info-small">{friend.time}</div>
+          <div className="info" style={{color: theme.palette.secondary.main}}>{friend.name}</div>
+          <div className="info info-small" style={{color: theme.palette.secondary.main}}>{friend.time}</div>
         </div>
       </ListItem>
     ));

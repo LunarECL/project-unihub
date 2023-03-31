@@ -29,7 +29,6 @@
 
 .filterBtn {
   color: #1e1e1e;
-  background-color: #5b9532;
   border-color: #0f1225;
   font-size: 84%;
   width: 6%;
@@ -48,7 +47,7 @@
 
 .filterBtn:hover {
   background-color: #1e1e1e;
-  color: #5b9532;
+  color: white;
 }
 
 .filterBtn:active {

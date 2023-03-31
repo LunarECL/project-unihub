@@ -38,6 +38,7 @@ import {
   restaurant_HeroBurger,
   restaurant_KFC,
 } from './assets/BuildingCoordinates';
+import { useTheme } from '@mui/material/styles';
 
 /* eslint-disable-next-line */
 export interface DisplayMapProps {}
@@ -50,6 +51,7 @@ export interface FriendLocation {
 }
 
 export function DisplayMap(props: DisplayMapProps) {
+  const theme = useTheme();
   const [latitute, setLatitute] = useState('0');
   const [longitude, setLongitude] = useState('0');
   const [friendLocations, setFriendLocations] = useState<FriendLocation[]>([]);
@@ -233,6 +235,7 @@ export function DisplayMap(props: DisplayMapProps) {
           />
           <button
             className={displayMap ? 'filterBtn' : 'noFilterBtn'}
+            style={{ backgroundColor: theme.palette.secondary.main }}
             onClick={() => setSideBarOpen(!sideBarOpen)}
           >
             {sideBarOpen ? 'Close' : 'Filter'}

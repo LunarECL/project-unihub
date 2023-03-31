@@ -3,6 +3,7 @@ import { List, ListItem } from '@mui/material';
 import { useGetUserLectures } from '@unihub/webapp/api';
 import { useEffect, useState } from 'react';
 import placeholder from '../assets/unihat.png';
+import { useTheme } from '@mui/material/styles';
 
 export interface DisplayCoursesProps {
   changeMapFocus: (
@@ -14,6 +15,7 @@ export interface DisplayCoursesProps {
 
 export function DisplayCourses(props: DisplayCoursesProps) {
   const [courses, setCourses] = useState<any[]>([]);
+  const theme = useTheme();
 
   useEffect(() => {
     useGetUserLectures().then((res) => {
@@ -29,13 +31,14 @@ export function DisplayCourses(props: DisplayCoursesProps) {
       <ListItem
         key={course.course.programCode}
         className="panel"
+        style={{borderBottomColor: theme.palette.secondary.main}}
         onClick={() => props.changeMapFocus(course.lectures[0].building)}
       >
         <div id={'id' + course.course.programCode} className="logoDiv">
           <img src={placeholder} alt="logo" className="logo" />
         </div>
 
-        <div className="info">{course.course.programCode}</div>
+        <div className="info" style={{color: theme.palette.secondary.main}}>{course.course.programCode}</div>
       </ListItem>
     ));
 

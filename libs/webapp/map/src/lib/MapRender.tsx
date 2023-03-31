@@ -14,6 +14,7 @@ import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
 import { FriendLocation } from './DisplayMap';
 import { fromLonLat } from 'ol/proj';
+import { useTheme } from '@mui/material/styles';
 
 import './MapRender.css';
 
@@ -28,6 +29,7 @@ export interface MapRenderProps {
 }
 
 export function MapRender(props: MapRenderProps) {
+  const theme = useTheme();
   const context = useContext(MapContext);
   const ref = useRef<HTMLDivElement>(null);
   const mapRef = useRef<Map | null>(null);
@@ -204,9 +206,9 @@ export function MapRender(props: MapRenderProps) {
         const vectorLayer = new VectorLayer({
           source: vectorSource,
           style: new Style({
-            stroke: new Stroke({ color: '#5b9532', width: 3 }),
+            stroke: new Stroke({ color: theme.palette.primary.main, width: 3 }),
             fill: new Fill({
-              color: 'rgb(111, 148, 98, 0.3)',
+              color: 'rgb(148, 97, 142, 0.3)', 
             }),
           }),
         });

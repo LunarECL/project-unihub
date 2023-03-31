@@ -12,7 +12,6 @@
 }
 
 .dropdown {
-  background-color: #5b9532;
   color: #1e1e1e;
   padding: 10px;
   border-radius: 5px;
@@ -26,7 +25,6 @@
 .sideBarTitle {
   margin-left: 10px;
   margin-bottom: 10px;
-  color: #5b9532;
 }
 
 .side-bar-header {
@@ -37,7 +35,7 @@
   width: 100%;
   height: 100%;
   padding: 10px;
-  border-bottom: 1px solid #5b9532;
+  border-bottom: 1px solid;
 }
 
 .side-bar-body {
@@ -48,5 +46,4 @@
   width: 100%;
   height: 100%;
   padding: 10px;
-  color: #5b9532;
 }
