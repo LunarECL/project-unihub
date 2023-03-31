@@ -1,0 +1,56 @@
+.mapContainer {
+  height: 100%;
+  position: fixed;
+  left: 0;
+}
+
+.mapSideBar {
+  width: 75%;
+}
+
+.mapNoSideBar {
+  width: 100%;
+}
+
+.noFilterBtn {
+  display: none;
+}
+
+.sideBarContent {
+  top: 70px;
+  width: 25%;
+  display: block;
+}
+
+.noSideBarContent {
+  width: 0%;
+  display: none;
+}
+
+.filterBtn {
+  color: #1e1e1e;
+  border-color: #0f1225;
+  font-size: 84%;
+  width: 6%;
+  height: 5%;
+  padding: 0;
+  margin: 0.25%;
+  border-radius: 12em;
+  border: 1.5px solid;
+  box-shadow: 0 3px #999;
+  cursor: pointer;
+  position: absolute;
+  top: 70px;
+  right: 0;
+  z-index: 1;
+}
+
+.filterBtn:hover {
+  background-color: #1e1e1e;
+  color: white;
+}
+
+.filterBtn:active {
+  box-shadow: 0 1px #666;
+  transform: translateY(3px);
+}

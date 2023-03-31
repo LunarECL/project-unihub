@@ -19,6 +19,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import { usePostUserDocument } from '@unihub/webapp/api';
 import styles from './webapp-share-doc-list.module.css';
 import { useTheme } from '@mui/material/styles';
+import documentImg from './assets/documentImg.webp';
 
 /* eslint-disable-next-line */
 export interface WebappShareDocListProps {}
@@ -145,7 +146,8 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
                 <Box
                   component="img"
                   className={styles.DocImage}
-                  src="https://cdn.iconscout.com/icon/free/png-256/google-docs-1772228-1507812.png"
+                  // src="https://cdn.iconscout.com/icon/free/png-256/google-docs-1772228-1507812.png"
+                  src={documentImg}
                 ></Box>
               </Button>
               <Typography
