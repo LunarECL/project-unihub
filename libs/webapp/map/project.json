@@ -3,12 +3,13 @@
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/webapp/map/src",
   "projectType": "library",
+  "tags": [],
   "targets": {
     "lint": {
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["libs/webapp/map/**/*.ts"]
+        "lintFilePatterns": ["libs/webapp/map/**/*.{ts,tsx,js,jsx}"]
       }
     },
     "test": {
@@ -25,6 +26,5 @@
         }
       }
     }
-  },
-  "tags": []
+  }
 }

@@ -12,9 +12,15 @@ import { Circle as CircleStyle } from 'ol/style';
 import Geolocation from 'ol/Geolocation';
 import Feature from 'ol/Feature';
 import Point from 'ol/geom/Point';
-import { usePostUserLocation } from '@unihub/webapp/api';
 
-function MapRender() {
+export interface MapRenderProps {
+  setLatitute: React.Dispatch<React.SetStateAction<string>>;
+  setLongitude: React.Dispatch<React.SetStateAction<string>>;
+
+  // an array of coordinates to display friends on the map
+}
+
+export function MapRender(props: MapRenderProps) {
   // our context
   const context = useContext(MapContext);
 
@@ -44,12 +50,12 @@ function MapRender() {
         trackingOptions: {
           enableHighAccuracy: true,
         },
-        projection: context.view.getProjection(),
+        projection: context.view?.getProjection(),
       });
 
       const accuracyFeature = new Feature();
       geolocation.on('change:accuracyGeometry', function () {
-        accuracyFeature.setGeometry(geolocation.getAccuracyGeometry());
+        accuracyFeature.setGeometry(geolocation.getAccuracyGeometry() as any);
       });
 
       // start geolocation
@@ -74,17 +80,22 @@ function MapRender() {
       geolocation.on('change:position', function () {
         // this function runs when the position changes
         const coordinates = geolocation.getPosition();
-        context.view.setCenter(coordinates);
-        context.view.setZoom(18);
+        context.view?.setCenter(coordinates);
+        context.view?.setZoom(18);
         positionFeature.setGeometry(
-          coordinates ? new Point(coordinates) : null
+          coordinates ? new Point(coordinates) : (null as any)
         );
 
         // store these coordinates in the database
-        const longitude = coordinates[0].toString();
-        const latitute = coordinates[1].toString();
 
-        usePostUserLocation(longitude, latitute);
+        if (coordinates) {
+          const longitude = coordinates[0].toString();
+          const latitute = coordinates[1].toString();
+
+          // set prop values
+          props.setLatitute(latitute);
+          props.setLongitude(longitude);
+        }
 
         // set a timeout for 5 seconds just in case position is constantly changing (user is moving)
         setTimeout(() => {
@@ -95,7 +106,7 @@ function MapRender() {
       new VectorLayer({
         map: mapRef.current,
         source: new VectorSource({
-          features: [accuracyFeature, positionFeature],
+          features: [positionFeature, accuracyFeature],
         }),
       });
     }
@@ -136,5 +147,3 @@ function MapRender() {
 
   return <div ref={ref} style={{ width: '100%', height: '100%' }} />;
 }
-
-export default MapRender;
