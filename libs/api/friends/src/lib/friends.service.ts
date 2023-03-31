@@ -135,8 +135,40 @@ export class FriendService {
         where: { userId: friends[i].friendId },
       });
 
+      let lat, long, time;
+
+      /*
+
+      // the constraints for the map
+    extent: boundingExtent([
+      fromLonLat([-79.1951, 43.78]),
+      fromLonLat([-79.1751, 43.7944]),
+    ]),
+
+      */
+
       if (!friendLocation) {
-        return { error: 'Friend does not have a location' };
+        // lat or lon can never be exactly 360, will use this as a flag for either no location or not in range of University
+        // 360 for out of range, -360 for no location
+        lat = '-360';
+        long = '-360';
+        time = '0';
+      } else {
+        // if the location is not in the range of the university, set the lat and long to 360
+        if (
+          parseFloat(friendLocation.latitude) < 43.78 ||
+          parseFloat(friendLocation.latitude) > 43.7944 ||
+          parseFloat(friendLocation.longitude) < -79.1951 ||
+          parseFloat(friendLocation.longitude) > -79.1751
+        ) {
+          lat = '360';
+          long = '360';
+          time = '0';
+        } else {
+          lat = friendLocation.latitude;
+          long = friendLocation.longitude;
+          time = friendLocation.updated + '';
+        }
       }
 
       const friendUserObject = await this.connection
@@ -147,10 +179,10 @@ export class FriendService {
 
       // make new friendLocation object
       const newFriendLocationObject: FriendLocation = {
-        latitute: friendLocation.latitude,
-        longitude: friendLocation.longitude,
+        latitute: lat,
+        longitude: long,
         name: friendUserObject.email,
-        time: friendLocation.updated + '',
+        time: time,
       };
 
       friendsLocation.push(newFriendLocationObject as FriendLocation);
