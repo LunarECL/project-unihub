@@ -46,7 +46,7 @@ export function FriendsList(props: FriendsListProps) {
   // get the list of friends from the database
   return (
     <div>
-      <div>
+      <div className="friends-item">
         <h2>Current friends</h2>
         <List>{friendsList}</List>
       </div>

@@ -40,7 +40,15 @@ export function NavBar(props: NavBarProps) {
           >
             Video Chat
           </Button>
-          {/* Map goes here */}
+          <Button className="AppBarItems" onClick={() => navigate('/home/map')}>
+            Map
+          </Button>
+          <Button
+            className="AppBarItems"
+            onClick={() => navigate('/home/friends')}
+          >
+            Friends
+          </Button>
         </Box>
       </Toolbar>
     </AppBar>

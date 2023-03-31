@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const query = async (latitude: string, longitude: string) => {
-  const url = `/api/map/user/location/`;
-  // const url = `http://localhost:3333/api/map/user/location/`;
+  // const url = `/api/map/user/location/`;
+  const url = `http://localhost:3333/api/map/user/location/`;
 
   const res = await axios.post(url, {
     latitude,

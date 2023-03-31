@@ -23,7 +23,7 @@ export function DisplayCourses(props: DisplayCoursesProps) {
 
   if (courses.length === 0) {
     // return "No friends found"
-    return <div>No friends found</div>;
+    return <div>No courses found</div>;
   } else {
     const courselist = courses.map((course) => (
       <ListItem
