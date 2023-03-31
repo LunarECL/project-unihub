@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { usePostFriend, useGetFriends } from '@unihub/webapp/api';
 import FriendsList from './FriendList';
 import './Friends.css';
-import { Grid, Box, Typography } from '@mui/material';
+import { Grid, Box, Typography, Button, Input } from '@mui/material';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface FriendsProps {}
@@ -24,41 +24,19 @@ export function Friends(props: FriendsProps) {
   };
 
   return (
-    // <div className="friends-container">
-    //   <h1>Welcome to Friends!</h1>
-    //   <div>
-    //     <h2>Invite friends</h2>
-    //     <input
-    //       type="email"
-    //       value={email}
-    //       onChange={(e) => setEmail(e.target.value)}
-    //     />
-    //     <button onClick={handleInviteClick}>Invite</button>
-    //   </div>
-    //   <div>
-    //     <FriendsList />
-    //   </div>
-    // </div>
-
-    <Grid container spacing={2}>
+    <Grid container spacing={2} className="friends-container">
       <Grid item xs={12}>
         <Box
           sx={{
-            bgcolor: 'background.paper',
             p: 2,
             textAlign: 'center',
             color: 'text.primary',
           }}
-        >
-          <Typography variant="h4" component="div" gutterBottom>
-            Welcome to Friends!
-          </Typography>
-        </Box>
+        ></Box>
       </Grid>
       <Grid item xs={12}>
         <Box
           sx={{
-            bgcolor: 'background.paper',
             p: 2,
             textAlign: 'center',
             color: 'text.primary',
@@ -67,19 +45,39 @@ export function Friends(props: FriendsProps) {
           <Typography variant="h5" component="div" gutterBottom>
             Invite friends
           </Typography>
-          <input
+          <Input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter email"
+            sx={{
+              width: '50%',
+              color: 'text.primary',
+              '&:hover': {
+                color: 'text.primary',
+              },
+              paddingRight: '10px',
+            }}
           />
 
-          <button onClick={handleInviteClick}>Invite</button>
+          <Button
+            onClick={handleInviteClick}
+            sx={{
+              backgroundColor: 'primary.main',
+              color: 'primary.contrastText',
+              '&:hover': {
+                backgroundColor: 'primary.dark',
+                color: 'primary.contrastText',
+              },
+            }}
+          >
+            Invite
+          </Button>
         </Box>
       </Grid>
       <Grid item xs={12}>
         <Box
           sx={{
-            bgcolor: 'background.paper',
             p: 2,
             textAlign: 'center',
             color: 'text.primary',

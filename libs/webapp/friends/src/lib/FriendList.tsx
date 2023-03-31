@@ -47,7 +47,7 @@ export function FriendsList(props: FriendsListProps) {
   return (
     <div>
       <div className="friends-item">
-        <h2>Current friends</h2>
+        <h2 className="friend-item-title">Current friends</h2>
         <List>{friendsList}</List>
       </div>
     </div>

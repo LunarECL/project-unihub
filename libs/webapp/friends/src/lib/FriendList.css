@@ -20,7 +20,17 @@
   width: 100%;
 }
 
+.friend-list-item:hover {
+  background-color: #eee;
+}
+
 .friends-item {
   height: 100%;
+  width: 100%;
+}
+
+.friend-item-title {
+  display: flex;
+  align-items: center;
   width: 100%;
 }
