@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const query = async (friendEmail: string) => {
-  //   const url = `/api/friends`;
-  const url = `http://localhost:3333/api/friends`;
+  const url = `/api/friends`;
+  // const url = `http://localhost:3333/api/friends`;
 
   const res = await axios.post(url, {
     friendEmail,

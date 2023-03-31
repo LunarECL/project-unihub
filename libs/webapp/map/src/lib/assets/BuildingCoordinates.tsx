@@ -1,4 +1,4 @@
-import { fromLonLat } from "ol/proj";
+import { fromLonLat } from 'ol/proj';
 
 export const building_EV = fromLonLat([-79.19052077563258, 43.787295762163836]);
 export const building_IC = fromLonLat([-79.18970352907695, 43.786841460411296]);

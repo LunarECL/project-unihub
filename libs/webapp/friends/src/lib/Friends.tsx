@@ -34,9 +34,6 @@ export function Friends(props: FriendsProps) {
         <button onClick={handleInviteClick}>Invite</button>
       </div>
       <div>
-        <h2>Pending requests</h2>
-      </div>
-      <div>
         <FriendsList />
       </div>
     </div>
