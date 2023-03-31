@@ -19,8 +19,16 @@ export function DisplaySideBar(props: DisplaySideBarProps) {
 
   return (
     <div>
-      <div className="side-bar-header" style={{borderBottomColor: theme.palette.secondary.main}}>
-        <div className="sideBarTitle" style={{color: theme.palette.secondary.main}}>Show me: </div>
+      <div
+        className="side-bar-header"
+        style={{ borderBottomColor: theme.palette.secondary.main }}
+      >
+        <div
+          className="sideBarTitle"
+          style={{ color: theme.palette.secondary.main }}
+        >
+          Show me:{' '}
+        </div>
         <select
           id="showingDropdown"
           className="dropdown"
@@ -33,7 +41,10 @@ export function DisplaySideBar(props: DisplaySideBarProps) {
           <option value="restaurant">Restaurants</option>
         </select>
       </div>
-      <div className="side-bar-body" style={{color: theme.palette.secondary.main}}>
+      <div
+        className="side-bar-body"
+        style={{ color: theme.palette.secondary.main }}
+      >
         {showingContent === 'restaurant' ? (
           <DisplayRestaurants changeMapFocus={props.changeMapFocus} />
         ) : showingContent === 'course' ? (

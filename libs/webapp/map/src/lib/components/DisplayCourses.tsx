@@ -31,14 +31,16 @@ export function DisplayCourses(props: DisplayCoursesProps) {
       <ListItem
         key={course.course.programCode}
         className="panel"
-        style={{borderBottomColor: theme.palette.secondary.main}}
+        style={{ borderBottomColor: theme.palette.secondary.main }}
         onClick={() => props.changeMapFocus(course.lectures[0].building)}
       >
         <div id={'id' + course.course.programCode} className="logoDiv">
           <img src={placeholder} alt="logo" className="logo" />
         </div>
 
-        <div className="info" style={{color: theme.palette.secondary.main}}>{course.course.programCode}</div>
+        <div className="info" style={{ color: theme.palette.secondary.main }}>
+          {course.course.programCode}
+        </div>
       </ListItem>
     ));
 

@@ -208,7 +208,7 @@ export function MapRender(props: MapRenderProps) {
           style: new Style({
             stroke: new Stroke({ color: theme.palette.primary.main, width: 3 }),
             fill: new Fill({
-              color: 'rgb(148, 97, 142, 0.3)', 
+              color: 'rgb(148, 97, 142, 0.3)',
             }),
           }),
         });

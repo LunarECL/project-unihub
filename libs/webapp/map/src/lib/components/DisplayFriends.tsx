@@ -68,7 +68,7 @@ export function DisplayFriends(props: DisplayFriendsProps) {
       <ListItem
         key={friend.name}
         className="panel"
-        style={{borderBottomColor: theme.palette.secondary.main}}
+        style={{ borderBottomColor: theme.palette.secondary.main }}
         onClick={() =>
           props.changeMapFocus('friend', friend.latitute, friend.longitude)
         }
@@ -78,8 +78,15 @@ export function DisplayFriends(props: DisplayFriendsProps) {
         </div>
 
         <div className="infoDiv">
-          <div className="info" style={{color: theme.palette.secondary.main}}>{friend.name}</div>
-          <div className="info info-small" style={{color: theme.palette.secondary.main}}>{friend.time}</div>
+          <div className="info" style={{ color: theme.palette.secondary.main }}>
+            {friend.name}
+          </div>
+          <div
+            className="info info-small"
+            style={{ color: theme.palette.secondary.main }}
+          >
+            {friend.time}
+          </div>
         </div>
       </ListItem>
     ));

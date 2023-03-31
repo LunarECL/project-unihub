@@ -17,14 +17,16 @@ export function DisplayRestaurants(props: DisplayRestaurantsProps) {
     <ListItem
       key={restaurant.name}
       className="panel"
-      style={{borderBottomColor: theme.palette.secondary.main}}
+      style={{ borderBottomColor: theme.palette.secondary.main }}
       onClick={() => props.changeMapFocus(restaurant.name)}
     >
       <div id={'id' + restaurant.name} className="logoDiv">
         <img src={restaurant.logo} alt="logo" className="logo" />
       </div>
 
-      <div className="info" style={{color: theme.palette.secondary.main}}>{restaurant.name}</div>
+      <div className="info" style={{ color: theme.palette.secondary.main }}>
+        {restaurant.name}
+      </div>
     </ListItem>
   ));
 
