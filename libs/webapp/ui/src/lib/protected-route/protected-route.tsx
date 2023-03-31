@@ -8,5 +8,3 @@ export function ProtectedRoute({ component, ...options }: ProtectedRouteProps) {
   const Component = withAuthenticationRequired(component, options);
   return <Component />;
 }
-
-export default ProtectedRoute;

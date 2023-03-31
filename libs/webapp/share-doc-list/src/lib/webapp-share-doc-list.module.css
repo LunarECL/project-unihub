@@ -1,7 +1,7 @@
 .DocumentListDiv {
   margin-left: 10%;
   margin-right: 10%;
-  margin-top: 5%;
+  margin-top: 6%;
 }
 
 .ListTitle {
@@ -39,7 +39,7 @@
   .DocImage {
     max-height: 233px;
     max-width: 350px;
-    color: #1976d2; /* replace with your primary color */
+    color: #1976d2;
   }
 }
 
@@ -47,7 +47,7 @@
   .DocImage {
     max-height: 167px;
     max-width: 250px;
-    color: #1976d2; /* replace with your primary color */
+    color: #1976d2;
   }
 }
 

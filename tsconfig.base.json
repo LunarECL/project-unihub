@@ -22,6 +22,7 @@
       "@unihub/api/friends": ["libs/api/friends/src/index.ts"],
       "@unihub/api/map": ["libs/api/map/src/index.ts"],
       "@unihub/api/sharedoc": ["libs/api/sharedoc/src/index.ts"],
+      "@unihub/api/webrtc": ["libs/api/webrtc/src/index.ts"],
       "@unihub/webapp/api": ["libs/webapp/api/src/index.ts"],
       "@unihub/webapp/create-doc": ["libs/webapp/create-doc/src/index.ts"],
       "@unihub/webapp/friends": ["libs/webapp/friends/src/index.ts"],

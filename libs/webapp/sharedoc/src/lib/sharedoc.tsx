@@ -44,7 +44,7 @@ export function Sharedoc(props: SharedocProps) {
   } = useParams();
 
   useEffect(() => {
-    const url = `ws://localhost:3030/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${documentId}/${lectureNumber}`;
+    const url = `wss://unihub.today/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${documentId}/${lectureNumber}`;
     const socket = new ReconnectingWebSocket(url);
     const connection = new ShareDB.Connection(socket as any);
     const doc = connection.get(courseCode!, documentId!);
@@ -163,7 +163,6 @@ export function Sharedoc(props: SharedocProps) {
               <Grid item xs={8}>
                 <Button
                   variant="text"
-                  // sx={{ mb: 2, left: -5 }}
                   id="ShareButton"
                   onClick={handleClickOpenDialog}
                 >
@@ -175,12 +174,13 @@ export function Sharedoc(props: SharedocProps) {
                   onClose={handleCloseDialog}
                   id="AddUserDialog"
                   maxWidth="lg"
+                  PaperProps={{ style: { width: '50%', maxHeight: '90%' } }}
                 >
-                  <DialogTitle>Share with other users on UniHub!</DialogTitle>
+                  <DialogTitle>Share with other users on UnIHub!</DialogTitle>
                   <DialogContent>
                     <TextField
                       id="user-email"
-                      label="User email"
+                      label="Enter the user's email"
                       type="user-email"
                       variant="standard"
                       fullWidth

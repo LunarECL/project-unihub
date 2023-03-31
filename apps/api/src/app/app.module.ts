@@ -19,6 +19,7 @@ import { ShareDoc } from '@unihub/api/sharedoc';
 import { ScheduleModule } from '@nestjs/schedule';
 import { Op } from '@unihub/api/sharedoc';
 import { Attribute } from '@unihub/api/sharedoc';
+import { WebrtcModule } from '@unihub/api/webrtc';
 import { MapModule } from '@unihub/api/map';
 import { Location } from '@unihub/api/map';
 import { Friends } from '@unihub/api/friends';
@@ -93,6 +94,7 @@ import { FriendsModule } from '@unihub/api/friends';
       inject: [ConfigService],
     }),
     EmailModule,
+    WebrtcModule,
     ScheduleModule.forRoot(),
   ],
   controllers: [AppController],

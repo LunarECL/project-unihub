@@ -4,6 +4,7 @@ import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
 import { EmailService } from './email.service';
 import { EmailConsumer } from './email.consumer';
+import { AuthModule } from '@unihub/api/auth';
 
 @Module({
   imports: [

@@ -1,4 +1,4 @@
-FROM my-base-image:nx-base AS builder
+FROM ghcr.io/uoft-utsc-cs-sandbox/unihub/base:latest AS builder
 
 ARG NODE_ENV
 ARG BUILD_FLAG

@@ -1,10 +1,10 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { CurrentUser } from './current-user.decorator';
-import { ManagementService } from '@unihub/api/auth';
 
 @Controller('auth')
 export class AuthController {
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor() {}
 
   @UseGuards(AuthGuard('jwt'))

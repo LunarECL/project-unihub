@@ -5,7 +5,7 @@ import { ManagementService } from './management.service';
 import { User } from './users/users.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthController } from './auth.controller';
-import { EmailService } from '../../../email/src/lib/email.service';
+import { EmailService } from '@unihub/api/email';
 import { EmailModule } from '@unihub/api/email';
 import { CoursesModule, Lecture } from '@unihub/api/courses';
 import { CurrentUser } from './current-user.decorator';

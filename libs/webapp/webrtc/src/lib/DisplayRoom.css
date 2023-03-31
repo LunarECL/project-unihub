@@ -1,5 +1,4 @@
 .App {
-  background: linear-gradient(to bottom, #000000, #111111);
   height: 100vh;
   width: 100vw;
   position: relative;
@@ -9,28 +8,15 @@
 
 .App-header {
   position: absolute;
-  top: 0;
+  top: 6%;
   left: 0;
   width: 100%;
   height: 10%;
-  background-color: #000000;
-  color: #ffffff;
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0 20px;
   box-sizing: border-box;
-}
-
-.headerBtn {
-  background-color: #222222;
-  color: #ffffff;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  width: 10%;
-  height: 100%;
 }
 
 .displayRemote {
@@ -131,4 +117,8 @@
 
 .flipped::-webkit-media-controls-panel {
   transform: scale(-1, 1);
+}
+
+.addLink {
+  padding-right: 5px;
 }
