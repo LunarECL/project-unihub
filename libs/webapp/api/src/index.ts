@@ -16,3 +16,4 @@ export * from './lib/hooks/usePostUserLocation';
 export * from './lib/hooks/useGetFriends';
 export * from './lib/hooks/usePostFriend';
 export * from './lib/hooks/useDeleteFriend';
+export * from './lib/hooks/useGetFriendsLocation';

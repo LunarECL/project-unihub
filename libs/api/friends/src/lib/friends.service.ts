@@ -5,6 +5,13 @@ import { Connection, Repository } from 'typeorm';
 import { User } from '@unihub/api/auth';
 import { Location } from '@unihub/api/map';
 
+interface FriendLocation {
+  latitute: string;
+  longitude: string;
+  name: string;
+  time: string;
+}
+
 @Injectable()
 export class FriendService {
   constructor(
@@ -118,13 +125,35 @@ export class FriendService {
       where: { userId: userId },
     });
 
-    let friendsLocation = [];
-    //Get the location of the friends
+    // make array of friendLocation objects
+    const friendsLocation: FriendLocation[] = [];
+    // loop through friends
+
     const locationRepository = this.connection.getRepository(Location);
     for (let i = 0; i < friends.length; i++) {
-      friendsLocation[i] = await locationRepository.findOne({
+      const friendLocation = await locationRepository.findOne({
         where: { userId: friends[i].friendId },
       });
+
+      if (!friendLocation) {
+        return { error: 'Friend does not have a location' };
+      }
+
+      const friendUserObject = await this.connection
+        .getRepository(User)
+        .findOne({
+          where: { userId: friends[i].friendId },
+        });
+
+      // make new friendLocation object
+      const newFriendLocationObject: FriendLocation = {
+        latitute: friendLocation.latitude,
+        longitude: friendLocation.longitude,
+        name: friendUserObject.email,
+        time: friendLocation.updated + '',
+      };
+
+      friendsLocation.push(newFriendLocationObject as FriendLocation);
     }
 
     return friendsLocation;

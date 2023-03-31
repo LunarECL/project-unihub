@@ -6,7 +6,8 @@ import { View } from 'ol';
 import { MapContext } from './MapContext';
 import { boundingExtent } from 'ol/extent';
 import './DisplayMap.css';
-import { usePostUserLocation } from '@unihub/webapp/api';
+import { usePostUserLocation, useGetFriendsLocation } from '@unihub/webapp/api';
+import { toLonLat } from 'ol/proj';
 
 /* eslint-disable-next-line */
 export interface DisplayMapProps {}
@@ -21,6 +22,7 @@ export interface FriendLocation {
 export function DisplayMap(props: DisplayMapProps) {
   const [latitute, setLatitute] = useState('0');
   const [longitude, setLongitude] = useState('0');
+  const [friendLocations, setFriendLocations] = useState<FriendLocation[]>([]);
   const defaultView = new View({
     center: fromLonLat([-79.18725541486484, 43.78422061706888]),
     zoom: 17,
@@ -41,30 +43,23 @@ export function DisplayMap(props: DisplayMapProps) {
   }, [context]);
 
   useEffect(() => {
-    usePostUserLocation(latitute, longitude);
-  }, [latitute, longitude]);
+    if (latitute === '0' || longitude === '0') {
+      return;
+    }
 
-  // make 3 sets of FriendLocation close to lat: 5432538.122139835, lon: -8814578.24438671, named "Friend 1", "Friend 2", "Friend 3"
-  const friendLocations: FriendLocation[] = [
-    {
-      latitute: ' 43.786841460411296',
-      longitude: '-79.18970352907695',
-      name: 'Friend 1',
-      time: '2021-04-20T20:00:00.000Z',
-    },
-    {
-      latitute: '43.784731388083195',
-      longitude: '-79.18610616855035',
-      name: 'Friend 2',
-      time: '2021-04-20T20:00:00.000Z',
-    },
-    {
-      latitute: '43.7844441599168',
-      longitude: '-79.18737030473145',
-      name: 'Friend 3',
-      time: '2021-04-20T20:00:00.000Z',
-    },
-  ];
+    const converted = toLonLat([
+      parseFloat(longitude),
+      parseFloat(latitute),
+    ]).toString();
+
+    const newLon = parseFloat(converted.split(',')[0]).toString();
+    const newLat = parseFloat(converted.split(',')[1]).toString();
+
+    usePostUserLocation(newLat, newLon);
+    useGetFriendsLocation().then((res) => {
+      setFriendLocations(res);
+    });
+  }, [latitute, longitude]);
 
   return (
     <MapContext.Provider value={{ view: context, geoJSON: geoJSON }}>
