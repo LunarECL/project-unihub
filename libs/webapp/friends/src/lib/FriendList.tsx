@@ -3,10 +3,14 @@ import {
   usePostFriend,
   useGetFriends,
   useDeleteFriend,
+  useGetRequestsFriends,
+  usePatchAcceptFriend,
 } from '@unihub/webapp/api';
-import { List, ListItem } from '@mui/material';
+import { Grid, List, ListItem, ListSubheader, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
 import './FriendList.css';
+import { useTheme } from '@mui/material/styles';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface FriendsListProps {}
@@ -14,41 +18,73 @@ export interface FriendsListProps {}
 interface Friend {
   userId: string;
   email: string;
+  isAccepted: boolean;
+  isReqested: boolean;
 }
 
 export function FriendsList(props: FriendsListProps) {
+  const theme = useTheme();
   const [friends, setFriends] = useState<Friend[]>([]);
+  const [requestsFriends, setRequestsFriends] = useState<Friend[]>([]);
 
   useEffect(() => {
     useGetFriends().then((friends) => setFriends(friends));
+    useGetRequestsFriends().then((friends) => setRequestsFriends(friends));
   }, []);
 
-  console.log('friends: ', friends);
-
-  //   const friendsList = friends.map((friend) => (
-  //     <ListItem key={friend}>{friend}</ListItem>
-  //   ));
-
   const handleDeleteFriend = (friend: Friend) => {
-    console.log('delete friend: ', friend);
     useDeleteFriend(friend.userId).then((friend) => console.log(friend));
+    //Remove from friends
+    setFriends(friends.filter((friend) => friend.userId !== friend.userId));
+  };
+
+  const handleAddFriend = (friend: Friend) => {
+    usePatchAcceptFriend(friend.email).then((friend) => console.log(friend));
+    //Remove from requestsFriends
+    setRequestsFriends(
+      requestsFriends.filter(
+        (requestFriend) => requestFriend.userId !== friend.userId
+      )
+    );
+    //Add to friends
+    setFriends([...friends, friend]);
   };
 
   const friendsList = friends.map((friend) => (
-    <ListItem key={friend.userId} className="friend-list-item">
-      <div>{friend.email}</div>
+    <ListItem key={friend.userId + 'accepted'} className='list-item'>
       <div className="delete-friend">
         <DeleteIcon onClick={() => handleDeleteFriend(friend)} />
       </div>
+      {friend.email}
     </ListItem>
   ));
 
-  // get the list of friends from the database
+  const requestsFriendsList = requestsFriends.map((friend) => (
+    <ListItem key={friend.userId + 'requested'} className='list-item'>
+      <div className="accept-friend">
+        <AddIcon onClick={() => handleAddFriend(friend)} />
+      </div>
+      {friend.email} has requested to be your friend
+    </ListItem>
+  ));
+
   return (
     <div>
       <div className="friends-item">
-        <h2 className="friend-item-title">Current friends</h2>
-        <List>{friendsList}</List>
+        <Grid container direction={'row'} spacing={3}>
+          <Grid item xs={6}>
+            <List className="list" subheader={<li />}>
+              <ListSubheader className="friend-item-title">{`Current Friends`}</ListSubheader>
+              {friendsList}
+            </List>
+          </Grid>
+          <Grid item xs={6}>
+            <List className="list" subheader={<li />}>
+              <ListSubheader className="friend-item-title">{`Pending Friends`}</ListSubheader>
+              {requestsFriendsList}
+            </List>
+          </Grid>
+        </Grid>
       </div>
     </div>
   );
