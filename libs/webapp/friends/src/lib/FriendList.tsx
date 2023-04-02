@@ -51,7 +51,7 @@ export function FriendsList(props: FriendsListProps) {
   };
 
   const friendsList = friends.map((friend) => (
-    <ListItem key={friend.userId + 'accepted'} className='list-item'>
+    <ListItem key={friend.userId + 'accepted'} className="list-item">
       <div className="delete-friend">
         <DeleteIcon onClick={() => handleDeleteFriend(friend)} />
       </div>
@@ -60,7 +60,7 @@ export function FriendsList(props: FriendsListProps) {
   ));
 
   const requestsFriendsList = requestsFriends.map((friend) => (
-    <ListItem key={friend.userId + 'requested'} className='list-item'>
+    <ListItem key={friend.userId + 'requested'} className="list-item">
       <div className="accept-friend">
         <AddIcon onClick={() => handleAddFriend(friend)} />
       </div>

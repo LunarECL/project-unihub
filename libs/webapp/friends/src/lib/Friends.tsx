@@ -82,7 +82,7 @@ export function Friends(props: FriendsProps) {
           </Grid>
         </Box>
       </Grid>
-      <Grid item xs={12} sx={{marginTop: '5%', marginBottom: '2%'}}>
+      <Grid item xs={12} sx={{ marginTop: '5%', marginBottom: '2%' }}>
         <Box
           sx={{
             p: 2,
