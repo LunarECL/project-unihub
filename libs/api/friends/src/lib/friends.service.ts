@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConsoleLogger, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Friends } from './entities.ts/friends.entity';
 import { Connection, Repository } from 'typeorm';
@@ -30,13 +30,13 @@ export class FriendService {
       return { error: 'User does not exist' };
     }
 
-    // check if user is already a friend of the current user
+    //Check if the friend is already added
     const friend = await this.friendRepository.findOne({
       where: { userId: currentUserId, friendId: newUserId.userId },
     });
 
     if (friend) {
-      return { error: 'User is already a friend' };
+      return { error: 'Friend already added' };
     }
 
     // check if user is trying to add themselves
@@ -48,13 +48,8 @@ export class FriendService {
     const newFriend = new Friends();
     newFriend.userId = currentUserId;
     newFriend.friendId = newUserId.userId;
+    newFriend.isRequested = true;
     await this.friendRepository.save(newFriend);
-
-    // also add the current user as a friend of the new user
-    const newFriend2 = new Friends();
-    newFriend2.userId = newUserId.userId;
-    newFriend2.friendId = currentUserId;
-    await this.friendRepository.save(newFriend2);
 
     return newFriend;
   } //end add Location
@@ -69,7 +64,7 @@ export class FriendService {
         }
       });
     const friends = await this.friendRepository.find({
-      where: { userId: userId },
+      where: { userId: userId, isAccepted: true },
       select: ['friendId'],
     });
 
@@ -122,7 +117,7 @@ export class FriendService {
   async getFriendsLocation(userId: string): Promise<any> {
     //Get the friends of the user
     const friends = await this.friendRepository.find({
-      where: { userId: userId },
+      where: { userId: userId, isAccepted: true },
     });
 
     // make array of friendLocation objects
@@ -189,5 +184,62 @@ export class FriendService {
     }
 
     return friendsLocation;
+  }
+
+  async getFriendRequests(userId: string): Promise<any> {
+    //Search through the friendId's and if isRequested is true, return the user
+    const friends = await this.friendRepository.find({
+      where: { friendId: userId, isRequested: true },
+    });
+
+    //Get the friends of the user from the user table
+    const userRepository = this.connection.getRepository(User);
+    const friendsList = [];
+    for (let i = 0; i < friends.length; i++) {
+      friendsList[i] = await userRepository.findOne({
+        where: { userId: friends[i].userId },
+        select: ['email'],
+      });
+    }
+
+    return friendsList;
+  }
+
+  async acceptFriendRequest(userId: string, friendEmail: string) {
+    //Get the friendId from the email
+    const userRepository = this.connection.getRepository(User);
+    const friendId = await userRepository.findOne({
+      where: { email: friendEmail },
+    });
+
+    //Check if the user exists in the database
+    this.friendRepository
+      .findOne({ where: { userId: userId } })
+      .then((friend) => {
+        if (!friend) {
+          return { error: 'User does not exist' };
+        }
+      });
+
+    //get the id of the friendship
+    const friendship = await this.friendRepository.findOne({
+      where: { userId: friendId.userId, friendId: userId },
+    });
+
+    //Update the friend, return the updated friend
+    const updatedFriend = await this.friendRepository.update(friendship.id, {
+      isAccepted: true,
+      isRequested: false,
+    });
+
+    //Also create a friendship for the other user
+    const newFriend = new Friends();
+    newFriend.userId = userId;
+    newFriend.friendId = friendId.userId;
+    newFriend.isAccepted = true;
+    newFriend.isRequested = false;
+    await this.friendRepository.save(newFriend);
+
+    return updatedFriend;
   }
 }

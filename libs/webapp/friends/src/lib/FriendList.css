@@ -11,17 +11,17 @@
   color: red;
 }
 
-.friend-list-item {
+.accept-friend {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  border: 1px solid #ccc;
-  padding: 10px;
-  width: 100%;
+  cursor: pointer;
+  right: 0;
+  position: absolute;
+  padding-right: 10px;
 }
 
-.friend-list-item:hover {
-  background-color: #eee;
+.accept-friend:hover {
+  color: rgb(50, 50, 50);
 }
 
 .friends-item {
@@ -33,4 +33,21 @@
   display: flex;
   align-items: center;
   width: 100%;
+  font-size: large !important;
+  background-color: transparent !important;
+}
+
+.list {
+  width: 100%;
+  height: 300px;
+  background-color: var(--background-paper);
+  position: relative;
+  overflow: auto;
+  max-height: 300px;
+  border: 1px solid #d3d4d5;
+  border-radius: 4px;
+}
+
+.list-item {
+  color: gray;
 }

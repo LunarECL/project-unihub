@@ -16,7 +16,6 @@ let client: Client;
 let signal: IonSFUJSONRPCSignal;
 
 export function DisplayRoom(props: DisplayRoomProps) {
-  let username = '';
   const animals = [
     'Ant',
     'Bear',
@@ -47,10 +46,16 @@ export function DisplayRoom(props: DisplayRoomProps) {
     'Yak',
     'Zebra',
   ];
+
+  let username = localStorage.getItem('username');
+
   if (!username) {
     username = `Anonymous ${
       animals[Math.floor(Math.random() * animals.length)]
     }`;
+
+    // store username in local storage
+    localStorage.setItem('username', username);
   }
 
   const [cameraOn, setCameraOn] = useState(false);
@@ -99,11 +104,41 @@ export function DisplayRoom(props: DisplayRoomProps) {
   const uid = undefined as unknown as string; // undefined because we are using uid generated from ion-sfu
 
   const config: Configuration = {
+    /*
+      STUN server is used to determine the public IP address of the client.
+      It is used to establish a direct connection between the client and the server.
+      It is also used to determine the public IP address of the client when the client is behind a NAT.
+
+      sometimes, the STUN server is blocked by the firewall, so we need to use TURN server.
+      TURN server is used to relay the media stream between the client and the server.
+      It is also used to relay the media stream between the client and the server when the client is behind a NAT.
+
+
+    */
     iceServers: [
       {
         urls: 'stun:stun.l.google.com:19302',
       },
+      {
+        urls: 'stun:relay.metered.ca:80',
+      },
+      {
+        urls: 'turn:relay.metered.ca:80',
+        username: 'bc990bbaf8701c19cbfd8fb3',
+        credential: 'E4kGgiPJE/Ry3OuJ',
+      },
+      {
+        urls: 'turn:relay.metered.ca:443',
+        username: 'bc990bbaf8701c19cbfd8fb3',
+        credential: 'E4kGgiPJE/Ry3OuJ',
+      },
+      {
+        urls: 'turn:relay.metered.ca:443?transport=tcp',
+        username: 'bc990bbaf8701c19cbfd8fb3',
+        credential: 'E4kGgiPJE/Ry3OuJ',
+      },
     ],
+
     codec: 'vp8',
   };
 
@@ -147,6 +182,11 @@ export function DisplayRoom(props: DisplayRoomProps) {
         displayRemoteStreams();
         enableAudio();
       }
+    };
+
+    // if the user closes the tab, leave the room
+    window.onbeforeunload = () => {
+      client.leave();
     };
   }, [streams]);
 
@@ -197,7 +237,10 @@ export function DisplayRoom(props: DisplayRoomProps) {
             pubVideo.current.autoplay = true;
             pubVideo.current.controls = false;
             pubVideo.current.muted = true;
+
+            console.log('publishing media', media);
             client.publish(media);
+
             setPubShow('');
           }
         })
@@ -268,7 +311,6 @@ export function DisplayRoom(props: DisplayRoomProps) {
     }
 
     const length = Object.keys(streams.current).length;
-    console.log(length);
 
     if (length === 1) {
       // only one stream, so make it full screen
@@ -355,8 +397,6 @@ export function DisplayRoom(props: DisplayRoomProps) {
   };
 
   const copyLinkToClipboard = () => {
-    console.log('copying link to clipboard');
-
     const link = window.location.origin + `/home/rooms/${roomId}`;
     navigator.clipboard.writeText(link).then(() => {
       alert('Copied link to clipboard!');

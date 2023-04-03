@@ -6,6 +6,7 @@ import {
   UseGuards,
   Delete,
   Param,
+  Patch,
 } from '@nestjs/common';
 import { CurrentUser } from '../../../auth/src/lib/current-user.decorator';
 import { AuthGuard } from '@nestjs/passport';
@@ -41,5 +42,22 @@ export class FriendController {
     @Param('friendId') friendId: string
   ): Promise<any> {
     return await this.friendService.deleteFriend(userId, friendId);
+  }
+
+  @Patch('/accept')
+  async acceptFriend(@CurrentUser() { userId }, @Body() body): Promise<any> {
+    //Check the body
+    if (!body.friendEmail) {
+      return { error: 'Missing friend' };
+    }
+    return await this.friendService.acceptFriendRequest(
+      userId,
+      body.friendEmail
+    );
+  }
+
+  @Get('/requests')
+  async getFriendRequests(@CurrentUser() { userId }): Promise<any> {
+    return await this.friendService.getFriendRequests(userId);
   }
 } //end CoursesController

@@ -10,4 +10,10 @@ export class Friends {
 
   @Column({ nullable: false })
   friendId: string;
+
+  @Column({ nullable: true })
+  isRequested: boolean;
+
+  @Column({ nullable: true })
+  isAccepted: boolean;
 } //end class Courses
