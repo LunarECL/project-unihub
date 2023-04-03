@@ -6,7 +6,7 @@ import { Section } from './entities/section.entity';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CoursesController } from './courses.controller';
 import { CoursesService } from './courses.service';
-import { AuthModule } from '@unihub/api/auth';
+import { CronService } from './cron.service';
 
 @Module({
   imports: [
@@ -16,7 +16,7 @@ import { AuthModule } from '@unihub/api/auth';
     ScheduleModule.forRoot(),
   ],
   controllers: [CoursesController],
-  providers: [Lecture, Section, Courses, CoursesService], // CronService],
+  providers: [Lecture, Section, Courses, CoursesService, CronService],
   exports: [Lecture, Section, Courses],
 })
 export class CoursesModule {}
