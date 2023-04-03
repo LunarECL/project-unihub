@@ -22,7 +22,6 @@ interface CardProps {
 
 export function Card(props: CardProps) {
   const theme = useTheme();
-  console.log(props.refVideo?.current?.srcObject);
   const [showControls, setShowControls] = useState(false);
   const [isMuted, setIsMuted] = useState(false);
 
@@ -90,7 +89,7 @@ export function Card(props: CardProps) {
           style={{ fontSize: fontSize + 'px' }}
           onClick={handleScreenStream}
         />
-        <MicIcon
+        {/* <MicIcon
           className="icon-element inactive"
           style={{
             display: isMuted ? 'none' : 'flex',
@@ -107,7 +106,7 @@ export function Card(props: CardProps) {
             fontSize: fontSize + 'px',
           }}
           onClick={handleMute}
-        />
+        /> */}
       </div>
     </div>
   );
