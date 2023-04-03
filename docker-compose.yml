@@ -40,6 +40,8 @@ services:
     image: ghcr.io/uoft-utsc-cs-sandbox/unihub/api:latest
     networks:
       - app
+    depends_on:
+      - db
     restart: always
     env_file:
       - .env
@@ -70,6 +72,19 @@ services:
       - 6379:6379
     networks:
       - app
+    restart: always
+
+  db:
+    image: mariadb:10.5
+    environment:
+      - MYSQL_ROOT_PASSWORD=test
+      - MYSQL_DATABASE=unihub
+    ports:
+      - 3306:3306
+    networks:
+      - app
+    volumes:
+      - ./data:/var/lib/mysql
     restart: always
 
 volumes:
