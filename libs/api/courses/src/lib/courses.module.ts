@@ -6,7 +6,7 @@ import { Section } from './entities/section.entity';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CoursesController } from './courses.controller';
 import { CoursesService } from './courses.service';
-import {CronService} from "./cron.service";
+import { CronService } from './cron.service';
 
 @Module({
   imports: [
