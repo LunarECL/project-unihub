@@ -116,12 +116,12 @@ export function DisplayRoom(props: DisplayRoomProps) {
 
     */
     iceServers: [
-      {
-        urls: 'stun:stun.l.google.com:19302',
-      },
       // {
-      //   urls: 'stun:relay.metered.ca:80',
+      //   urls: 'stun:stun.l.google.com:19302',
       // },
+      {
+        urls: 'stun:relay.metered.ca:80',
+      },
       // {
       //   urls: 'turn:relay.metered.ca:80',
       //   username: 'bc990bbaf8701c19cbfd8fb3',
@@ -143,7 +143,8 @@ export function DisplayRoom(props: DisplayRoomProps) {
   };
 
   useEffect(() => {
-    signal ||= new IonSFUJSONRPCSignal('wss://unihub.today/ws');
+    // signal ||= new IonSFUJSONRPCSignal('wss://unihub.today/ws');
+    signal ||= new IonSFUJSONRPCSignal('ws://localhost:8000/ws');
     client ||= new Client(signal, config);
     signal.onopen = () => {
       client.join(roomId, uid);

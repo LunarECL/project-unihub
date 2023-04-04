@@ -17,7 +17,7 @@
 }
 
 .sideBarContent {
-  top: 70px;
+  top: 60px;
   width: 25%;
   display: block;
 }
@@ -32,6 +32,7 @@
   border-color: #0f1225;
   font-size: 84%;
   width: 6%;
+  min-width: fit-content;
   height: 5%;
   padding: 0;
   margin: 0.25%;
@@ -53,4 +54,81 @@
 .filterBtn:active {
   box-shadow: 0 1px #666;
   transform: translateY(3px);
+}
+
+/* for mobile */
+@media (max-width: 952px) {
+  .mapSideBar {
+    width: 70%;
+  }
+
+  .sideBarContent {
+    width: 30%;
+  }
+
+  .filterBtn {
+    width: 10%;
+    padding: 2px;
+  }
+}
+
+@media (max-width: 768px) {
+  .mapSideBar {
+    width: 60%;
+  }
+
+  .sideBarContent {
+    width: 40%;
+  }
+
+  .filterBtn {
+    width: 10%;
+    padding: 2px;
+  }
+}
+
+@media (max-width: 576px) {
+  .mapSideBar {
+    width: 50%;
+  }
+
+  .sideBarContent {
+    width: 50%;
+  }
+
+  .filterBtn {
+    width: 10%;
+    padding: 2px;
+  }
+}
+
+@media (max-width: 480px) {
+  .mapSideBar {
+    width: 40%;
+  }
+
+  .sideBarContent {
+    width: 60%;
+  }
+
+  .filterBtn {
+    width: 10%;
+    padding: 2px;
+  }
+}
+
+/* iPhone 12 */
+@media (max-width: 393px) {
+  .mapSideBar {
+    width: 30%;
+  }
+
+  .sideBarContent {
+    width: 70%;
+  }
+
+  .filterBtn {
+    width: 10%;
+    padding: 2px;
+  }
 }
