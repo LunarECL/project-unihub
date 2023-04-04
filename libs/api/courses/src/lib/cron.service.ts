@@ -23,7 +23,7 @@ export class CronService implements OnModuleInit {
     await this.runScheduledTask(); // Run the task when the server starts up
   }
 
-  @Cron('0 0 * * * *') // run at midnight every day
+  @Cron('0 0 1 7 * *') // Run every July 1st at 00:00:00
   async runScheduledTask() {
     // Add your function to be run here
     console.log('scheduleCourse:  Crawling start');
@@ -31,6 +31,25 @@ export class CronService implements OnModuleInit {
   }
 
   async task() {
+    const currentDate = new Date();
+    const targetDate = new Date(currentDate.getFullYear(), 6, 1); // July 1st
+
+    if (
+      currentDate.getMonth() === targetDate.getMonth() &&
+      currentDate.getDate() === targetDate.getDate()
+    ) {
+      console.log('scheduleCourse:  Data delete');
+      await this.coursesRepository.clear();
+      await this.sectionRepository.clear();
+      await this.lectureRepository.clear();
+    }
+    //check data exist
+    const check = await this.coursesRepository.find();
+    if (check.length > 0) {
+      console.log('scheduleCourse:  Data exist');
+      return;
+    }
+
     const url = process.env.COURSE_SCHEDULE_URL as string;
     const body2 = 'coursecode=&instructor=&courseTitle=';
     let body = '';
