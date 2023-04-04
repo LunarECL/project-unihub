@@ -119,24 +119,24 @@ export function DisplayRoom(props: DisplayRoomProps) {
       {
         urls: 'stun:stun.l.google.com:19302',
       },
-      {
-        urls: 'stun:relay.metered.ca:80',
-      },
-      {
-        urls: 'turn:relay.metered.ca:80',
-        username: 'bc990bbaf8701c19cbfd8fb3',
-        credential: 'E4kGgiPJE/Ry3OuJ',
-      },
-      {
-        urls: 'turn:relay.metered.ca:443',
-        username: 'bc990bbaf8701c19cbfd8fb3',
-        credential: 'E4kGgiPJE/Ry3OuJ',
-      },
-      {
-        urls: 'turn:relay.metered.ca:443?transport=tcp',
-        username: 'bc990bbaf8701c19cbfd8fb3',
-        credential: 'E4kGgiPJE/Ry3OuJ',
-      },
+      // {
+      //   urls: 'stun:relay.metered.ca:80',
+      // },
+      // {
+      //   urls: 'turn:relay.metered.ca:80',
+      //   username: 'bc990bbaf8701c19cbfd8fb3',
+      //   credential: 'E4kGgiPJE/Ry3OuJ',
+      // },
+      // {
+      //   urls: 'turn:relay.metered.ca:443',
+      //   username: 'bc990bbaf8701c19cbfd8fb3',
+      //   credential: 'E4kGgiPJE/Ry3OuJ',
+      // },
+      // {
+      //   urls: 'turn:relay.metered.ca:443?transport=tcp',
+      //   username: 'bc990bbaf8701c19cbfd8fb3',
+      //   credential: 'E4kGgiPJE/Ry3OuJ',
+      // },
     ],
 
     codec: 'vp8',
