@@ -18,7 +18,7 @@ export function DisplaySideBar(props: DisplaySideBarProps) {
   const theme = useTheme();
 
   return (
-    <div>
+    <div className="side-bar">
       <div
         className="side-bar-header"
         style={{ borderBottomColor: theme.palette.secondary.main }}

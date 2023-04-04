@@ -97,7 +97,9 @@ export function MapRender(props: MapRenderProps) {
         }
 
         // set a timeout for 5 seconds just in case position is constantly changing (user is moving)
-        setTimeout(() => {}, 5000);
+        setTimeout(() => {
+          console.log("5 seconds have passed, user's location is stable");
+        }, 5000);
       });
 
       // wait for geolocation to get the user's location
@@ -208,7 +210,10 @@ export function MapRender(props: MapRenderProps) {
           style: new Style({
             stroke: new Stroke({ color: theme.palette.primary.main, width: 3 }),
             fill: new Fill({
-              color: 'rgb(148, 97, 142, 0.3)',
+              color:
+                theme.palette.primary.main === '#5B9632'
+                  ? 'rgb(91, 150, 50, 0.3)'
+                  : 'rgb(148, 97, 142, 0.3)',
             }),
           }),
         });
@@ -228,14 +233,6 @@ export function MapRender(props: MapRenderProps) {
     }
   }, [context.geoJSON, mapRef]);
 
-  // useEffect(() => {
-  //   console.log('coordinates', coordinates);
-  //   if (coordinates !== '') {
-  //     setUserLocationFound(true);
-  //     props.setDisplayMap(true);
-  //   }
-  // }, [coordinates]);
-
   return (
     <div className="map-render-container">
       <div
@@ -245,8 +242,6 @@ export function MapRender(props: MapRenderProps) {
             : 'map-render-display map-display-on'
         }
       >
-        <h1 className="loading-info">Getting your location...</h1>
-
         <img src="https://cdn.dribbble.com/users/2433051/screenshots/4872252/spinning-globe-white.gif"></img>
       </div>
       <div

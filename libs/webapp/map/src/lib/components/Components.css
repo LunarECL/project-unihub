@@ -10,7 +10,7 @@
 }
 
 .panel:hover {
-  background-color: white;
+  background-color: rgb(75, 71, 71);
   cursor: pointer;
 }
 

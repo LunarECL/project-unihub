@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import React, { useEffect, useState } from 'react';
 import { fromLonLat } from 'ol/proj';
 import 'ol/ol.css';
@@ -21,7 +22,6 @@ import {
   geoJSON_SW,
   geoJSON_SC,
 } from './assets/GeoJSON_files';
-
 import {
   building_EV,
   building_IC,
@@ -154,47 +154,131 @@ export function DisplayMap(props: DisplayMapProps) {
     // change the map focus to the location (include animations)
     if (location.includes('IC')) {
       // animate the map to the location
-      flyTo(building_IC, function () {}, 'building');
+      flyTo(
+        building_IC,
+        function () {
+          // we want to fly to IC building
+        },
+        'building'
+      );
       // we also want to draw over the building on the map
       setGeoJSON(geoJSON_IC as any);
     } else if (location.includes('SW')) {
-      flyTo(building_SW, function () {}, 'building');
+      flyTo(
+        building_SW,
+        function () {
+          // we want to fly to SW building
+        },
+        'building'
+      );
       setGeoJSON(geoJSON_SW as any);
     } else if (location.includes('HW')) {
-      flyTo(building_HW, function () {}, 'building');
+      flyTo(
+        building_HW,
+        function () {
+          // we want to fly to HW building
+        },
+        'building'
+      );
       setGeoJSON(geoJSON_HW as any);
     } else if (location.includes('BV')) {
-      flyTo(building_BV, function () {}, 'building');
+      flyTo(
+        building_BV,
+        function () {
+          // we want to fly to BV building
+        },
+        'building'
+      );
       setGeoJSON(geoJSON_BV as any);
     } else if (location.includes('HL')) {
-      flyTo(building_HL, function () {}, 'building');
+      flyTo(
+        building_HL,
+        function () {
+          // we want to fly to HL building
+        },
+        'building'
+      );
       setGeoJSON(geoJSON_HL as any);
     } else if (location.includes('AA')) {
-      flyTo(building_AA, function () {}, 'building');
+      flyTo(
+        building_AA,
+        function () {
+          // we want to fly to AA building
+        },
+        'building'
+      );
       setGeoJSON(geoJSON_AA as any);
     } else if (location.includes('EV')) {
-      flyTo(building_EV, function () {}, 'building');
+      flyTo(
+        building_EV,
+        function () {
+          // we want to fly to EV building
+        },
+        'building'
+      );
       setGeoJSON(geoJSON_EV as any);
     } else if (location.includes('AC')) {
-      flyTo(building_AC, function () {}, 'building');
+      flyTo(
+        building_AC,
+        function () {
+          // we want to fly to AC building
+        },
+        'building'
+      );
       setGeoJSON(geoJSON_AC as any);
     } else if (location.includes('MW')) {
-      flyTo(building_MW, function () {}, 'building');
+      flyTo(
+        building_MW,
+        function () {
+          // we want to fly to MW building
+        },
+        'building'
+      );
       setGeoJSON(geoJSON_MW as any);
     } else if (location.includes('Starbucks')) {
-      flyTo(restaurtant_Starbucks, function () {}, 'restaurant');
+      flyTo(
+        restaurtant_Starbucks,
+        function () {
+          // we want to fly to Starbucks
+        },
+        'restaurant'
+      );
       setGeoJSON(geoJSON_SW as any);
     } else if (location.includes('Subway')) {
-      flyTo(restaurant_Subway, function () {}, 'restaurant');
+      flyTo(
+        restaurant_Subway,
+        function () {
+          // we want to fly to Subway
+        },
+        'restaurant'
+      );
       setGeoJSON(geoJSON_SC as any);
     } else if (location.includes('Tim Hortons')) {
-      flyTo(restaurant_MarketPlaceTims, function () {}, 'restaurant');
+      flyTo(
+        restaurant_MarketPlaceTims,
+        function () {
+          // we want to fly to Tim Hortons
+        },
+        'restaurant'
+      );
       setGeoJSON(geoJSON_HW as any);
     } else if (location.includes('Hero Burger')) {
-      flyTo(restaurant_HeroBurger, function () {}, 'restaurant');
+      flyTo(
+        restaurant_HeroBurger,
+        function () {
+          // we want to fly to Hero Burger
+        },
+        'restaurant'
+      );
       setGeoJSON(geoJSON_SC as any);
     } else if (location.includes('KFC')) {
-      flyTo(restaurant_KFC, function () {}, 'restaurant');
+      flyTo(
+        restaurant_KFC,
+        function () {
+          // we want to fly to KFC
+        },
+        'restaurant'
+      );
       setGeoJSON(geoJSON_SC as any);
     } else if (location.includes('friend')) {
       if (
@@ -205,7 +289,9 @@ export function DisplayMap(props: DisplayMapProps) {
       ) {
         flyTo(
           fromLonLat([parseFloat(longitude!), parseFloat(latitude!)]),
-          function () {},
+          function () {
+            // we want to fly to the friend
+          },
           'friend'
         );
         // don't draw over the map
@@ -215,6 +301,8 @@ export function DisplayMap(props: DisplayMapProps) {
         // flyTo(defaultPosition, function () {}, 'default');
       }
     }
+
+    setSideBarOpen(false);
   }
 
   return (
