@@ -3,7 +3,6 @@
   width: 25%;
   position: fixed;
   right: 0;
-  background-color: #1e1e1e;
   overflow: scroll;
 }
 
@@ -12,7 +11,6 @@
 }
 
 .dropdown {
-  color: #1e1e1e;
   padding: 10px;
   border-radius: 5px;
   border: none;
