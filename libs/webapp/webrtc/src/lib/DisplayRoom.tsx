@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import React, { useEffect, useState, useRef } from 'react';
 import { Client, LocalStream } from 'ion-sdk-js';
 import { IonSFUJSONRPCSignal } from 'ion-sdk-js/lib/signal/json-rpc-impl';
@@ -111,7 +110,6 @@ export function DisplayRoom(props: DisplayRoomProps) {
         urls: 'stun:stun.l.google.com:19302',
       },
     ],
-
     codec: 'vp8',
   };
 

@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import './Components.css';
 import { List, ListItem } from '@mui/material';
 import { useGetUserLectures } from '@unihub/webapp/api';
