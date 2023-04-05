@@ -10,7 +10,7 @@ export class AppController {
 
   @Get()
   getHello(): string {
-    return 'ShareDoc API'
+    return 'ShareDoc API';
   }
 
   @Get('documents')

@@ -211,12 +211,12 @@ export function Sharedoc() {
                 </Grid>
                 <Grid item xs={12}>
                   {custAlert && (
-                  <Alert severity={custAlert.type}>
-                    <AlertTitle>
-                      {custAlert.type === 'success' ? 'Success' : 'Error'}
-                    </AlertTitle>
-                    {custAlert!.message}
-                  </Alert>
+                    <Alert severity={custAlert.type}>
+                      <AlertTitle>
+                        {custAlert.type === 'success' ? 'Success' : 'Error'}
+                      </AlertTitle>
+                      {custAlert!.message}
+                    </Alert>
                   )}
                 </Grid>
               </>

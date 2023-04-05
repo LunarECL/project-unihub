@@ -1,4 +1,4 @@
-import {Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@unihub/api/auth';
 import { Attribute, ShareDoc } from '@unihub/api/sharedoc';
