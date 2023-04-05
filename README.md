@@ -1,6 +1,6 @@
 # UnIHuB
 
-UnIHuB is a comprehensive platform designed to bring all the tools and resources students need in their academic career at university. It serves as a hub of information and enables interaction with other students. UnIHuB amalgamates various features such as a Reddit-like forum, study groups with video chatting, live note-taking during lectures, timetable sharing, and much more.
+UnIHuB is a comprehensive platform designed to bring all the tools and resources students need in their academic career at university. It serves as a hub of information and enables interaction with other students. UnIHuB amalgamates various features such as tracking friends on campus, study groups with video chatting, live note-taking during lectures, personalized timetables, and much more.
 
 ## Team: The Janitors
 
@@ -16,10 +16,8 @@ UnIHuB is a comprehensive platform designed to bring all the tools and resources
 
 - Auth0 (Authorization)
 - SendGrid (Email delivery)
-- Push API (Notifications)
+- OpenLayers (Map/Location tracking) 
 - ShareDB (Collaborative document editing)
-- Google Calendar (Timetable management)
-- MediaSoup (WebRTC for video chat)
 - Pion/ion-sfu (WebRTC for video chat)
 - And more...
 
@@ -71,6 +69,34 @@ The project is structured into two main parts: the frontend (React) and the back
 - Email delivery setup
 - Course timetable management
 - Job and message handling with Bull (Premium Queue package)
+
+### Final version
+
+- Location tracking and course display on campus using OpenLayers
+- Adding and requesting friends
+- Finalized deployment setup
+- Polished UI
+
+## Project information
+
+### Complexity
+
+- Auth0: 1 pt
+- Email delivery: 2pt
+- ShareDB: 2pt
+- Bull/Queue package: 3 pt
+- OpenLayers: 1pt
+
+#### Bonus Complexity
+
+- WebRTC: 2pt (Many to many)
+
+
+### Video Demo
+[Video demo link](https://discord.com/channels/1080712220926820352/1080712222789079102/1091476587045724170)
+
+### Deployed version
+[UnIHub](https://unihub.today/)
 
 ## Nx Workspace
 
