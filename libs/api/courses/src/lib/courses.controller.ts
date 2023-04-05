@@ -2,13 +2,11 @@ import {
   Controller,
   Get,
   Post,
-  Put,
   Delete,
   Param,
   Body,
   UseGuards,
 } from '@nestjs/common';
-// import { CurrentUser } from '@unihub/api/auth';
 import { CurrentUser } from '../../../auth/src/lib/current-user.decorator';
 import { CoursesService } from './courses.service';
 import { AuthGuard } from '@nestjs/passport';
@@ -30,7 +28,10 @@ export class CoursesController {
 
   @Post('/user/lecture')
   async addUserLecture(@CurrentUser() { userId }, @Body() body): Promise<any> {
-    console.log('body', body);
+    //Check the body
+    if (!body.sectionId) {
+      return { error: 'No sectionId provided', status: 400 };
+    }
     return await this.coursesService.addToUserLecture(userId, body.sectionId);
   }
 
@@ -39,7 +40,9 @@ export class CoursesController {
     @CurrentUser() { userId },
     @Param('sectionId') sectionId: string
   ): Promise<any> {
-    console.log('sectionId', sectionId);
+    if (!sectionId) {
+      return { error: 'No sectionId provided', status: 400 };
+    }
     return await this.coursesService.removeFromUserLecture(userId, sectionId);
   }
 } //end CoursesController

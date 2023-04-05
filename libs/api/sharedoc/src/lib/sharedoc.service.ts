@@ -1,12 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Courses, Lecture, Section } from '@unihub/api/courses';
-import { Connection, Equal, In, IsNull, Not, Repository } from 'typeorm';
+import { Connection, IsNull, Not, Repository } from 'typeorm';
 import { ShareDoc } from './entities/sharedoc.entity';
 import { Op } from './entities/ops.entity';
 import { Attribute } from './entities/attributes.entity';
 import { User } from '@unihub/api/auth';
-// import { CoursesController } from '@unihub/api/courses';
 
 @Injectable()
 export class DocumentService {
@@ -77,11 +76,6 @@ export class DocumentService {
     } else {
       return;
     }
-
-    // //Check if there are any documents in the database
-    // const document = await this.documentRepo.find({
-    //   where: { lecture: { id: lectureId } },
-    // });
 
     const lectureDocuments = await this.documentRepo.find({
       where: [{ lecture: { id: lectureId }, lectureNumber: Not(IsNull()) }],

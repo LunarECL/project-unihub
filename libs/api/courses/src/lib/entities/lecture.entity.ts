@@ -1,8 +1,6 @@
 import {
   Column,
   Entity,
-  JoinTable,
-  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -35,11 +33,9 @@ export class Lecture {
   @UpdateDateColumn()
   updated: Date;
 
-  // @Column({ nullable: false })
   @ManyToOne(() => Section, (section: Section) => section.lectures)
   section: Section;
 
-  // @Column({ nullable: false })
   @OneToMany(() => ShareDoc, (shareDoc) => shareDoc.lecture)
   shareDoc: [];
 } //end class Courses

@@ -1,15 +1,12 @@
-import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import {Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AuthModule } from '@unihub/api/auth';
 import { User } from '@unihub/api/auth';
 import { Attribute, ShareDoc } from '@unihub/api/sharedoc';
-import { Repository, Connection, In } from 'typeorm';
+import { Repository, Connection } from 'typeorm';
 import { Courses } from './entities/courses.entity';
 import { Lecture } from './entities/lecture.entity';
 import { Section } from './entities/section.entity';
 import { Op } from '@unihub/api/sharedoc';
-import { FindOperator } from 'typeorm';
-// import dataSource from 'typeorm';
 
 @Injectable()
 export class CoursesService {
@@ -113,7 +110,7 @@ export class CoursesService {
       relations: ['section'],
     });
 
-    for (let lecture of lectures) {
+    for (const lecture of lectures) {
       const documents = await documentRepository.find({
         where: {
           lecture: {
@@ -127,13 +124,13 @@ export class CoursesService {
         relations: ['users'],
       });
 
-      let documentsToRemove: ShareDoc[] = [];
+      const documentsToRemove: ShareDoc[] = [];
 
       if (documents.length > 0) {
         //Find the ops with the document id
         const ops = await this.connection.getRepository(Op);
 
-        for (let document of documents) {
+        for (const document of documents) {
           if (document.users.length > 0) {
             document.users = document.users.filter(
               (u) => u.userId !== user.userId
@@ -149,7 +146,7 @@ export class CoursesService {
             });
 
             if (opsToDelete.length > 0) {
-              for (let op of opsToDelete) {
+              for (const op of opsToDelete) {
                 const attributes = this.connection.getRepository(Attribute);
 
                 const attributesToDelete = await attributes.find({

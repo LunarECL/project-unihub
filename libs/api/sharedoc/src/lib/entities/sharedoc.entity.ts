@@ -22,7 +22,6 @@ export class ShareDoc {
   @Column({ nullable: true })
   userTitle: string; //title of the document
 
-  // @Column({ nullable: false })
   @ManyToOne(() => Lecture, (lecture) => lecture.shareDoc)
   lecture: Lecture;
 
