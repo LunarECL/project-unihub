@@ -6,6 +6,12 @@
   left: 10%;
 }
 
+@media screen and (max-width: 600px) {
+  #doc-container {
+    top: 15%;
+  }
+}
+
 #header {
   font-size: 24px;
   font-weight: lighter;
@@ -19,13 +25,34 @@
   font-size: 24px;
 }
 
+@media screen and (max-width: 600px) {
+  #DocTitle {
+    font-size: 15px;
+  }
+}
+
 #BackButton {
   position: absolute;
   right: 0px;
 }
 
+@media screen and (max-width: 600px) {
+  #BackButton {
+    width: 70px;
+    height: 30px;
+    font-size: 12px !important;
+  }
+}
+
 #ShareButton {
   left: -5px;
+}
+
+/* when the screen is minimized decrease the font size */
+@media screen and (max-width: 600px) {
+  #ShareButton {
+    font-size: 10px !important;
+  }
 }
 
 #AddUserDialog {
