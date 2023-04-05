@@ -1,13 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Box,
-  Button,
-  Container,
-  Grid,
-  TextField,
-  Typography,
-  makeStyles,
-} from '@mui/material';
+import { Button, Container, Grid, TextField, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import placeholder from '../assets/placeholder.png';
 import { useTheme } from '@mui/material/styles';
@@ -16,14 +8,8 @@ import { useTheme } from '@mui/material/styles';
 export interface JoinRoomProps {}
 
 export function JoinRoom(props: JoinRoomProps) {
-  const theme = useTheme();
-  const [roomLink, setRoomLink] = useState('');
   const [meetingCode, setMeetingCode] = useState('');
   const navigate = useNavigate();
-
-  const handleRoomLinkChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setRoomLink(event.target.value);
-  };
 
   const handleJoinRoom = () => {
     // Code to handle joining the room
@@ -44,23 +30,12 @@ export function JoinRoom(props: JoinRoomProps) {
   };
 
   const headingStyle = {
-    fontSize: 48,
+    fontSize: 40,
     fontWeight: 'bold',
     marginBottom: 4,
     textAlign: 'center' as const,
     position: 'relative' as const,
     paddingBottom: 50,
-  };
-
-  // Can't change the background colour of the image
-  const capStyle = {
-    position: 'absolute' as const,
-    top: -35,
-    left: -30,
-    transformOrigin: 'top left',
-    transform: 'rotate(-20deg)',
-    height: 104,
-    color: theme.palette.primary.main,
   };
 
   const buttonStyle = {
@@ -70,10 +45,9 @@ export function JoinRoom(props: JoinRoomProps) {
     height: '70%',
   };
   return (
-    <Container maxWidth="sm" style={containerStyle}>
+    <Container maxWidth="xs" style={containerStyle}>
       <Typography variant="h1" style={headingStyle}>
         Welcome to UniHub Video Chat!
-        <img src={placeholder} alt="UniHub Cap" height="64" style={capStyle} />
       </Typography>
       <Grid container spacing={1} alignItems="center" justifyContent="center">
         <Grid item xs={12}>
