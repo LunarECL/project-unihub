@@ -116,8 +116,8 @@ export function DisplayRoom(props: DisplayRoomProps) {
   };
 
   useEffect(() => {
-    // signal ||= new IonSFUJSONRPCSignal('wss://unihub.today/ws');
-    signal ||= new IonSFUJSONRPCSignal('ws://localhost:8000/ws');
+    signal ||= new IonSFUJSONRPCSignal('wss://unihub.today/ws');
+    // signal ||= new IonSFUJSONRPCSignal('ws://localhost:8000/ws');
     client ||= new Client(signal, config);
     signal.onopen = () => {
       client.join(roomId, uid);
