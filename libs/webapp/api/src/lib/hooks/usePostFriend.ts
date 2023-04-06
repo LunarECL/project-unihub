@@ -3,7 +3,7 @@ import { useMutation, UseMutationResult } from 'react-query';
 
 async function postFriend(friendEmail: string): Promise<any> {
   const url = `/api/friends`;
-  // const url = 'http://localhost:3333/apiapi/friends`;
+  // const url = '/apiapi/friends`;
 
   const res = await axios.post(url, {
     friendEmail,
