@@ -1,4 +1,4 @@
-import { ConsoleLogger, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Friends } from './entities.ts/friends.entity';
 import { Connection, Repository } from 'typeorm';
@@ -131,16 +131,6 @@ export class FriendService {
       });
 
       let lat, long, time;
-
-      /*
-
-      // the constraints for the map
-    extent: boundingExtent([
-      fromLonLat([-79.1951, 43.78]),
-      fromLonLat([-79.1751, 43.7944]),
-    ]),
-
-      */
 
       if (!friendLocation) {
         // lat or lon can never be exactly 360, will use this as a flag for either no location or not in range of University

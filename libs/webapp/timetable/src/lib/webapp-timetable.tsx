@@ -14,18 +14,19 @@ import {
   MenuItem,
   Grid,
   CircularProgress,
+  AlertColor,
+  AlertTitle,
+  Alert,
 } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useGetCourses } from '@unihub/webapp/api';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { usePostUserLecture } from '@unihub/webapp/api';
 import { useGetUserLectures } from '@unihub/webapp/api';
 import { useDeleteUserLecture } from '@unihub/webapp/api';
 import styles from './webapp-timetable.module.css';
 import { useTheme } from '@mui/material/styles';
-/* eslint-disable-next-line */
-export interface WebappTimetableProps {}
 
 function createData(
   time: string,
@@ -43,7 +44,7 @@ function createCourseData(
   courseTitle: string,
   sec_cd: string,
   prof: string,
-  section: string, //sectionType + sectionNumber
+  section: string,
   deliveryMode: string
 ) {
   return { programCode, courseTitle, sec_cd, prof, section, deliveryMode };
@@ -90,13 +91,19 @@ const searchOpt = [
 let allCourses: any[] = [];
 let colIndex = 0;
 
-export function WebappTimetable(props: WebappTimetableProps) {
+interface IAlert {
+  type: AlertColor;
+  message: string;
+}
+
+export function WebappTimetable() {
   const theme = useTheme();
   const [coursesRows, setCoursesRows] = useState<any>([]);
   const [courses, setCourses] = useState<any>([]);
   const [allCoursesRows, setAllCoursesRows] = useState<any>([]);
   const [search, setSearch] = useState('Code');
   const [loading, setLoading] = useState(true);
+  const [alert, setAlert] = useState<IAlert | null>(null);
 
   const postUserLectureMutation = usePostUserLecture();
 
@@ -142,7 +149,6 @@ export function WebappTimetable(props: WebappTimetableProps) {
     });
 
     function loadCourses() {
-      //May need to do pagination here because it takes too long
       useGetCourses().then((courses) => {
         setCourses(courses);
         const rows = courses.map((course: any) => {
@@ -183,8 +189,6 @@ export function WebappTimetable(props: WebappTimetableProps) {
           '';
         setCoursesRows(allCoursesRows);
       }
-
-      console.log(open); // add this line
     };
 
   const { mutate: deleteUserLecture } = useDeleteUserLecture();
@@ -228,8 +232,7 @@ export function WebappTimetable(props: WebappTimetableProps) {
 
         const date = new Date(lecture.startTime);
 
-        let startTime = date.getUTCHours(); //FOR DOCKER
-        // let startTime = date.getHours();
+        let startTime = date.getUTCHours();
 
         let endTime = startTime + lecture.totalMinutes / 60;
 
@@ -241,11 +244,11 @@ export function WebappTimetable(props: WebappTimetableProps) {
           startTime = startTime - 12;
         }
 
-        let iteration: number = 0;
+        let iteration = 0;
 
         //Colour in the cells of the timetable
         for (let i = startTime; i < endTime; i++, iteration++) {
-          let row = rows.find((row) => row.time === i + ':00');
+          const row = rows.find((row) => row.time === i + ':00');
           if (row) {
             const cell = document.querySelector(
               `[data-day="${day}-${row.time}"]`
@@ -344,10 +347,11 @@ export function WebappTimetable(props: WebappTimetableProps) {
                     (dateCourseLecture >= dateLecture &&
                       dateCourseLecture <= newDate2)
                   ) {
-                    //Conflict
-                    alert(
-                      `The course you are trying to add has a conflict with ${course.course.programCode} already in the timetable. We will not add it to your courses.`
-                    );
+                    setAlert({
+                      type: 'error',
+                      message: `The course you are trying to add has a conflict with ${course.course.programCode} already in the timetable. We will not add it to your courses.`,
+                    });
+
                     isConflict = true;
                   }
                 }
@@ -359,6 +363,10 @@ export function WebappTimetable(props: WebappTimetableProps) {
     }
 
     if (isConflict) {
+      toggleDrawer(false)();
+      setTimeout(() => {
+        setAlert(null);
+      }, 3000);
       return;
     }
 
@@ -370,7 +378,15 @@ export function WebappTimetable(props: WebappTimetableProps) {
 
   return (
     <>
-      <Stack direction="row" spacing={10} className={styles.Stack}>
+      {alert && (
+        <Alert severity={alert.type} className={styles.alert}>
+          <AlertTitle>
+            {alert.type === 'success' ? 'Success' : 'Error'}
+          </AlertTitle>
+          {alert!.message}
+        </Alert>
+      )}
+      <Stack direction="row" spacing={'5%'} className={styles.Stack}>
         <TableContainer>
           <Table
             className={styles.Table}

@@ -64,6 +64,7 @@ export function DisplayRoom(props: DisplayRoomProps) {
   const [noRemoteStreams, setNoRemoteStreams] = useState<boolean>(true);
   const [disabled, setDisabled] = useState<boolean>(false);
   const [modalOpen, setModalOpen] = useState<boolean>(false);
+  const [issuesModalOpen, setIssuesModalOpen] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
 
   const postInvitationEmailMutation = usePostInvitationEmail();
@@ -106,54 +107,23 @@ export function DisplayRoom(props: DisplayRoomProps) {
   const uid = undefined as unknown as string; // undefined because we are using uid generated from ion-sfu
 
   const config: Configuration = {
-    /*
-      STUN server is used to determine the public IP address of the client.
-      It is used to establish a direct connection between the client and the server.
-      It is also used to determine the public IP address of the client when the client is behind a NAT.
-
-      sometimes, the STUN server is blocked by the firewall, so we need to use TURN server.
-      TURN server is used to relay the media stream between the client and the server.
-      It is also used to relay the media stream between the client and the server when the client is behind a NAT.
-
-
-    */
     iceServers: [
       {
         urls: 'stun:stun.l.google.com:19302',
       },
-      // {
-      //   urls: 'stun:relay.metered.ca:80',
-      // },
-      // {
-      //   urls: 'turn:relay.metered.ca:80',
-      //   username: 'bc990bbaf8701c19cbfd8fb3',
-      //   credential: 'E4kGgiPJE/Ry3OuJ',
-      // },
-      // {
-      //   urls: 'turn:relay.metered.ca:443',
-      //   username: 'bc990bbaf8701c19cbfd8fb3',
-      //   credential: 'E4kGgiPJE/Ry3OuJ',
-      // },
-      // {
-      //   urls: 'turn:relay.metered.ca:443?transport=tcp',
-      //   username: 'bc990bbaf8701c19cbfd8fb3',
-      //   credential: 'E4kGgiPJE/Ry3OuJ',
-      // },
     ],
-
     codec: 'vp8',
   };
 
   useEffect(() => {
-    signal ||= new IonSFUJSONRPCSignal('wss://unihub.today/ws');
-    // signal ||= new IonSFUJSONRPCSignal('ws://localhost:8000/ws');
+    // signal ||= new IonSFUJSONRPCSignal('wss://unihub.today/ws');
+    signal ||= new IonSFUJSONRPCSignal('ws://localhost:8000/ws');
     client ||= new Client(signal, config);
     signal.onopen = () => {
       client.join(roomId, uid);
     };
 
     client.ontrack = (track: MediaStreamTrack, stream: MediaStream) => {
-      console.log('ontrack', track, stream);
       if (!streams.current[stream.id]) {
         setNoRemoteStreams(false);
         // create a video element
@@ -174,7 +144,6 @@ export function DisplayRoom(props: DisplayRoomProps) {
             streams.current[stream.id].videoElement.remove();
             delete streams.current[stream.id];
             displayRemoteStreams();
-            enableAudio();
           }
 
           if (Object.keys(streams.current).length === 0) {
@@ -183,7 +152,6 @@ export function DisplayRoom(props: DisplayRoomProps) {
         };
 
         displayRemoteStreams();
-        enableAudio();
       }
     };
 
@@ -202,6 +170,10 @@ export function DisplayRoom(props: DisplayRoomProps) {
       handleCameraStream(false);
     } else {
       handleCameraStream(true);
+      // turn off screen
+      if (screenOn) {
+        handleScreenStream(false);
+      }
     }
 
     //TIMEOUT
@@ -216,6 +188,11 @@ export function DisplayRoom(props: DisplayRoomProps) {
       handleScreenStream(false);
     } else {
       handleScreenStream(true);
+
+      // turn off camera
+      if (cameraOn) {
+        handleCameraStream(false);
+      }
     }
 
     //TIMEOUT
@@ -234,14 +211,11 @@ export function DisplayRoom(props: DisplayRoomProps) {
       })
         .then((media) => {
           if (pubVideo.current) {
-            // to flip the video so it isnnt mirrored
-            pubVideo.current.style.transform = 'scaleX(-1)';
             pubVideo.current.srcObject = media;
             pubVideo.current.autoplay = true;
             pubVideo.current.controls = false;
             pubVideo.current.muted = true;
 
-            console.log('publishing media', media);
             client.publish(media);
 
             setPubShow('');
@@ -296,17 +270,6 @@ export function DisplayRoom(props: DisplayRoomProps) {
     setScreenOn(!screenOn);
   };
 
-  const enableAudio = () => {
-    // inside the gridContainer, enable the audio for all the videos
-    const gridContainer = document.getElementById('stream-container');
-    if (gridContainer) {
-      const videos = gridContainer.getElementsByTagName('video');
-      for (let i = 0; i < videos.length; i++) {
-        // videos[i].muted = false;
-      }
-    }
-  };
-
   const displayRemoteStreams = () => {
     const gridContainer = document.getElementById('stream-container');
     if (gridContainer) {
@@ -331,7 +294,6 @@ export function DisplayRoom(props: DisplayRoomProps) {
       videoContainer.classList.add('stream');
 
       videoElement.classList.add('videoEl');
-      videoElement.classList.add('flipped');
 
       const nameDiv = document.createElement('div');
       nameDiv.classList.add('name');
@@ -375,7 +337,6 @@ export function DisplayRoom(props: DisplayRoomProps) {
             videoContainer.classList.add('stream');
 
             videoElement.classList.add('videoEl');
-            videoElement.classList.add('flipped');
 
             const nameDiv = document.createElement('div');
             nameDiv.classList.add('nameEl');
@@ -413,28 +374,9 @@ export function DisplayRoom(props: DisplayRoomProps) {
     setModalOpen(false);
   };
 
-  const handleModalClose = () => {
-    setModalOpen(false);
-  };
-
   useEffect(() => {
     displayRemoteStreams();
-    enableAudio();
   }, [streams.current]);
-
-  const style = {
-    position: 'absolute',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: 400,
-    bgcolor: 'background.paper',
-    border: '2px solid #000',
-    boxShadow: 24,
-    p: 4,
-    display: 'flex',
-    flexDirection: 'column',
-  };
 
   return (
     <div className="App">
@@ -447,13 +389,45 @@ export function DisplayRoom(props: DisplayRoomProps) {
         >
           Invititation Link
         </Button>
+
+        {/* add not working? button */}
+        <Button
+          className="headerBtn"
+          id="bnt_pubcam"
+          onClick={() => setIssuesModalOpen(true)}
+        >
+          Experiencing Issues?
+        </Button>
+
         <Modal
-          open={modalOpen}
-          onClose={handleModalClose}
+          open={issuesModalOpen}
+          onClose={() => setIssuesModalOpen(false)}
           aria-labelledby="simple-modal-title"
           aria-describedby="simple-modal-description"
         >
-          <Box sx={style}>
+          <Box className="modal-box">
+            <Typography id="modal-modal-title" variant="h4" component="h2">
+              Possible Solutions
+            </Typography>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              1. Refresh the page
+            </Typography>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              2. Make sure you are connected to UofT wifi
+            </Typography>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              3. Make sure you are using Google Chrome
+            </Typography>
+          </Box>
+        </Modal>
+
+        <Modal
+          open={modalOpen}
+          onClose={() => setModalOpen(false)}
+          aria-labelledby="simple-modal-title"
+          aria-describedby="simple-modal-description"
+        >
+          <Box className="modal-box">
             <Typography id="modal-modal-title" variant="h6" component="h2">
               Share Room Link
             </Typography>

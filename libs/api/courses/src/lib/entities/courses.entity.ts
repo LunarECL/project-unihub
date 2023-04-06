@@ -1,7 +1,6 @@
 import {
   Column,
   Entity,
-  ManyToMany,
   OneToMany,
   PrimaryColumn,
   UpdateDateColumn,
@@ -25,7 +24,6 @@ export class Courses {
   @UpdateDateColumn()
   updated: Date;
 
-  //   @Column({ nullable: false })
   @OneToMany(() => Section, (section) => section.course)
   sections: Section[];
 } //end class Courses

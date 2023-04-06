@@ -5,7 +5,7 @@ import {
   useGetRequestsFriends,
   usePatchAcceptFriend,
 } from '@unihub/webapp/api';
-import { Grid, List, ListItem, ListSubheader, Typography } from '@mui/material';
+import { Grid, List, ListItem, ListSubheader } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import './FriendList.css';

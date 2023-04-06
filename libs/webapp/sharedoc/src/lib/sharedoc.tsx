@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import * as ShareDB from 'sharedb/lib/client';
 //@ts-ignore
@@ -10,24 +10,29 @@ import {
   Button,
   Typography,
   Grid,
-  CircularProgress,
   Skeleton,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   TextField,
+  Alert,
+  AlertTitle,
+  AlertColor,
 } from '@mui/material';
-import { useGetShareDoc } from '@unihub/webapp/api';
 import { useNavigate, useParams } from 'react-router-dom';
 import { usePostDocumentContent } from '@unihub/webapp/api';
 import { useGetIfUserCanViewDoc } from '@unihub/webapp/api';
 import { usePostShareDocument } from '@unihub/webapp/api';
-export interface SharedocProps {}
 
 ShareDB.types.register(richText.type);
 
-export function Sharedoc(props: SharedocProps) {
+interface IAlert {
+  type: AlertColor;
+  message: string;
+}
+
+export function Sharedoc() {
   const navigate = useNavigate();
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [doc, setDoc] = useState<any>(null);
@@ -35,9 +40,10 @@ export function Sharedoc(props: SharedocProps) {
   const editorRef = useRef<ReactQuill>(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [isUserDoc, setIsUserDoc] = useState(false);
+  const [custAlert, setAlert] = useState<IAlert | null>(null);
 
   const postDocumentContentMutation = usePostDocumentContent();
-  const postShareDocumentMutation = usePostShareDocument();
+  const { mutate: postShareDocument } = usePostShareDocument();
 
   const {
     courseCode = '',
@@ -59,7 +65,6 @@ export function Sharedoc(props: SharedocProps) {
         alert('You are not authorized to view this document');
         navigate(-1);
       } else {
-        // isAuthorized = true; // update state here
         setIsAuthorized(true);
         if (res.isUser) {
           setIsUserDoc(true);
@@ -139,18 +144,31 @@ export function Sharedoc(props: SharedocProps) {
     const userEmail = (
       document.getElementById('user-email') as HTMLInputElement
     ).value;
-    postShareDocumentMutation.mutate(
-      { documentId, userEmail },
-      {
-        onSuccess: (res) => {
-          if (res === false) {
-            alert('User does not exist');
-          } else {
-            alert('User added to document');
-          }
-        },
-      }
-    );
+    postShareDocument({ documentId, userEmail }, {
+      onSuccess: (res) => {
+        if (res === false) {
+          // alert('User does not exist');
+          setAlert({
+            type: 'error',
+            message: 'User sharing could not be completed',
+          });
+
+          setTimeout(() => {
+            setAlert(null);
+          }, 3000);
+        } else {
+          // alert('User added to document');
+          setAlert({
+            type: 'success',
+            message: 'User added to document',
+          });
+
+          setTimeout(() => {
+            setAlert(null);
+          }, 3000);
+        }
+      },
+    });
     setOpenDialog(false);
   };
 
@@ -165,48 +183,55 @@ export function Sharedoc(props: SharedocProps) {
               </Typography>
             </Grid>
             <Grid item xs={4}>
-              <Button
-                //navigate to the previous page
-                onClick={backButton}
-                variant="contained"
-                id="BackButton"
-              >
+              <Button onClick={backButton} variant="contained" id="BackButton">
                 Back
               </Button>
             </Grid>
             {isUserDoc ? (
-              <Grid item xs={8}>
-                <Button
-                  variant="text"
-                  id="ShareButton"
-                  onClick={handleClickOpenDialog}
-                >
-                  Share with other users!
-                </Button>
+              <>
+                <Grid item xs={8}>
+                  <Button
+                    variant="text"
+                    id="ShareButton"
+                    onClick={handleClickOpenDialog}
+                  >
+                    Share with other users!
+                  </Button>
 
-                <Dialog
-                  open={openDialog}
-                  onClose={handleCloseDialog}
-                  id="AddUserDialog"
-                  maxWidth="lg"
-                  PaperProps={{ style: { width: '50%', maxHeight: '90%' } }}
-                >
-                  <DialogTitle>Share with other users on UnIHub!</DialogTitle>
-                  <DialogContent>
-                    <TextField
-                      id="user-email"
-                      label="Enter the user's email"
-                      type="user-email"
-                      variant="standard"
-                      fullWidth
-                    />
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleCloseDialog}>Cancel</Button>
-                    <Button onClick={handleShare}>Share</Button>
-                  </DialogActions>
-                </Dialog>
-              </Grid>
+                  <Dialog
+                    open={openDialog}
+                    onClose={handleCloseDialog}
+                    id="AddUserDialog"
+                    maxWidth="lg"
+                    PaperProps={{ style: { width: '50%', maxHeight: '90%' } }}
+                  >
+                    <DialogTitle>Share with other users on UnIHub!</DialogTitle>
+                    <DialogContent>
+                      <TextField
+                        id="user-email"
+                        label="Enter the user's email"
+                        type="user-email"
+                        variant="standard"
+                        fullWidth
+                      />
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleCloseDialog}>Cancel</Button>
+                      <Button onClick={handleShare}>Share</Button>
+                    </DialogActions>
+                  </Dialog>
+                </Grid>
+                <Grid item xs={12}>
+                  {custAlert && (
+                    <Alert severity={custAlert.type}>
+                      <AlertTitle>
+                        {custAlert.type === 'success' ? 'Success' : 'Error'}
+                      </AlertTitle>
+                      {custAlert!.message}
+                    </Alert>
+                  )}
+                </Grid>
+              </>
             ) : (
               <></>
             )}

@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { usePostFriend, useGetFriends } from '@unihub/webapp/api';
+import { useState } from 'react';
+import { usePostFriend } from '@unihub/webapp/api';
 import FriendsList from './FriendList';
 import './Friends.css';
 import { Grid, Box, Typography, Button, Input, TextField } from '@mui/material';

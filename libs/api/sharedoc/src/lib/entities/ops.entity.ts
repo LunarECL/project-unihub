@@ -1,11 +1,8 @@
 import {
   Column,
   Entity,
-  ManyToMany,
   ManyToOne,
-  OneToMany,
   OneToOne,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { ShareDoc } from './sharedoc.entity';

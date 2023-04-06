@@ -4,14 +4,33 @@
   margin-top: 6%;
 }
 
+@media (max-width: 768px) {
+  .DocumentListDiv {
+    margin-top: 30%;
+  }
+}
+
 .ListTitle {
   font-size: 35px !important;
   margin-bottom: 2px !important;
 }
 
+@media (max-width: 426px) {
+  .ListTitle {
+    font-size: 25px !important;
+  }
+}
+
 .CreateDocButton {
   margin-bottom: 4% !important;
   float: left;
+}
+
+/* When screen is minimized decrease the font size */
+@media (max-width: 426px) {
+  .CreateDocButton {
+    font-size: 10px !important;
+  }
 }
 
 .CreateDocDialog {
@@ -37,13 +56,13 @@
 
 @media (max-width: 959.95px) {
   .DocImage {
-    max-height: 233px;
-    max-width: 350px;
+    max-height: 70px;
+    max-width: 70px;
     color: #1976d2;
   }
 }
 
-@media (min-width: 960px) {
+@media (min-width: 426px) {
   .DocImage {
     max-height: 167px;
     max-width: 250px;
@@ -54,4 +73,11 @@
 .DocTitle {
   font-size: 20px !important;
   margin-bottom: 2px !important;
+}
+
+/* Make font size smaller when the screen is minimized */
+@media (max-width: 425px) {
+  .DocTitle {
+    font-size: 10px !important;
+  }
 }

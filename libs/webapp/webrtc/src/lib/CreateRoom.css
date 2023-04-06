@@ -108,3 +108,22 @@
 .user-name-input::placeholder {
   color: white !important;
 }
+
+@media (max-width: 768px) {
+  .video-display-area {
+    width: 80%;
+    height: 35%;
+  }
+
+  .camera-mic-container {
+    width: 80%;
+  }
+
+  .name-input-container {
+    width: 80%;
+  }
+
+  .join-room-container {
+    width: 80%;
+  }
+}
