@@ -370,7 +370,11 @@ export function DisplayRoom(props: DisplayRoomProps) {
   };
 
   const handleSendLinkEmail = () => {
-    postInvitationEmailMutation.mutate({ email, roomId, groupId: roomId });
+    postInvitationEmailMutation.mutate({
+      email,
+      groupName: roomId,
+      groupId: roomId,
+    });
     setModalOpen(false);
   };
 
