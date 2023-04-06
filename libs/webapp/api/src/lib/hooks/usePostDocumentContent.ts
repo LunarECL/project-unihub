@@ -1,7 +1,15 @@
 import axios from 'axios';
-import { useQuery } from 'react-query';
+import { useMutation, UseMutationResult } from 'react-query';
 
-const query = async (documentId: string, ops: Object[]) => {
+interface PostDocumentContentParams {
+  documentId: string;
+  ops: Object[];
+}
+
+async function postDocumentContent({
+  documentId,
+  ops,
+}: PostDocumentContentParams): Promise<any> {
   const url = `/api/sharedoc/document/content`;
   // const url = 'http://localhost:3333/api/sharedoc/document/content';
 
@@ -11,10 +19,15 @@ const query = async (documentId: string, ops: Object[]) => {
   });
 
   return res.data;
-};
+}
 
-export function usePostDocumentContent(documentId: string, ops: Object[]) {
-  return query(documentId, ops);
+export function usePostDocumentContent(): UseMutationResult<
+  any,
+  unknown,
+  PostDocumentContentParams,
+  unknown
+> {
+  return useMutation(postDocumentContent);
 }
 
 export default usePostDocumentContent;

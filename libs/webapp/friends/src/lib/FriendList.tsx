@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import {
-  usePostFriend,
   useGetFriends,
   useDeleteFriend,
   useGetRequestsFriends,
@@ -27,27 +26,38 @@ export function FriendsList(props: FriendsListProps) {
   const [friends, setFriends] = useState<Friend[]>([]);
   const [requestsFriends, setRequestsFriends] = useState<Friend[]>([]);
 
+  const patchAcceptFriendMutation = usePatchAcceptFriend();
+
   useEffect(() => {
     useGetFriends().then((friends) => setFriends(friends));
     useGetRequestsFriends().then((friends) => setRequestsFriends(friends));
   }, []);
 
+  const { mutate: deleteFriend } = useDeleteFriend();
+
   const handleDeleteFriend = (friend: Friend) => {
-    useDeleteFriend(friend.userId).then((friend) => console.log(friend));
-    //Remove from friends
-    setFriends(friends.filter((friend) => friend.userId !== friend.userId));
+    deleteFriend(friend.userId, {
+      onSuccess: (deletedFriend) => {
+        console.log(deletedFriend);
+        setFriends(friends.filter((f) => f.userId !== friend.userId));
+      },
+    });
   };
 
   const handleAddFriend = (friend: Friend) => {
-    usePatchAcceptFriend(friend.email).then((friend) => console.log(friend));
-    //Remove from requestsFriends
-    setRequestsFriends(
-      requestsFriends.filter(
-        (requestFriend) => requestFriend.userId !== friend.userId
-      )
-    );
-    //Add to friends
-    setFriends([...friends, friend]);
+    patchAcceptFriendMutation.mutate(friend.email, {
+      onSuccess: (friend) => {
+        console.log(friend);
+        // Remove from requestsFriends
+        setRequestsFriends(
+          requestsFriends.filter(
+            (requestFriend) => requestFriend.userId !== friend.userId
+          )
+        );
+        // Add to friends
+        setFriends([...friends, friend]);
+      },
+    });
   };
 
   const friendsList = friends.map((friend) => (

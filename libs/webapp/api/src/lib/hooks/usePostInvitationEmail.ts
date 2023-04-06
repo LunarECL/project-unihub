@@ -1,6 +1,17 @@
 import axios from 'axios';
+import { useMutation, UseMutationResult } from 'react-query';
 
-const query = async (email: string, groupName: string, groupId: string) => {
+interface InvitationEmailParams {
+  email: string;
+  groupName: string;
+  groupId: string;
+}
+
+async function postInvitationEmail({
+  email,
+  groupName,
+  groupId,
+}: InvitationEmailParams): Promise<any> {
   const url = `/api/email/invitation`;
 
   const res = await axios.post(url, {
@@ -10,12 +21,13 @@ const query = async (email: string, groupName: string, groupId: string) => {
   });
 
   return res.data;
-};
+}
 
-export function usePostInvitationEmail(
-  email: string,
-  groupName: string,
-  groupId: string
-) {
-  return query(email, groupName, groupId);
+export function usePostInvitationEmail(): UseMutationResult<
+  any,
+  unknown,
+  InvitationEmailParams,
+  unknown
+> {
+  return useMutation(postInvitationEmail);
 }

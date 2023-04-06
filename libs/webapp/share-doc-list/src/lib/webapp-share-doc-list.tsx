@@ -45,6 +45,8 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
 
   const [openDialog, setOpenDialog] = useState(false);
 
+  const postUserDocumentMutation = usePostUserDocument();
+
   const handleClickOpenDialog = () => {
     setOpenDialog(true);
   };
@@ -54,17 +56,22 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
   };
 
   const handleCreateDocument = () => {
-    //First create the document for the lecture
+    // First create the document for the lecture
     const title = (document.getElementById('document-name') as HTMLInputElement)
       .value;
     if (title !== '') {
-      usePostUserDocument(lectureId || '', title).then((res) => {
-        //Then navigate to the document
-        navigate(
-          `/home/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${res}/${title}`
-        );
-        setOpenDialog(false);
-      });
+      postUserDocumentMutation.mutate(
+        { lectureId: lectureId || '', title },
+        {
+          onSuccess: (res) => {
+            // Then navigate to the document
+            navigate(
+              `/home/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${res}/${title}`
+            );
+            setOpenDialog(false);
+          },
+        }
+      );
     }
   };
 

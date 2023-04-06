@@ -98,6 +98,8 @@ export function WebappTimetable(props: WebappTimetableProps) {
   const [search, setSearch] = useState('Code');
   const [loading, setLoading] = useState(true);
 
+  const postUserLectureMutation = usePostUserLecture();
+
   let hasDisplayed = false;
 
   const navigate = useNavigate();
@@ -185,17 +187,23 @@ export function WebappTimetable(props: WebappTimetableProps) {
       console.log(open); // add this line
     };
 
+  const { mutate: deleteUserLecture } = useDeleteUserLecture();
+
   const handleDelete = (sectionId: string) => {
     colIndex = (colIndex - 1) % colours.length;
-    useDeleteUserLecture(sectionId).then(() => {
-      //Remove the course from the timetable
-      const course = allCourses.find((course: any) => course.id === sectionId);
-      if (course) {
-        displayCourse(course, true);
-      }
+    deleteUserLecture(sectionId, {
+      onSuccess: () => {
+        const course = allCourses.find(
+          (course: any) => course.id === sectionId
+        );
+        if (course) {
+          displayCourse(course, true);
+        }
 
-      //Remove the course from the allCourses array
-      allCourses = allCourses.filter((course: any) => course.id !== sectionId);
+        allCourses = allCourses.filter(
+          (course: any) => course.id !== sectionId
+        );
+      },
     });
   };
 
@@ -354,7 +362,7 @@ export function WebappTimetable(props: WebappTimetableProps) {
       return;
     }
 
-    usePostUserLecture(courses[courseIndex].id);
+    postUserLectureMutation.mutate(courses[courseIndex].id);
     allCourses.push(courses[courseIndex]);
     displayCourse(courses[courseIndex], false);
     toggleDrawer(false)();

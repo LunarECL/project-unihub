@@ -66,6 +66,8 @@ export function DisplayRoom(props: DisplayRoomProps) {
   const [modalOpen, setModalOpen] = useState<boolean>(false);
   const [email, setEmail] = useState<string>('');
 
+  const postInvitationEmailMutation = usePostInvitationEmail();
+
   const backgroundColors = [
     '#FFC107', // Amber
     '#FF5722', // Deep Orange
@@ -407,7 +409,7 @@ export function DisplayRoom(props: DisplayRoomProps) {
   };
 
   const handleSendLinkEmail = () => {
-    usePostInvitationEmail(email, roomId, roomId);
+    postInvitationEmailMutation.mutate({ email, roomId, groupId: roomId });
     setModalOpen(false);
   };
 

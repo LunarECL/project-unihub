@@ -1,7 +1,15 @@
 import axios from 'axios';
-import { useQuery } from 'react-query';
+import { useMutation, UseMutationResult } from 'react-query';
 
-const query = async (documentId: string, userEmail: string) => {
+interface ShareDocumentParams {
+  documentId: string;
+  userEmail: string;
+}
+
+async function postShareDocument({
+  documentId,
+  userEmail,
+}: ShareDocumentParams): Promise<any> {
   const url = `/api/sharedoc/document/user/share`;
   // const url = 'http://localhost:3333/api/sharedoc/document/user/share';
 
@@ -11,10 +19,15 @@ const query = async (documentId: string, userEmail: string) => {
   });
 
   return res.data;
-};
+}
 
-export function usePostShareDocument(documentId: string, userEmail: string) {
-  return query(documentId, userEmail);
+export function usePostShareDocument(): UseMutationResult<
+  any,
+  unknown,
+  ShareDocumentParams,
+  unknown
+> {
+  return useMutation(postShareDocument);
 }
 
 export default usePostShareDocument;

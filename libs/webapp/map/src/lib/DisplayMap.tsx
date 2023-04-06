@@ -58,6 +58,8 @@ export function DisplayMap(props: DisplayMapProps) {
   const [sideBarOpen, setSideBarOpen] = useState(false);
   const [displayMap, setDisplayMap] = useState(false);
 
+  const { mutate: postUserLocation } = usePostUserLocation();
+
   const defaultPosition = fromLonLat([-79.18725541486484, 43.78422061706888]);
 
   const defaultView = new View({
@@ -92,7 +94,7 @@ export function DisplayMap(props: DisplayMapProps) {
     const newLon = parseFloat(converted.split(',')[0]).toString();
     const newLat = parseFloat(converted.split(',')[1]).toString();
 
-    usePostUserLocation(newLat, newLon);
+    postUserLocation({ latitude: newLat, longitude: newLon });
     useGetFriendsLocation().then((res) => {
       setFriendLocations(res);
     });

@@ -35,6 +35,10 @@ export function Sharedoc(props: SharedocProps) {
   const editorRef = useRef<ReactQuill>(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [isUserDoc, setIsUserDoc] = useState(false);
+
+  const postDocumentContentMutation = usePostDocumentContent();
+  const postShareDocumentMutation = usePostShareDocument();
+
   const {
     courseCode = '',
     sessionId = '',
@@ -111,8 +115,14 @@ export function Sharedoc(props: SharedocProps) {
   }
 
   function backButton() {
-    usePostDocumentContent(documentId, doc.data);
-    navigate(-1);
+    postDocumentContentMutation.mutate(
+      { documentId, ops: doc.data },
+      {
+        onSuccess: () => {
+          navigate(-1);
+        },
+      }
+    );
   }
 
   const handleClickOpenDialog = () => {
@@ -124,18 +134,23 @@ export function Sharedoc(props: SharedocProps) {
   };
 
   const handleShare = () => {
-    //Add the user to the document
-    //Get the user email from the text field
+    // Add the user to the document
+    // Get the user email from the text field
     const userEmail = (
       document.getElementById('user-email') as HTMLInputElement
     ).value;
-    usePostShareDocument(documentId, userEmail).then((res) => {
-      if (res === false) {
-        alert('User does not exist');
-      } else {
-        alert('User added to document');
+    postShareDocumentMutation.mutate(
+      { documentId, userEmail },
+      {
+        onSuccess: (res) => {
+          if (res === false) {
+            alert('User does not exist');
+          } else {
+            alert('User added to document');
+          }
+        },
       }
-    });
+    );
     setOpenDialog(false);
   };
 

@@ -10,10 +10,11 @@ export interface FriendsProps {}
 
 export function Friends(props: FriendsProps) {
   const [email, setEmail] = useState('');
+  const postFriendMutation = usePostFriend();
 
   const handleInviteClick = () => {
     if (email.trim()) {
-      usePostFriend(email);
+      postFriendMutation.mutate(email);
       setEmail('');
     }
   };
