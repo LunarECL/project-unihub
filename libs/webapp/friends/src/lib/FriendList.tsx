@@ -28,10 +28,19 @@ export function FriendsList(props: FriendsListProps) {
 
   const patchAcceptFriendMutation = usePatchAcceptFriend();
 
+  // Call the hooks outside the useEffect
+  const { data: fetchedFriends } = useGetFriends();
+  const { data: fetchedRequestsFriends } = useGetRequestsFriends();
+
   useEffect(() => {
-    useGetFriends().then((friends) => setFriends(friends));
-    useGetRequestsFriends().then((friends) => setRequestsFriends(friends));
-  }, []);
+    if (fetchedFriends) {
+      setFriends(fetchedFriends);
+    }
+
+    if (fetchedRequestsFriends) {
+      setRequestsFriends(fetchedRequestsFriends);
+    }
+  }, [fetchedFriends, fetchedRequestsFriends]);
 
   const { mutate: deleteFriend } = useDeleteFriend();
 

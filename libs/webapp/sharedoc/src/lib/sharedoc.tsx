@@ -53,6 +53,9 @@ export function Sharedoc() {
     lectureNumber = '',
   } = useParams();
 
+  const { data: userCanViewDocData, isLoading: userCanViewDocLoading } =
+    useGetIfUserCanViewDoc(documentId);
+
   useEffect(() => {
     const url = `wss://unihub.today/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${documentId}/${lectureNumber}`;
     const socket = new ReconnectingWebSocket(url);
@@ -60,13 +63,13 @@ export function Sharedoc() {
     const doc = connection.get(courseCode!, documentId!);
 
     const authorizeUser = async () => {
-      const res = await useGetIfUserCanViewDoc(documentId);
-      if (!res.isAuthorized) {
+      if (userCanViewDocLoading) return;
+      if (!userCanViewDocData.isAuthorized) {
         alert('You are not authorized to view this document');
         navigate(-1);
       } else {
         setIsAuthorized(true);
-        if (res.isUser) {
+        if (userCanViewDocData.isUser) {
           setIsUserDoc(true);
         }
       }
@@ -106,7 +109,7 @@ export function Sharedoc() {
         doc.destroy();
       }
     };
-  }, [isAuthorized]);
+  }, [isAuthorized, userCanViewDocData, userCanViewDocLoading]);
 
   function handleChange(
     content: string,

@@ -1,12 +1,14 @@
+// useGetRequestsFriends.ts
 import axios from 'axios';
+import { useQuery } from 'react-query';
 
-const query = async () => {
+const fetchRequestsFriends = async () => {
   const res = await axios.get('/api/friends/requests');
   return res.data;
 };
 
 export function useGetRequestsFriends() {
-  return query();
+  return useQuery('requestsFriends', fetchRequestsFriends);
 }
 
 export default useGetRequestsFriends;

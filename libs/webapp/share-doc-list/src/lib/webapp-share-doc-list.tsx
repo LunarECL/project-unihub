@@ -66,16 +66,17 @@ export function WebappShareDocList() {
     }
   };
 
+  const { data: allDocuments } = useGetAllDocuments(
+    lectureId !== undefined ? lectureId : ''
+  );
+
+  // For useGetAllDocuments
   useEffect(() => {
-    async function fetchDocuments() {
-      const res = await useGetAllDocuments(
-        lectureId !== undefined ? lectureId : ''
-      );
-      setDocuments(res);
+    if (allDocuments) {
+      setDocuments(allDocuments);
       setLoading(false);
     }
-    fetchDocuments();
-  }, [lectureId]);
+  }, [allDocuments]);
 
   return (
     <div className={styles.DocumentListDiv}>

@@ -80,6 +80,9 @@ export function DisplayMap(props: DisplayMapProps) {
     setContext(context);
   }, [context]);
 
+  const { data: friendsLocation } = useGetFriendsLocation();
+
+  // For postUserLocation and useGetFriendsLocation
   useEffect(() => {
     if (latitute === '0' || longitude === '0') {
       return;
@@ -94,10 +97,11 @@ export function DisplayMap(props: DisplayMapProps) {
     const newLat = parseFloat(converted.split(',')[1]).toString();
 
     postUserLocation({ latitude: newLat, longitude: newLon });
-    useGetFriendsLocation().then((res) => {
-      setFriendLocations(res);
-    });
-  }, [latitute, longitude]);
+
+    if (friendsLocation) {
+      setFriendLocations(friendsLocation);
+    }
+  }, [latitute, longitude, friendsLocation]);
 
   // function taken from offical OpenLayers website
   // https://openlayers.org/en/latest/examples/animation.html

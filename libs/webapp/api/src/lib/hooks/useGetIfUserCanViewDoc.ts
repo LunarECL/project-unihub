@@ -1,6 +1,8 @@
+// useGetIfUserCanViewDoc.ts
 import axios from 'axios';
+import { useQuery } from 'react-query';
 
-const query = async (documentId: string) => {
+const fetchUserCanViewDoc = async (documentId: string) => {
   const res = await axios.get('/api/shareDoc/document/user/canView', {
     params: {
       documentId: documentId,
@@ -11,7 +13,9 @@ const query = async (documentId: string) => {
 };
 
 export function useGetIfUserCanViewDoc(documentId: string) {
-  return query(documentId);
+  return useQuery(['userCanViewDoc', documentId], () =>
+    fetchUserCanViewDoc(documentId)
+  );
 }
 
 export default useGetIfUserCanViewDoc;

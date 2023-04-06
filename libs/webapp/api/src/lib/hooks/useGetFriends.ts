@@ -1,13 +1,14 @@
+// useGetFriends.ts
 import axios from 'axios';
+import { useQuery } from 'react-query';
 
-const query = async () => {
-  const res = await axios.get('/api/friends'); //switch back for docker
-  // const res = await axios.get('http://localhost:3333/api/friends');
+const fetchFriends = async () => {
+  const res = await axios.get('/api/friends');
   return res.data;
 };
 
 export function useGetFriends() {
-  return query();
+  return useQuery('getFriends', fetchFriends);
 }
 
 export default useGetFriends;

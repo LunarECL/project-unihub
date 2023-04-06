@@ -16,12 +16,14 @@ export interface DisplayCoursesProps {
 export function DisplayCourses(props: DisplayCoursesProps) {
   const [courses, setCourses] = useState<any[]>([]);
   const theme = useTheme();
+  const { data: userLecturesData, isLoading: userLecturesLoading } =
+    useGetUserLectures();
 
   useEffect(() => {
-    useGetUserLectures().then((res) => {
-      setCourses(res);
-    });
-  }, []);
+    if (!userLecturesLoading && userLecturesData) {
+      setCourses(userLecturesData);
+    }
+  }, [userLecturesLoading, userLecturesData]);
 
   if (courses.length === 0) {
     // return "No friends found"

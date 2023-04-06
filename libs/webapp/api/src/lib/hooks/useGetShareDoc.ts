@@ -1,12 +1,14 @@
+// useGetShareDoc.ts
 import axios from 'axios';
+import { useQuery } from 'react-query';
 
-const query = async () => {
+const fetchShareDoc = async () => {
   const res = await axios.get('/api/sharedoc');
   return res.data;
 };
 
 export function useGetShareDoc() {
-  return query();
+  return useQuery('shareDoc', fetchShareDoc);
 }
 
 export default useGetShareDoc;

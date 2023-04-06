@@ -24,9 +24,11 @@ export function DisplayFriends(props: DisplayFriendsProps) {
   const [friends, setFriends] = useState<FriendLocation[]>([]);
   const theme = useTheme();
 
+  const { data: friendsLocation } = useGetFriendsLocation();
+
   useEffect(() => {
-    useGetFriendsLocation().then((res) => {
-      res.map((friend: any) => {
+    if (friendsLocation) {
+      friendsLocation.map((friend: any) => {
         if (friend.time === '0') {
           friend.time = 'Out of range';
         } else if (friend.time === '-1') {
@@ -57,9 +59,9 @@ export function DisplayFriends(props: DisplayFriendsProps) {
         }
       });
 
-      setFriends(res);
-    });
-  }, []);
+      setFriends(friendsLocation);
+    }
+  }, [friendsLocation]);
 
   if (friends.length === 0) {
     return <div>No friends found</div>;

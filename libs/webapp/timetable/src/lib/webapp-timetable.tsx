@@ -135,82 +135,6 @@ export function WebappTimetable() {
     setCoursesRows(newFilter);
   }; //end handleFilter
 
-  useEffect(() => {
-    //Get the user's lectures
-    useGetUserLectures().then((courses) => {
-      if (hasDisplayed) {
-        return;
-      }
-      courses.forEach((course: any) => {
-        displayCourse(course, false);
-        allCourses.push(course);
-      });
-      hasDisplayed = true;
-    });
-
-    function loadCourses() {
-      useGetCourses().then((courses) => {
-        setCourses(courses);
-        const rows = courses.map((course: any) => {
-          return createCourseData(
-            course.course.programCode,
-            course.course.title,
-            course.course.sec_cd,
-            course.instructor,
-            course.sectionType + course.sectionNumber,
-            course.delivery_mode
-          );
-        });
-        setAllCoursesRows(rows);
-        setCoursesRows(rows);
-        setLoading(false);
-      });
-    }
-    loadCourses();
-  }, []);
-
-  const [state, setState] = React.useState({
-    bottom: false,
-  });
-
-  const toggleDrawer =
-    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-      if (
-        event?.type === 'keydown' &&
-        ((event as React.KeyboardEvent).key === 'Tab' ||
-          (event as React.KeyboardEvent).key === 'Shift')
-      ) {
-        return;
-      }
-
-      setState({ ...state, bottom: open });
-      if (open === false) {
-        (document.getElementById('outlined-search') as HTMLInputElement).value =
-          '';
-        setCoursesRows(allCoursesRows);
-      }
-    };
-
-  const { mutate: deleteUserLecture } = useDeleteUserLecture();
-
-  const handleDelete = (sectionId: string) => {
-    colIndex = (colIndex - 1) % colours.length;
-    deleteUserLecture(sectionId, {
-      onSuccess: () => {
-        const course = allCourses.find(
-          (course: any) => course.id === sectionId
-        );
-        if (course) {
-          displayCourse(course, true);
-        }
-
-        allCourses = allCourses.filter(
-          (course: any) => course.id !== sectionId
-        );
-      },
-    });
-  };
-
   const displayCourse = (course: any, isRemove: boolean) => {
     //Check if the course has lectures
     if (course.lectures) {
@@ -297,6 +221,82 @@ export function WebappTimetable() {
       });
       colIndex = (colIndex + 1) % colours.length;
     }
+  };
+
+  const { isLoading: userLecturesLoading, data: userLectures } =
+    useGetUserLectures();
+  const { isLoading: fetchedCoursesLoading, data: fetchedCourses } =
+    useGetCourses();
+
+  useEffect(() => {
+    if (!userLecturesLoading && userLectures && !hasDisplayed) {
+      userLectures.forEach((course: any) => {
+        displayCourse(course, false);
+        allCourses.push(course);
+      });
+      hasDisplayed = true;
+    }
+  }, [userLecturesLoading, userLectures]);
+
+  useEffect(() => {
+    if (!fetchedCoursesLoading && fetchedCourses) {
+      setCourses(fetchedCourses);
+      const rows = fetchedCourses.map((course: any) => {
+        return createCourseData(
+          course.course.programCode,
+          course.course.title,
+          course.course.sec_cd,
+          course.instructor,
+          course.sectionType + course.sectionNumber,
+          course.delivery_mode
+        );
+      });
+      setAllCoursesRows(rows);
+      setCoursesRows(rows);
+      setLoading(false);
+    }
+  }, [fetchedCoursesLoading, fetchedCourses]);
+
+  const [state, setState] = React.useState({
+    bottom: false,
+  });
+
+  const toggleDrawer =
+    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+      if (
+        event?.type === 'keydown' &&
+        ((event as React.KeyboardEvent).key === 'Tab' ||
+          (event as React.KeyboardEvent).key === 'Shift')
+      ) {
+        return;
+      }
+
+      setState({ ...state, bottom: open });
+      if (open === false) {
+        (document.getElementById('outlined-search') as HTMLInputElement).value =
+          '';
+        setCoursesRows(allCoursesRows);
+      }
+    };
+
+  const { mutate: deleteUserLecture } = useDeleteUserLecture();
+
+  const handleDelete = (sectionId: string) => {
+    colIndex = (colIndex - 1) % colours.length;
+    deleteUserLecture(sectionId, {
+      onSuccess: () => {
+        const course = allCourses.find(
+          (course: any) => course.id === sectionId
+        );
+        if (course) {
+          displayCourse(course, true);
+        }
+
+        allCourses = allCourses.filter(
+          (course: any) => course.id !== sectionId
+        );
+      },
+    });
   };
 
   // When user clicks on a course, it should be added to the timetable
