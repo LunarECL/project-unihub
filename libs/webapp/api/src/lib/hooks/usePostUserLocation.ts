@@ -1,19 +1,24 @@
 import axios from 'axios';
+import { useMutation, UseMutationOptions } from 'react-query';
 
-const query = async (latitude: string, longitude: string) => {
+interface PostUserLocationMutationInput {
+  latitude: string;
+  longitude: string;
+}
+
+const postUserLocationMutationFn = async ({
+  latitude,
+  longitude,
+}: PostUserLocationMutationInput) => {
   const url = `/api/map/user/location/`;
-  // const url = `http://localhost:3333/api/map/user/location/`;
-
-  const res = await axios.post(url, {
-    latitude,
-    longitude,
-  });
-
+  const res = await axios.post(url, { latitude, longitude });
   return res.data;
 };
 
-export function usePostUserLocation(latitude: string, longitude: string) {
-  return query(latitude, longitude);
+export function usePostUserLocation(
+  options?: UseMutationOptions<any, unknown, PostUserLocationMutationInput>
+) {
+  return useMutation(postUserLocationMutationFn, options);
 }
 
 export default usePostUserLocation;

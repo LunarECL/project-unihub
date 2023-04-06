@@ -6,7 +6,6 @@ import {
   Button,
   CircularProgress,
   Grid,
-  IconButton,
   TextField,
   Typography,
 } from '@mui/material';
@@ -14,15 +13,11 @@ import {
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import { usePostUserDocument } from '@unihub/webapp/api';
 import styles from './webapp-share-doc-list.module.css';
 import { useTheme } from '@mui/material/styles';
 import documentImg from './assets/documentImg.webp';
-
-/* eslint-disable-next-line */
-export interface WebappShareDocListProps {}
 
 interface Document {
   id: string;
@@ -31,7 +26,7 @@ interface Document {
   userTitle: string;
 }
 
-export function WebappShareDocList(props: WebappShareDocListProps) {
+export function WebappShareDocList() {
   const theme = useTheme();
   //Get the courseCode, sessionId, lectureId from the url
   const { courseCode, sessionId, lectureId } = useParams();
@@ -39,11 +34,10 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
 
   //Loading state
   const [loading, setLoading] = useState(true);
-
-  // Use state to store the documents and loading status
   const [documents, setDocuments] = useState<Document[]>([]);
-
   const [openDialog, setOpenDialog] = useState(false);
+
+  const { mutate: postUserDocument } = usePostUserDocument();
 
   const handleClickOpenDialog = () => {
     setOpenDialog(true);
@@ -54,30 +48,35 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
   };
 
   const handleCreateDocument = () => {
-    //First create the document for the lecture
+    // First create the document for the lecture
     const title = (document.getElementById('document-name') as HTMLInputElement)
       .value;
     if (title !== '') {
-      usePostUserDocument(lectureId || '', title).then((res) => {
-        //Then navigate to the document
-        navigate(
-          `/home/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${res}/${title}`
-        );
-        setOpenDialog(false);
-      });
+      postUserDocument(
+        { lectureId: lectureId || '', documentName: title },
+        {
+          onSuccess: (res) => {
+            navigate(
+              `/home/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${res}/${title}`
+            );
+            setOpenDialog(false);
+          },
+        }
+      );
     }
   };
 
+  const { data: allDocuments } = useGetAllDocuments(
+    lectureId !== undefined ? lectureId : ''
+  );
+
+  // For useGetAllDocuments
   useEffect(() => {
-    async function fetchDocuments() {
-      const res = await useGetAllDocuments(
-        lectureId !== undefined ? lectureId : ''
-      );
-      setDocuments(res);
+    if (allDocuments) {
+      setDocuments(allDocuments);
       setLoading(false);
     }
-    fetchDocuments();
-  }, [lectureId]);
+  }, [allDocuments]);
 
   return (
     <div className={styles.DocumentListDiv}>
@@ -99,7 +98,6 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
           >
             Create your own document!
           </Button>
-          {/* fix the way this looks later */}
           <Dialog
             open={openDialog}
             onClose={handleCloseDialog}
@@ -131,9 +129,8 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
           </Grid>
         ) : (
           documents.map((doc) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={doc.id}>
+            <Grid item xs={0} sm={6} md={4} lg={3} key={doc.id}>
               <Button
-                // style={{ cursor: 'pointer', width: '100%' }}
                 className={styles.DocumentItem}
                 onClick={() =>
                   navigate(
@@ -146,7 +143,6 @@ export function WebappShareDocList(props: WebappShareDocListProps) {
                 <Box
                   component="img"
                   className={styles.DocImage}
-                  // src="https://cdn.iconscout.com/icon/free/png-256/google-docs-1772228-1507812.png"
                   src={documentImg}
                 ></Box>
               </Button>

@@ -1,6 +1,5 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { AppBar, Box, Button, Toolbar, Typography } from '@mui/material';
-import React, { useEffect } from 'react';
 import './navbar.css';
 import { useTheme } from '@mui/material/styles';
 

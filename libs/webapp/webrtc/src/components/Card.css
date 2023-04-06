@@ -13,7 +13,6 @@
   top: 0;
   left: 0;
   z-index: 1;
-  /* background-color: #49274a; */
 }
 
 .name {
@@ -59,9 +58,32 @@
 }
 
 .inactive:hover {
-  background-color: #0d141c !important;
+  background-color: #0d141c;
 }
 
 .active:hover {
-  background-color: #ebeff5 !important;
+  background-color: #ebeff5;
+}
+
+@media (max-width: 576px) {
+  .card-icons {
+    position: absolute;
+    top: 2px;
+    box-sizing: border-box;
+    z-index: 2;
+    padding: 0;
+  }
+
+  .name {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 0.5rem;
+    box-sizing: border-box;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: #ffffff;
+    font-size: 0.6rem;
+    z-index: 2;
+  }
 }

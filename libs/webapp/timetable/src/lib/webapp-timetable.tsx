@@ -14,18 +14,19 @@ import {
   MenuItem,
   Grid,
   CircularProgress,
+  AlertColor,
+  AlertTitle,
+  Alert,
 } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useGetCourses } from '@unihub/webapp/api';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { usePostUserLecture } from '@unihub/webapp/api';
 import { useGetUserLectures } from '@unihub/webapp/api';
 import { useDeleteUserLecture } from '@unihub/webapp/api';
 import styles from './webapp-timetable.module.css';
 import { useTheme } from '@mui/material/styles';
-/* eslint-disable-next-line */
-export interface WebappTimetableProps {}
 
 function createData(
   time: string,
@@ -43,7 +44,7 @@ function createCourseData(
   courseTitle: string,
   sec_cd: string,
   prof: string,
-  section: string, //sectionType + sectionNumber
+  section: string,
   deliveryMode: string
 ) {
   return { programCode, courseTitle, sec_cd, prof, section, deliveryMode };
@@ -90,13 +91,21 @@ const searchOpt = [
 let allCourses: any[] = [];
 let colIndex = 0;
 
-export function WebappTimetable(props: WebappTimetableProps) {
+interface IAlert {
+  type: AlertColor;
+  message: string;
+}
+
+export function WebappTimetable() {
   const theme = useTheme();
   const [coursesRows, setCoursesRows] = useState<any>([]);
   const [courses, setCourses] = useState<any>([]);
   const [allCoursesRows, setAllCoursesRows] = useState<any>([]);
   const [search, setSearch] = useState('Code');
   const [loading, setLoading] = useState(true);
+  const [alert, setAlert] = useState<IAlert | null>(null);
+
+  const postUserLectureMutation = usePostUserLecture();
 
   let hasDisplayed = false;
 
@@ -126,79 +135,6 @@ export function WebappTimetable(props: WebappTimetableProps) {
     setCoursesRows(newFilter);
   }; //end handleFilter
 
-  useEffect(() => {
-    //Get the user's lectures
-    useGetUserLectures().then((courses) => {
-      if (hasDisplayed) {
-        return;
-      }
-      courses.forEach((course: any) => {
-        displayCourse(course, false);
-        allCourses.push(course);
-      });
-      hasDisplayed = true;
-    });
-
-    function loadCourses() {
-      //May need to do pagination here because it takes too long
-      useGetCourses().then((courses) => {
-        setCourses(courses);
-        const rows = courses.map((course: any) => {
-          return createCourseData(
-            course.course.programCode,
-            course.course.title,
-            course.course.sec_cd,
-            course.instructor,
-            course.sectionType + course.sectionNumber,
-            course.delivery_mode
-          );
-        });
-        setAllCoursesRows(rows);
-        setCoursesRows(rows);
-        setLoading(false);
-      });
-    }
-    loadCourses();
-  }, []);
-
-  const [state, setState] = React.useState({
-    bottom: false,
-  });
-
-  const toggleDrawer =
-    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
-      if (
-        event?.type === 'keydown' &&
-        ((event as React.KeyboardEvent).key === 'Tab' ||
-          (event as React.KeyboardEvent).key === 'Shift')
-      ) {
-        return;
-      }
-
-      setState({ ...state, bottom: open });
-      if (open === false) {
-        (document.getElementById('outlined-search') as HTMLInputElement).value =
-          '';
-        setCoursesRows(allCoursesRows);
-      }
-
-      console.log(open); // add this line
-    };
-
-  const handleDelete = (sectionId: string) => {
-    colIndex = (colIndex - 1) % colours.length;
-    useDeleteUserLecture(sectionId).then(() => {
-      //Remove the course from the timetable
-      const course = allCourses.find((course: any) => course.id === sectionId);
-      if (course) {
-        displayCourse(course, true);
-      }
-
-      //Remove the course from the allCourses array
-      allCourses = allCourses.filter((course: any) => course.id !== sectionId);
-    });
-  };
-
   const displayCourse = (course: any, isRemove: boolean) => {
     //Check if the course has lectures
     if (course.lectures) {
@@ -220,8 +156,7 @@ export function WebappTimetable(props: WebappTimetableProps) {
 
         const date = new Date(lecture.startTime);
 
-        let startTime = date.getUTCHours(); //FOR DOCKER
-        // let startTime = date.getHours();
+        let startTime = date.getUTCHours();
 
         let endTime = startTime + lecture.totalMinutes / 60;
 
@@ -233,11 +168,11 @@ export function WebappTimetable(props: WebappTimetableProps) {
           startTime = startTime - 12;
         }
 
-        let iteration: number = 0;
+        let iteration = 0;
 
         //Colour in the cells of the timetable
         for (let i = startTime; i < endTime; i++, iteration++) {
-          let row = rows.find((row) => row.time === i + ':00');
+          const row = rows.find((row) => row.time === i + ':00');
           if (row) {
             const cell = document.querySelector(
               `[data-day="${day}-${row.time}"]`
@@ -288,6 +223,82 @@ export function WebappTimetable(props: WebappTimetableProps) {
     }
   };
 
+  const { isLoading: userLecturesLoading, data: userLectures } =
+    useGetUserLectures();
+  const { isLoading: fetchedCoursesLoading, data: fetchedCourses } =
+    useGetCourses();
+
+  useEffect(() => {
+    if (!userLecturesLoading && userLectures && !hasDisplayed) {
+      userLectures.forEach((course: any) => {
+        displayCourse(course, false);
+        allCourses.push(course);
+      });
+      hasDisplayed = true;
+    }
+  }, [userLecturesLoading, userLectures]);
+
+  useEffect(() => {
+    if (!fetchedCoursesLoading && fetchedCourses) {
+      setCourses(fetchedCourses);
+      const rows = fetchedCourses.map((course: any) => {
+        return createCourseData(
+          course.course.programCode,
+          course.course.title,
+          course.course.sec_cd,
+          course.instructor,
+          course.sectionType + course.sectionNumber,
+          course.delivery_mode
+        );
+      });
+      setAllCoursesRows(rows);
+      setCoursesRows(rows);
+      setLoading(false);
+    }
+  }, [fetchedCoursesLoading, fetchedCourses]);
+
+  const [state, setState] = React.useState({
+    bottom: false,
+  });
+
+  const toggleDrawer =
+    (open: boolean) => (event: React.KeyboardEvent | React.MouseEvent) => {
+      if (
+        event?.type === 'keydown' &&
+        ((event as React.KeyboardEvent).key === 'Tab' ||
+          (event as React.KeyboardEvent).key === 'Shift')
+      ) {
+        return;
+      }
+
+      setState({ ...state, bottom: open });
+      if (open === false) {
+        (document.getElementById('outlined-search') as HTMLInputElement).value =
+          '';
+        setCoursesRows(allCoursesRows);
+      }
+    };
+
+  const { mutate: deleteUserLecture } = useDeleteUserLecture();
+
+  const handleDelete = (sectionId: string) => {
+    colIndex = (colIndex - 1) % colours.length;
+    deleteUserLecture(sectionId, {
+      onSuccess: () => {
+        const course = allCourses.find(
+          (course: any) => course.id === sectionId
+        );
+        if (course) {
+          displayCourse(course, true);
+        }
+
+        allCourses = allCourses.filter(
+          (course: any) => course.id !== sectionId
+        );
+      },
+    });
+  };
+
   // When user clicks on a course, it should be added to the timetable
   const addCourseTime = (index: number) => {
     //Get the index of the course in the courses array from the current index of the course in the coursesRows array
@@ -336,10 +347,11 @@ export function WebappTimetable(props: WebappTimetableProps) {
                     (dateCourseLecture >= dateLecture &&
                       dateCourseLecture <= newDate2)
                   ) {
-                    //Conflict
-                    alert(
-                      `The course you are trying to add has a conflict with ${course.course.programCode} already in the timetable. We will not add it to your courses.`
-                    );
+                    setAlert({
+                      type: 'error',
+                      message: `The course you are trying to add has a conflict with ${course.course.programCode} already in the timetable. We will not add it to your courses.`,
+                    });
+
                     isConflict = true;
                   }
                 }
@@ -351,10 +363,14 @@ export function WebappTimetable(props: WebappTimetableProps) {
     }
 
     if (isConflict) {
+      toggleDrawer(false)();
+      setTimeout(() => {
+        setAlert(null);
+      }, 3000);
       return;
     }
 
-    usePostUserLecture(courses[courseIndex].id);
+    postUserLectureMutation.mutate(courses[courseIndex].id);
     allCourses.push(courses[courseIndex]);
     displayCourse(courses[courseIndex], false);
     toggleDrawer(false)();
@@ -362,7 +378,15 @@ export function WebappTimetable(props: WebappTimetableProps) {
 
   return (
     <>
-      <Stack direction="row" spacing={10} className={styles.Stack}>
+      {alert && (
+        <Alert severity={alert.type} className={styles.alert}>
+          <AlertTitle>
+            {alert.type === 'success' ? 'Success' : 'Error'}
+          </AlertTitle>
+          {alert!.message}
+        </Alert>
+      )}
+      <Stack direction="row" spacing={'5%'} className={styles.Stack}>
         <TableContainer>
           <Table
             className={styles.Table}

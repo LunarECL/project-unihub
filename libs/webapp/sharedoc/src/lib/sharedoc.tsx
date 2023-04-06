@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import * as ShareDB from 'sharedb/lib/client';
 //@ts-ignore
@@ -10,24 +10,29 @@ import {
   Button,
   Typography,
   Grid,
-  CircularProgress,
   Skeleton,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   TextField,
+  Alert,
+  AlertTitle,
+  AlertColor,
 } from '@mui/material';
-import { useGetShareDoc } from '@unihub/webapp/api';
 import { useNavigate, useParams } from 'react-router-dom';
 import { usePostDocumentContent } from '@unihub/webapp/api';
 import { useGetIfUserCanViewDoc } from '@unihub/webapp/api';
 import { usePostShareDocument } from '@unihub/webapp/api';
-export interface SharedocProps {}
 
 ShareDB.types.register(richText.type);
 
-export function Sharedoc(props: SharedocProps) {
+interface IAlert {
+  type: AlertColor;
+  message: string;
+}
+
+export function Sharedoc() {
   const navigate = useNavigate();
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [doc, setDoc] = useState<any>(null);
@@ -35,6 +40,11 @@ export function Sharedoc(props: SharedocProps) {
   const editorRef = useRef<ReactQuill>(null);
   const [openDialog, setOpenDialog] = useState(false);
   const [isUserDoc, setIsUserDoc] = useState(false);
+  const [custAlert, setAlert] = useState<IAlert | null>(null);
+
+  const postDocumentContentMutation = usePostDocumentContent();
+  const { mutate: postShareDocument } = usePostShareDocument();
+
   const {
     courseCode = '',
     sessionId = '',
@@ -43,6 +53,9 @@ export function Sharedoc(props: SharedocProps) {
     lectureNumber = '',
   } = useParams();
 
+  const { data: userCanViewDocData, isLoading: userCanViewDocLoading } =
+    useGetIfUserCanViewDoc(documentId);
+
   useEffect(() => {
     const url = `wss://unihub.today/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${documentId}/${lectureNumber}`;
     const socket = new ReconnectingWebSocket(url);
@@ -50,14 +63,13 @@ export function Sharedoc(props: SharedocProps) {
     const doc = connection.get(courseCode!, documentId!);
 
     const authorizeUser = async () => {
-      const res = await useGetIfUserCanViewDoc(documentId);
-      if (!res.isAuthorized) {
+      if (userCanViewDocLoading) return;
+      if (!userCanViewDocData.isAuthorized) {
         alert('You are not authorized to view this document');
         navigate(-1);
       } else {
-        // isAuthorized = true; // update state here
         setIsAuthorized(true);
-        if (res.isUser) {
+        if (userCanViewDocData.isUser) {
           setIsUserDoc(true);
         }
       }
@@ -97,7 +109,7 @@ export function Sharedoc(props: SharedocProps) {
         doc.destroy();
       }
     };
-  }, [isAuthorized]);
+  }, [isAuthorized, userCanViewDocData, userCanViewDocLoading]);
 
   function handleChange(
     content: string,
@@ -111,8 +123,14 @@ export function Sharedoc(props: SharedocProps) {
   }
 
   function backButton() {
-    usePostDocumentContent(documentId, doc.data);
-    navigate(-1);
+    postDocumentContentMutation.mutate(
+      { documentId, ops: doc.data },
+      {
+        onSuccess: () => {
+          navigate(-1);
+        },
+      }
+    );
   }
 
   const handleClickOpenDialog = () => {
@@ -124,18 +142,39 @@ export function Sharedoc(props: SharedocProps) {
   };
 
   const handleShare = () => {
-    //Add the user to the document
-    //Get the user email from the text field
+    // Add the user to the document
+    // Get the user email from the text field
     const userEmail = (
       document.getElementById('user-email') as HTMLInputElement
     ).value;
-    usePostShareDocument(documentId, userEmail).then((res) => {
-      if (res === false) {
-        alert('User does not exist');
-      } else {
-        alert('User added to document');
+    postShareDocument(
+      { documentId, userEmail },
+      {
+        onSuccess: (res) => {
+          if (res === false) {
+            // alert('User does not exist');
+            setAlert({
+              type: 'error',
+              message: 'User sharing could not be completed',
+            });
+
+            setTimeout(() => {
+              setAlert(null);
+            }, 3000);
+          } else {
+            // alert('User added to document');
+            setAlert({
+              type: 'success',
+              message: 'User added to document',
+            });
+
+            setTimeout(() => {
+              setAlert(null);
+            }, 3000);
+          }
+        },
       }
-    });
+    );
     setOpenDialog(false);
   };
 
@@ -150,48 +189,55 @@ export function Sharedoc(props: SharedocProps) {
               </Typography>
             </Grid>
             <Grid item xs={4}>
-              <Button
-                //navigate to the previous page
-                onClick={backButton}
-                variant="contained"
-                id="BackButton"
-              >
+              <Button onClick={backButton} variant="contained" id="BackButton">
                 Back
               </Button>
             </Grid>
             {isUserDoc ? (
-              <Grid item xs={8}>
-                <Button
-                  variant="text"
-                  id="ShareButton"
-                  onClick={handleClickOpenDialog}
-                >
-                  Share with other users!
-                </Button>
+              <>
+                <Grid item xs={8}>
+                  <Button
+                    variant="text"
+                    id="ShareButton"
+                    onClick={handleClickOpenDialog}
+                  >
+                    Share with other users!
+                  </Button>
 
-                <Dialog
-                  open={openDialog}
-                  onClose={handleCloseDialog}
-                  id="AddUserDialog"
-                  maxWidth="lg"
-                  PaperProps={{ style: { width: '50%', maxHeight: '90%' } }}
-                >
-                  <DialogTitle>Share with other users on UnIHub!</DialogTitle>
-                  <DialogContent>
-                    <TextField
-                      id="user-email"
-                      label="Enter the user's email"
-                      type="user-email"
-                      variant="standard"
-                      fullWidth
-                    />
-                  </DialogContent>
-                  <DialogActions>
-                    <Button onClick={handleCloseDialog}>Cancel</Button>
-                    <Button onClick={handleShare}>Share</Button>
-                  </DialogActions>
-                </Dialog>
-              </Grid>
+                  <Dialog
+                    open={openDialog}
+                    onClose={handleCloseDialog}
+                    id="AddUserDialog"
+                    maxWidth="lg"
+                    PaperProps={{ style: { width: '50%', maxHeight: '90%' } }}
+                  >
+                    <DialogTitle>Share with other users on UnIHub!</DialogTitle>
+                    <DialogContent>
+                      <TextField
+                        id="user-email"
+                        label="Enter the user's email"
+                        type="user-email"
+                        variant="standard"
+                        fullWidth
+                      />
+                    </DialogContent>
+                    <DialogActions>
+                      <Button onClick={handleCloseDialog}>Cancel</Button>
+                      <Button onClick={handleShare}>Share</Button>
+                    </DialogActions>
+                  </Dialog>
+                </Grid>
+                <Grid item xs={12}>
+                  {custAlert && (
+                    <Alert severity={custAlert.type}>
+                      <AlertTitle>
+                        {custAlert.type === 'success' ? 'Success' : 'Error'}
+                      </AlertTitle>
+                      {custAlert!.message}
+                    </Alert>
+                  )}
+                </Grid>
+              </>
             ) : (
               <></>
             )}

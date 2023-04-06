@@ -1,17 +1,15 @@
+// useDeleteFriend.ts
 import axios from 'axios';
-import { useQuery } from 'react-query';
+import { useMutation } from 'react-query';
 
-const query = async (friendId: string) => {
+const deleteFriendMutationFn = async (friendId: string) => {
   const url = `/api/friends/${friendId}`;
-  // const url = `http://localhost:3333/api/friends/${friendId}`;
-
   const res = await axios.delete(url);
-
   return res.data;
 };
 
-export function useDeleteFriend(friendId: string) {
-  return query(friendId);
+export function useDeleteFriend() {
+  return useMutation(deleteFriendMutationFn);
 }
 
 export default useDeleteFriend;

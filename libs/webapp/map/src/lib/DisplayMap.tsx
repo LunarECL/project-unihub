@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import React, { useEffect, useState } from 'react';
 import { fromLonLat } from 'ol/proj';
 import 'ol/ol.css';
@@ -58,6 +57,8 @@ export function DisplayMap(props: DisplayMapProps) {
   const [sideBarOpen, setSideBarOpen] = useState(false);
   const [displayMap, setDisplayMap] = useState(false);
 
+  const { mutate: postUserLocation } = usePostUserLocation();
+
   const defaultPosition = fromLonLat([-79.18725541486484, 43.78422061706888]);
 
   const defaultView = new View({
@@ -79,6 +80,9 @@ export function DisplayMap(props: DisplayMapProps) {
     setContext(context);
   }, [context]);
 
+  const { data: friendsLocation } = useGetFriendsLocation();
+
+  // For postUserLocation and useGetFriendsLocation
   useEffect(() => {
     if (latitute === '0' || longitude === '0') {
       return;
@@ -92,11 +96,12 @@ export function DisplayMap(props: DisplayMapProps) {
     const newLon = parseFloat(converted.split(',')[0]).toString();
     const newLat = parseFloat(converted.split(',')[1]).toString();
 
-    usePostUserLocation(newLat, newLon);
-    useGetFriendsLocation().then((res) => {
-      setFriendLocations(res);
-    });
-  }, [latitute, longitude]);
+    postUserLocation({ latitude: newLat, longitude: newLon });
+
+    if (friendsLocation) {
+      setFriendLocations(friendsLocation);
+    }
+  }, [latitute, longitude, friendsLocation]);
 
   // function taken from offical OpenLayers website
   // https://openlayers.org/en/latest/examples/animation.html

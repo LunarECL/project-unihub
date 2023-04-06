@@ -1,7 +1,5 @@
 import ScreenShareIcon from '@mui/icons-material/ScreenShare';
 import VideocamIcon from '@mui/icons-material/Videocam';
-import MicIcon from '@mui/icons-material/Mic';
-import MicOffIcon from '@mui/icons-material/MicOff';
 import { useState } from 'react';
 
 import './Card.css';
@@ -23,18 +21,12 @@ interface CardProps {
 export function Card(props: CardProps) {
   const theme = useTheme();
   const [showControls, setShowControls] = useState(false);
-  const [isMuted, setIsMuted] = useState(false);
 
   let fontSize = 26;
 
   if (props.width > 40) {
     fontSize = 35;
   }
-
-  const handleMute = () => {
-    if (!props.disabled) setIsMuted(!isMuted);
-  };
-
   const handleScreenStream = () => {
     if (!props.disabled) props.handleScreenToggle();
   };
@@ -89,24 +81,6 @@ export function Card(props: CardProps) {
           style={{ fontSize: fontSize + 'px' }}
           onClick={handleScreenStream}
         />
-        {/* <MicIcon
-          className="icon-element inactive"
-          style={{
-            display: isMuted ? 'none' : 'flex',
-            fontSize: fontSize + 'px',
-          }}
-          onClick={handleMute}
-        />
-        <MicOffIcon
-          className="icon-element active"
-          style={{
-            color: 'red',
-            backgroundColor: 'dde2eb',
-            display: isMuted ? 'flex' : 'none',
-            fontSize: fontSize + 'px',
-          }}
-          onClick={handleMute}
-        /> */}
       </div>
     </div>
   );

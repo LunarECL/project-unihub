@@ -96,9 +96,8 @@ export function MapRender(props: MapRenderProps) {
           props.setLongitude(longitude);
         }
 
-        // set a timeout for 5 seconds just in case position is constantly changing (user is moving)
         setTimeout(() => {
-          console.log("5 seconds have passed, user's location is stable");
+          // set a timeout for 5 seconds just in case position is constantly changing (user is moving)
         }, 5000);
       });
 

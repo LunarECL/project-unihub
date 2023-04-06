@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { usePostFriend, useGetFriends } from '@unihub/webapp/api';
+import { useState } from 'react';
+import { usePostFriend } from '@unihub/webapp/api';
 import FriendsList from './FriendList';
 import './Friends.css';
 import { Grid, Box, Typography, Button, Input, TextField } from '@mui/material';
@@ -10,10 +10,11 @@ export interface FriendsProps {}
 
 export function Friends(props: FriendsProps) {
   const [email, setEmail] = useState('');
+  const postFriendMutation = usePostFriend();
 
   const handleInviteClick = () => {
     if (email.trim()) {
-      usePostFriend(email);
+      postFriendMutation.mutate(email);
       setEmail('');
     }
   };

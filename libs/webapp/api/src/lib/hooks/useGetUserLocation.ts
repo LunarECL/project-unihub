@@ -1,8 +1,9 @@
+// useGetUserLocation.ts
 import axios from 'axios';
+import { useQuery } from 'react-query';
 
-const query = async (userId: string) => {
+const fetchUserLocation = async (userId: string) => {
   const url = `/api/map/user/location/`;
-  // const url = `http://localhost:3333/api/map/user/location/`;
 
   const res = await axios.get(url, {
     params: {
@@ -14,7 +15,7 @@ const query = async (userId: string) => {
 };
 
 export function useGetUserLocation(userId: string) {
-  return query(userId);
+  return useQuery(['userLocation', userId], () => fetchUserLocation(userId));
 }
 
 export default useGetUserLocation;

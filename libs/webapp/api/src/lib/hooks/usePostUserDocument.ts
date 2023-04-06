@@ -1,7 +1,15 @@
 import axios from 'axios';
-import { useQuery } from 'react-query';
+import { useMutation, UseMutationResult } from 'react-query';
 
-const query = async (lectureId: string, documentName: string) => {
+interface UserDocumentParams {
+  lectureId: string;
+  documentName: string;
+}
+
+async function postUserDocument({
+  lectureId,
+  documentName,
+}: UserDocumentParams): Promise<any> {
   const url = `/api/sharedoc/document/user/create`;
   // const url = 'http://localhost:3333/api/sharedoc/document/user/create';
 
@@ -11,10 +19,15 @@ const query = async (lectureId: string, documentName: string) => {
   });
 
   return res.data;
-};
+}
 
-export function usePostUserDocument(lectureId: string, documentName: string) {
-  return query(lectureId, documentName);
+export function usePostUserDocument(): UseMutationResult<
+  any,
+  unknown,
+  UserDocumentParams,
+  unknown
+> {
+  return useMutation(postUserDocument);
 }
 
 export default usePostUserDocument;

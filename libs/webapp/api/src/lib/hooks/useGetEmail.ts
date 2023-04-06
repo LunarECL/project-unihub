@@ -1,14 +1,14 @@
+// useGetEmail.ts
 import axios from 'axios';
 import { useQuery } from 'react-query';
 
-const query = async () => {
+const fetchEmail = async () => {
   const res = await axios.get('/api/auth');
-  // const res = await axios.get('http://localhost:3333/api/auth');
   return res.data;
 };
 
 export function useGetEmail() {
-  return query();
+  return useQuery('getEmail', fetchEmail);
 }
 
 export default useGetEmail;

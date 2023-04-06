@@ -1,8 +1,9 @@
 import axios from 'axios';
+import { useMutation } from 'react-query';
 
-const query = async (friendEmail: string) => {
+const patchAcceptFriend = async (friendEmail: string) => {
   const url = `/api/friends/accept`;
-  //   const url = `http://localhost:3333/api/friends/accept`;
+  //   const url = `/apifriends/accept`;
 
   const res = await axios.patch(url, {
     friendEmail,
@@ -11,8 +12,8 @@ const query = async (friendEmail: string) => {
   return res.data;
 };
 
-export function usePatchAcceptFriend(friendEmail: string) {
-  return query(friendEmail);
+export function usePatchAcceptFriend() {
+  return useMutation(patchAcceptFriend);
 }
 
 export default usePatchAcceptFriend;

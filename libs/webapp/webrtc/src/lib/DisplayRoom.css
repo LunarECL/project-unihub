@@ -68,10 +68,11 @@
   position: absolute;
   right: 0;
   bottom: 0;
-  height: 90%;
+  height: 84%;
   width: 77%;
   display: inline-block;
   margin: 1rem 1rem;
+  top: 12%;
 }
 
 .media-element {
@@ -111,14 +112,76 @@
   overflow: auto;
 }
 
-.flipped {
-  transform: scale(-1, 1);
-}
-
-.flipped::-webkit-media-controls-panel {
-  transform: scale(-1, 1);
-}
-
 .addLink {
   padding-right: 5px;
+}
+
+.modal-box {
+  width: 400px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  border: 2px solid #000;
+  box-shadow: 24;
+  padding: 2rem;
+  background-color: #1e1e1e;
+}
+
+@media (max-width: 1127px) {
+  .displayNoRemote {
+    width: 50%;
+    height: 50%;
+    margin-top: 25%;
+  }
+
+  .remoteGridContainer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    height: 84%;
+    width: 70%;
+    display: inline-block;
+    margin: 1rem 1rem;
+    top: 12%;
+  }
+
+  .multiple-streams {
+    max-width: 50%;
+    max-height: 100%;
+    width: 50%;
+    height: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .displayNoRemote {
+    width: 50%;
+    height: 50%;
+    margin-top: 40%;
+  }
+
+  .remoteGridContainer {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    height: 84%;
+    width: 70%;
+    display: inline-block;
+    margin: 1rem 1rem;
+    top: 12%;
+  }
+
+  .multiple-streams {
+    max-width: 50%;
+    max-height: 100%;
+    width: 50%;
+    height: 100%;
+  }
+
+  .modal-box {
+    width: 350px;
+  }
 }

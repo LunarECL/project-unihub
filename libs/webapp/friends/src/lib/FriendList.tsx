@@ -1,12 +1,11 @@
 import { useEffect, useState } from 'react';
 import {
-  usePostFriend,
   useGetFriends,
   useDeleteFriend,
   useGetRequestsFriends,
   usePatchAcceptFriend,
 } from '@unihub/webapp/api';
-import { Grid, List, ListItem, ListSubheader, Typography } from '@mui/material';
+import { Grid, List, ListItem, ListSubheader } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import './FriendList.css';
@@ -27,27 +26,47 @@ export function FriendsList(props: FriendsListProps) {
   const [friends, setFriends] = useState<Friend[]>([]);
   const [requestsFriends, setRequestsFriends] = useState<Friend[]>([]);
 
+  const patchAcceptFriendMutation = usePatchAcceptFriend();
+
+  // Call the hooks outside the useEffect
+  const { data: fetchedFriends } = useGetFriends();
+  const { data: fetchedRequestsFriends } = useGetRequestsFriends();
+
   useEffect(() => {
-    useGetFriends().then((friends) => setFriends(friends));
-    useGetRequestsFriends().then((friends) => setRequestsFriends(friends));
-  }, []);
+    if (fetchedFriends) {
+      setFriends(fetchedFriends);
+    }
+
+    if (fetchedRequestsFriends) {
+      setRequestsFriends(fetchedRequestsFriends);
+    }
+  }, [fetchedFriends, fetchedRequestsFriends]);
+
+  const { mutate: deleteFriend } = useDeleteFriend();
 
   const handleDeleteFriend = (friend: Friend) => {
-    useDeleteFriend(friend.userId).then((friend) => console.log(friend));
-    //Remove from friends
-    setFriends(friends.filter((friend) => friend.userId !== friend.userId));
+    deleteFriend(friend.userId, {
+      onSuccess: (deletedFriend) => {
+        console.log(deletedFriend);
+        setFriends(friends.filter((f) => f.userId !== friend.userId));
+      },
+    });
   };
 
   const handleAddFriend = (friend: Friend) => {
-    usePatchAcceptFriend(friend.email).then((friend) => console.log(friend));
-    //Remove from requestsFriends
-    setRequestsFriends(
-      requestsFriends.filter(
-        (requestFriend) => requestFriend.userId !== friend.userId
-      )
-    );
-    //Add to friends
-    setFriends([...friends, friend]);
+    patchAcceptFriendMutation.mutate(friend.email, {
+      onSuccess: (friend) => {
+        console.log(friend);
+        // Remove from requestsFriends
+        setRequestsFriends(
+          requestsFriends.filter(
+            (requestFriend) => requestFriend.userId !== friend.userId
+          )
+        );
+        // Add to friends
+        setFriends([...friends, friend]);
+      },
+    });
   };
 
   const friendsList = friends.map((friend) => (
