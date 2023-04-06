@@ -310,11 +310,6 @@ export class DocumentService {
       return false;
     }
 
-    //If they try to add themeselves to the document don't do anything
-    if (user.email === userEmail) {
-      return false;
-    }
-
     const document = await this.documentRepo.findOne({
       where: { id: documentId },
       relations: ['users'],
