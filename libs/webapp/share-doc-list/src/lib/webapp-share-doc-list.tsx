@@ -52,14 +52,17 @@ export function WebappShareDocList() {
     const title = (document.getElementById('document-name') as HTMLInputElement)
       .value;
     if (title !== '') {
-      postUserDocument({ lectureId: lectureId || '', documentName: title }, {
-        onSuccess: (res) => {
-          navigate(
-            `/home/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${res}/${title}`
-          );
-          setOpenDialog(false);
-        },
-      });
+      postUserDocument(
+        { lectureId: lectureId || '', documentName: title },
+        {
+          onSuccess: (res) => {
+            navigate(
+              `/home/sharedDocument/${courseCode}/${sessionId}/${lectureId}/${res}/${title}`
+            );
+            setOpenDialog(false);
+          },
+        }
+      );
     }
   };
 

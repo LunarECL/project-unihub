@@ -1,8 +1,4 @@
-import {
-  Grid,
-  Tab,
-  Typography,
-} from '@mui/material';
+import { Grid, Tab, Typography } from '@mui/material';
 import './navbar.css';
 import './credits.css';
 

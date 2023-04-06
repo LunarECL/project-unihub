@@ -144,31 +144,34 @@ export function Sharedoc() {
     const userEmail = (
       document.getElementById('user-email') as HTMLInputElement
     ).value;
-    postShareDocument({ documentId, userEmail }, {
-      onSuccess: (res) => {
-        if (res === false) {
-          // alert('User does not exist');
-          setAlert({
-            type: 'error',
-            message: 'User sharing could not be completed',
-          });
+    postShareDocument(
+      { documentId, userEmail },
+      {
+        onSuccess: (res) => {
+          if (res === false) {
+            // alert('User does not exist');
+            setAlert({
+              type: 'error',
+              message: 'User sharing could not be completed',
+            });
 
-          setTimeout(() => {
-            setAlert(null);
-          }, 3000);
-        } else {
-          // alert('User added to document');
-          setAlert({
-            type: 'success',
-            message: 'User added to document',
-          });
+            setTimeout(() => {
+              setAlert(null);
+            }, 3000);
+          } else {
+            // alert('User added to document');
+            setAlert({
+              type: 'success',
+              message: 'User added to document',
+            });
 
-          setTimeout(() => {
-            setAlert(null);
-          }, 3000);
-        }
-      },
-    });
+            setTimeout(() => {
+              setAlert(null);
+            }, 3000);
+          }
+        },
+      }
+    );
     setOpenDialog(false);
   };
 

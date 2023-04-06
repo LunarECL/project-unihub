@@ -45,7 +45,6 @@
   display: flex;
 }
 
-
 @media (max-width: 768px) {
   .AboutContainer {
     margin-top: 50% !important;
