@@ -1,4 +1,3 @@
-import styles from './webapp-public.module.css';
 import { LogoutOptions, useAuth0 } from '@auth0/auth0-react';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -11,7 +10,6 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material';
-import React, { useEffect } from 'react';
 import './landing.css';
 import UnIHubPage from './components/UnIHubPage';
 import { useTheme } from '@mui/material/styles';
@@ -58,7 +56,6 @@ export function Landing(props: LandingProps) {
                       </Typography>
                       <Box>
                         <Button
-                          // Should prob make the map the inital page
                           onClick={() => navigate('/home/timetable')}
                           variant="contained"
                           sx={{

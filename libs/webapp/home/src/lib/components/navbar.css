@@ -1,12 +1,11 @@
 .NavBar {
-  /* background-color: transparent !important; */
   box-shadow: none !important;
   margin-bottom: 10% !important;
 }
 
 .AppBarUnIHub {
   flex-grow: 1;
-  display: none; /* for xs screens */
+  display: none;
 
   font-weight: 200 !important;
   font-size: 30px !important;

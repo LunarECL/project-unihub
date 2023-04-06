@@ -10,8 +10,12 @@
   font-style: normal;
   font-weight: 400;
   font-size: 100%;
+}
 
-  /* color: #94618e; */
+@media (max-width: 600px) {
+  .UnIHub-header {
+    text-align: center;
+  }
 }
 
 .GridContainer {
@@ -35,11 +39,24 @@
   margin-left: 5%;
 }
 
+@media (max-width: 600px) {
+  .LandingImage {
+    width: 0px;
+    height: 0px;
+  }
+}
+
 .GetStartedButton {
   border-radius: 30px !important;
   font-weight: 700 !important;
 
   margin-top: 10% !important;
+}
+
+@media (max-width: 600px) {
+  .GetStartedButton {
+    margin-top:-90% !important;
+  }
 }
 
 .AppBar {
@@ -48,7 +65,7 @@
 
 .AppBarUnIHub {
   flex-grow: 1;
-  display: none; /* for xs screens */
+  display: none;
 
   font-weight: 400 !important;
   font-size: 30px !important;
@@ -58,7 +75,6 @@
 
 @media (min-width: 600px) {
   .AppBarUnIHub {
-    /* Show the element for screens wider than or equal to 600px */
     display: block;
   }
 }
@@ -67,5 +83,4 @@
   box-shadow: none !important;
 
   font-size: 18px !important;
-  /* color: #FFFF !important; */
 }

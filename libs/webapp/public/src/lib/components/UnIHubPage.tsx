@@ -29,7 +29,7 @@ export function UnIHubPage(props: UnIHubPageProps) {
           </Grid>
         </Grid>
       </Grid>
-      <Grid container direction="row" spacing={2} className="CardsContainer">
+      <Grid container direction="row" spacing={0} className="CardsContainer">
         <Grid
           item
           xs={3}

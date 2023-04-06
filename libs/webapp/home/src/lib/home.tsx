@@ -1,8 +1,6 @@
-import React from 'react';
 import { ApiProvider } from '@unihub/webapp/api';
 import { Sharedoc } from '@unihub/webapp/sharedoc';
 import { Route, Routes, useNavigate } from 'react-router-dom';
-import Forum from './forum/forum';
 import { WebappTimetable } from '@unihub/webapp/timetable';
 import { WebappShareDocList } from '@unihub/webapp/share-doc-list';
 import { DisplayRoom, CreateRoom, JoinRoom } from '@unihub/webapp/webrtc';

@@ -18,9 +18,25 @@
   line-height: 24px;
 }
 
+@media (max-width: 768px) {
+  .UnIHubAbout {
+    text-align: center;
+    margin-left: -20% !important;
+  }
+}
+
 .UnIHubAboutPara {
   font-size: 35px !important;
   width: 60% !important;
+}
+
+@media (max-width: 768px) {
+  .UnIHubAboutPara {
+    font-size: 20px !important;
+    width: 100% !important;
+    text-align: center;
+    margin-left: -8% !important;
+  }
 }
 
 .AboutContainer {
@@ -29,11 +45,31 @@
   display: flex;
 }
 
+
+@media (max-width: 768px) {
+  .AboutContainer {
+    margin-top: 50% !important;
+  }
+}
+
 .UnIHubImageContainer {
   margin-top: 12% !important;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+@media (max-width: 768px) {
+  .UnIHubImageContainer {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .UnIHubImage {
+    width: 0px;
+    height: 0px;
+  }
 }
 
 .CardsContainer {
@@ -47,7 +83,6 @@
 }
 
 .CardsItems {
-  /* background: #94618e; */
   margin-right: 4% !important;
   margin-left: 4% !important;
   width: 100%;
@@ -58,11 +93,23 @@
   padding: 20px;
 }
 
+@media (max-width: 768px) {
+  .CardsItems {
+    margin-right: 0% !important;
+  }
+}
+
 .CardText {
   font-weight: 700 !important;
   color: #ffffff;
   text-align: center;
   margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .CardText {
+    font-size: 10px !important;
+  }
 }
 
 .CardVideoChatImage {
@@ -75,6 +122,13 @@
   background-position: center;
 }
 
+@media (max-width: 768px) {
+  .CardVideoChatImage {
+    background: none;
+    display: none;
+  }
+}
+
 .CardNoteTakingImage {
   background: url('https://cdni.iconscout.com/illustration/premium/thumb/man-learning-online-5595986-4660064.png?f=webp');
   width: 100% !important;
@@ -85,6 +139,13 @@
   background-position: center;
 }
 
+@media (max-width: 768px) {
+  .CardNoteTakingImage {
+    background: none;
+    display: none;
+  }
+}
+
 .CardMapImage {
   background: url('https://www.aimms.com/wp-content/uploads/Aimms_New.png');
   width: 100% !important;
@@ -93,6 +154,13 @@
   background-repeat: no-repeat;
   margin: 0 auto;
   background-position: center;
+}
+
+@media (max-width: 768px) {
+  .CardMapImage {
+    background: none;
+    display: none;
+  }
 }
 
 .InsideCardItem {

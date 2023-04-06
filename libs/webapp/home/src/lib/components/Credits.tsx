@@ -1,26 +1,15 @@
-import { Link, useNavigate } from 'react-router-dom';
 import {
-  AppBar,
-  Box,
-  Button,
   Grid,
   Tab,
-  Toolbar,
   Typography,
 } from '@mui/material';
-import React, { useEffect } from 'react';
 import './navbar.css';
-import { useTheme } from '@mui/material/styles';
 import './credits.css';
 
 /* eslint-disable-next-line */
 export interface CreditsProps {}
 
 export function Credits(props: CreditsProps) {
-  const navigate = useNavigate();
-
-  const theme = useTheme();
-
   return (
     <Grid container direction="row" className="PageDims" spacing={5}>
       <Grid item xs={12}>
@@ -69,10 +58,6 @@ export function Credits(props: CreditsProps) {
           <br />
           <Tab sx={{ minWidth: 0, mr: 1 }} />
           4. Bull/Redis for queueing: https://github.com/OptimalBits/bull
-          {/* <br />
-          <Tab sx={{ minWidth: 0, mr: 1 }} />
-          5. Email sending:  */}
-          {/* Not too sure what this should be */}
         </Typography>
       </Grid>
       <Grid item xs={12}>
