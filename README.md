@@ -21,6 +21,27 @@ UnIHuB is a comprehensive platform designed to bring all the tools and resources
 - Pion/ion-sfu (WebRTC for video chat)
 - And more...
 
+## Overview of main features
+
+### Friends Location
+* Add or remove friends to track their location on campus
+* View real-time locations of online friends and last known locations of offline friends
+* Visualize university buildings, restaurants, and friends' locations on an interactive map
+
+### Video Chat
+* Create or join study groups with unique access codes
+* Share study group links via email or by copying the link
+* Enable webcam and collaborate with fellow students in real-time
+
+### Timetable
+* Add courses you are taking to your personal timetable
+* Click on courses in the timetable to access shared document folders for that course
+
+### Share Document
+* Access public lecture notes in shared document folders
+* Create your own documents to collaborate with specific users via email
+* Collaborate on notes, assignments, or projects in real-time with fellow students
+
 ## Getting Started
 
 To run this project on your local environment, follow these steps:
