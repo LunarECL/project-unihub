@@ -93,7 +93,7 @@ The project is structured into two main parts: the frontend (React) and the back
 
 
 ### Video Demo
-[Video demo link](https://discord.com/channels/1080712220926820352/1080712222789079102/1091476587045724170)
+[Video demo link](https://www.youtube.com/watch?v=urqnS0UMyko&ab_channel=UnIHuB)
 
 ### Deployed version
 [UnIHub](https://unihub.today/)
